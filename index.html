@@ -19,6 +19,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .btn-secondary:hover{background:rgba(255,255,255,0.15)}
 .btn-danger{background:rgba(255,71,87,0.2);color:#ff4757}
 .btn-danger:hover{background:rgba(255,71,87,0.3)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
 .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:24px}
 .stat-card{background:rgba(255,255,255,0.05);border-radius:16px;padding:24px;display:flex;align-items:center;gap:16px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s}
 .stat-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.2)}
@@ -75,13 +76,12 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .timeline-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .timeline-item:last-child{border-bottom:none}
 .timeline-dot{width:10px;height:10px;border-radius:50%;background:#667eea;flex-shrink:0}
+.timeline-dot.paid{background:#2ed573}
 .timeline-date{font-size:13px;color:rgba(255,255,255,0.6);min-width:100px}
 .timeline-amount{font-weight:600;color:#2ed573;min-width:70px}
-.timeline-type{font-size:12px;color:rgba(255,255,255,0.4)}
+.timeline-type{font-size:12px;color:rgba(255,255,255,0.4);flex:1}
 .modal-footer{padding:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:flex-end;gap:12px}
-
-/* Styles pour le modal détail étudiant */
-.detail-modal .modal{max-width:550px}
+.detail-modal .modal{max-width:650px}
 .student-profile{text-align:center;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:20px}
 .student-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;font-weight:700}
 .student-profile h3{font-size:24px;font-weight:600;margin-bottom:8px}
@@ -106,10 +106,40 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .notes-section textarea:focus{outline:none;border-color:#667eea}
 .edit-input{width:100%;padding:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;margin-top:6px;transition:all 0.3s}
 .edit-input:focus{outline:none;border-color:#667eea;background:rgba(255,255,255,0.12)}
-.edit-input::placeholder{color:rgba(255,255,255,0.4)}
-
+.echeances-list{background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);max-height:300px;overflow-y:auto}
+.echeance-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);transition:background 0.2s}
+.echeance-item:last-child{border-bottom:none}
+.echeance-item:hover{background:rgba(255,255,255,0.03)}
+.echeance-item.is-paid{opacity:0.6}
+.echeance-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.echeance-check:hover{border-color:#667eea}
+.echeance-check.checked{background:#2ed573;border-color:#2ed573}
+.echeance-check.checked::after{content:"✓";color:#fff;font-size:14px;font-weight:bold}
+.echeance-info{flex:1;display:flex;align-items:center;gap:10px}
+.echeance-date{font-size:14px;font-weight:500}
+.echeance-type{font-size:12px;color:rgba(255,255,255,0.5)}
+.echeance-amount{font-size:16px;font-weight:600;color:#2ed573}
+.echeance-amount.unpaid{color:#ff9f43}
+.echeance-actions{display:flex;gap:6px}
+.echeance-edit-btn,.echeance-delete-btn{width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.2s}
+.echeance-edit-btn{background:rgba(102,126,234,0.2);color:#667eea}
+.echeance-edit-btn:hover{background:rgba(102,126,234,0.4)}
+.echeance-delete-btn{background:rgba(255,71,87,0.2);color:#ff4757}
+.echeance-delete-btn:hover{background:rgba(255,71,87,0.4)}
+.echeance-edit-row{display:flex;gap:8px;align-items:center;flex:1}
+.echeance-edit-row input{padding:8px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#fff;font-size:13px;width:auto}
+.echeance-edit-row input[type="date"]{width:140px}
+.echeance-edit-row input[type="number"]{width:80px}
+.echeance-edit-row select{padding:8px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#fff;font-size:13px}
+.echeance-save-btn,.echeance-cancel-btn{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
+.echeance-save-btn{background:#2ed573;color:#fff}
+.echeance-cancel-btn{background:rgba(255,255,255,0.1);color:#fff}
+.add-echeance-btn{width:100%;padding:12px;margin-top:10px;background:rgba(102,126,234,0.1);border:2px dashed rgba(102,126,234,0.3);border-radius:10px;color:#667eea;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
+.add-echeance-btn:hover{background:rgba(102,126,234,0.2);border-color:rgba(102,126,234,0.5)}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-header h4{margin-bottom:0}
 @media(max-width:900px){.dashboard{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.dashboard{grid-template-columns:1fr}.header{flex-direction:column;gap:16px;text-align:center}}
+@media(max-width:600px){.dashboard{grid-template-columns:1fr}.header{flex-direction:column;gap:16px;text-align:center}.echeance-edit-row{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -126,488 +156,371 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 </div>
 <div class="filters">
 <div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher un étudiant..." oninput="filterStudents()"></div>
-<select id="formationFilter" onchange="filterStudents()">
-<option value="">Toutes les formations</option>
-<option value="M1 RH">M1 RH</option>
-<option value="M1 INFO CS">M1 INFO CS</option>
-<option value="M2 INFO BD">M2 INFO BD</option>
-<option value="M2 MSC">M2 MSC</option>
-<option value="BTS SIO 2 SLAM">BTS SIO 2 SLAM</option>
-<option value="BTS SIO 2 SISR">BTS SIO 2 SISR</option>
-<option value="BTS CG 2">BTS CG 2</option>
-</select>
-<select id="statusFilter" onchange="filterStudents()">
-<option value="">Tous les statuts</option>
-<option value="ok">✅ À jour</option>
-<option value="pending">⏳ En attente</option>
-<option value="late">⚠️ En retard</option>
-</select>
+<select id="formationFilter" onchange="filterStudents()"><option value="">Toutes les formations</option><option value="M1 RH">M1 RH</option><option value="M1 INFO CS">M1 INFO CS</option><option value="M2 INFO BD">M2 INFO BD</option><option value="M2 MSC">M2 MSC</option><option value="BTS SIO 2 SLAM">BTS SIO 2 SLAM</option><option value="BTS SIO 2 SISR">BTS SIO 2 SISR</option><option value="BTS CG 2">BTS CG 2</option></select>
+<select id="statusFilter" onchange="filterStudents()"><option value="">Tous les statuts</option><option value="ok">✅ À jour</option><option value="pending">⏳ En attente</option><option value="late">⚠️ En retard</option></select>
 </div>
 <div class="students-grid" id="studentsGrid"></div>
 </div>
- 
-<!-- Modal Nouvel étudiant -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
 <div class="modal" onclick="event.stopPropagation()">
 <div class="modal-header"><h2>📝 Nouvel étudiant</h2><button class="close-btn" onclick="closeModal()">×</button></div>
 <div class="modal-body">
 <div class="form-group"><label>Nom complet</label><input type="text" id="studentName" placeholder="Ex: DUPONT Marie"></div>
 <div class="form-group"><label>Téléphone</label><input type="text" id="studentPhone" placeholder="Ex: 0612345678"></div>
-<div class="form-group"><label>Formation</label><select id="studentFormation">
-<option value="M1 RH">M1 RH</option>
-<option value="M1 INFO CS">M1 INFO CS</option>
-<option value="M2 INFO BD">M2 INFO BD</option>
-<option value="M2 MSC">M2 MSC</option>
-<option value="BTS SIO 2 SLAM">BTS SIO 2 SLAM</option>
-<option value="BTS SIO 2 SISR">BTS SIO 2 SISR</option>
-<option value="BTS CG 2">BTS CG 2</option>
-</select></div>
-<div class="form-group"><label>Rythme</label><select id="studentRythme">
-<option value="IOA">IOA</option>
-<option value="Initiale">Initiale</option>
-<option value="Alternance">Alternance</option>
-</select></div>
+<div class="form-group"><label>Formation</label><select id="studentFormation"><option value="M1 RH">M1 RH</option><option value="M1 INFO CS">M1 INFO CS</option><option value="M2 INFO BD">M2 INFO BD</option><option value="M2 MSC">M2 MSC</option><option value="BTS SIO 2 SLAM">BTS SIO 2 SLAM</option><option value="BTS SIO 2 SISR">BTS SIO 2 SISR</option><option value="BTS CG 2">BTS CG 2</option></select></div>
+<div class="form-group"><label>Rythme</label><select id="studentRythme"><option value="IOA">IOA</option><option value="Initiale">Initiale</option><option value="Alternance">Alternance</option></select></div>
 <div class="form-group"><label>Banque</label><input type="text" id="studentBank" placeholder="Ex: BNP, LCL, SG..."></div>
-<div class="form-group">
-<label>Échéances de paiement <span class="hint">Format intelligent</span></label>
-<textarea id="paymentInput" placeholder="Ex: 760€ pvt le 20/08/2025 puis 323€/mois du 20/10/2025 au 20/07/2026" oninput="parsePayment()"></textarea>
-</div>
-<div class="payment-preview">
-<div class="preview-header"><span>📅 Aperçu des échéances</span><span id="previewTotal">Total: 0€</span></div>
-<div id="previewTimeline"><p class="empty">Saisissez une formule ci-dessus pour voir l'aperçu...</p></div>
-</div>
+<div class="form-group"><label>Échéances de paiement <span class="hint">Format intelligent</span></label><textarea id="paymentInput" placeholder="Ex: 760€ pvt le 20/08/2025 puis 260€ tous les 5 du mois jusqu'au 20/07/2026" oninput="parsePayment()"></textarea></div>
+<div class="payment-preview"><div class="preview-header"><span>📅 Aperçu des échéances</span><span id="previewTotal">Total: 0€</span></div><div id="previewTimeline"><p class="empty">Saisissez une formule ci-dessus pour voir l'aperçu...</p></div></div>
 </div>
 <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="saveStudent()">💾 Enregistrer</button></div>
 </div>
 </div>
-
-<!-- Modal Détail étudiant -->
 <div class="modal-overlay detail-modal" id="detailModal" onclick="closeDetailModal()">
 <div class="modal" onclick="event.stopPropagation()">
 <div class="modal-header"><h2>👤 Fiche étudiant</h2><button class="close-btn" onclick="closeDetailModal()">×</button></div>
-<div class="modal-body" id="detailContent">
-<!-- Contenu généré dynamiquement -->
-</div>
-<div class="modal-footer">
-<button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button>
-<button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button>
-<button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>
+<div class="modal-body" id="detailContent"></div>
+<div class="modal-footer" id="detailFooter"><button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button><button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button><button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button></div>
 </div>
 </div>
-</div>
- 
 <script>
 let students=[
-{id:1,name:"ESSAGA Flora",formation:"M1 RH",rythme:"IOA",phone:"0744139534",status:"ok",paid:2280,total:3690,bank:"BANQUE POSTALE",email:"flora.essaga@email.com",notes:""},
-{id:2,name:"MOUNGUERI Rich",formation:"M1 INFO CS",rythme:"IOA",phone:"0758779884",status:"ok",paid:1507,total:3690,bank:"LCL",email:"rich.moungueri@email.com",notes:""},
-{id:3,name:"ANANI Koffi",formation:"M1 INFO CS",rythme:"IOA",phone:"0759367370",status:"pending",paid:760,total:3690,bank:"",email:"koffi.anani@email.com",notes:"En attente de justificatif"},
-{id:4,name:"SOGBOSSI Max",formation:"M1 INFO CS",rythme:"IOA",phone:"0743307010",status:"pending",paid:760,total:3690,bank:"",email:"max.sogbossi@email.com",notes:""},
-{id:5,name:"TCHINDA Loïc",formation:"M1 INFO CS",rythme:"IOA",phone:"0764844814",status:"ok",paid:1836,total:3690,bank:"",email:"loic.tchinda@email.com",notes:""},
-{id:6,name:"SOUMAHORO Hafsoitou",formation:"M2 MSC",rythme:"IOA",phone:"0753594359",status:"ok",paid:2329,total:3690,bank:"BOURSOBANK",email:"hafsoitou.soumahoro@email.com",notes:""},
-{id:7,name:"TRAORE Diarah",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0753291991",status:"ok",paid:1083,total:3690,bank:"BQ POPULAIRE",email:"diarah.traore@email.com",notes:""},
-{id:8,name:"KAM KEFUYANTSAP Eve",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0613198352",status:"pending",paid:3000,total:4990,bank:"",email:"eve.kam@email.com",notes:"Formation initiale - frais majorés"},
-{id:9,name:"BOUDRAA Adam",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0769853540",status:"ok",paid:3990,total:4990,bank:"CIC",email:"adam.boudraa@email.com",notes:""},
-{id:10,name:"KEITA Siriman",formation:"BTS CG 2",rythme:"Alternance",phone:"0621083426",status:"late",paid:323,total:3690,bank:"LCL",email:"siriman.keita@email.com",notes:"⚠️ Relance effectuée le 15/01"},
-{id:11,name:"LANGLOIS Léo",formation:"M2 INFO BD",rythme:"IOA",phone:"0783389741",status:"ok",paid:1507,total:3690,bank:"SG",email:"leo.langlois@email.com",notes:""},
-{id:12,name:"FOMO Océane",formation:"BTS CG 2",rythme:"Alternance",phone:"0759575007",status:"ok",paid:1406,total:3690,bank:"SG",email:"oceane.fomo@email.com",notes:""}
+{id:1,name:"ESSAGA Flora",formation:"M1 RH",rythme:"IOA",phone:"0744139534",status:"ok",paid:2280,total:3690,bank:"BANQUE POSTALE",email:"",notes:"",echeances:[{date:"2024-09-01",amount:760,type:"Prélèvement",paid:true},{date:"2024-10-05",amount:380,type:"Mensualité",paid:true},{date:"2024-11-05",amount:380,type:"Mensualité",paid:true},{date:"2024-12-05",amount:380,type:"Mensualité",paid:true},{date:"2025-01-05",amount:380,type:"Mensualité",paid:true},{date:"2025-02-05",amount:380,type:"Mensualité",paid:false}]},
+{id:2,name:"MOUNGUERI Rich",formation:"M1 INFO CS",rythme:"IOA",phone:"0758779884",status:"ok",paid:1507,total:3690,bank:"LCL",email:"",notes:"",echeances:[]},
+{id:3,name:"ANANI Koffi",formation:"M1 INFO CS",rythme:"IOA",phone:"0759367370",status:"pending",paid:760,total:3690,bank:"",email:"",notes:"En attente de justificatif",echeances:[]},
+{id:4,name:"SOGBOSSI Max",formation:"M1 INFO CS",rythme:"IOA",phone:"0743307010",status:"pending",paid:760,total:3690,bank:"",email:"",notes:"",echeances:[]},
+{id:5,name:"TCHINDA Loïc",formation:"M1 INFO CS",rythme:"IOA",phone:"0764844814",status:"ok",paid:1836,total:3690,bank:"",email:"",notes:"",echeances:[]},
+{id:6,name:"SOUMAHORO Hafsoitou",formation:"M2 MSC",rythme:"IOA",phone:"0753594359",status:"ok",paid:2329,total:3690,bank:"BOURSOBANK",email:"",notes:"",echeances:[]},
+{id:7,name:"TRAORE Diarah",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0753291991",status:"ok",paid:1083,total:3690,bank:"BQ POPULAIRE",email:"",notes:"",echeances:[]},
+{id:8,name:"KAM KEFUYANTSAP Eve",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0613198352",status:"pending",paid:3000,total:4990,bank:"",email:"",notes:"Formation initiale",echeances:[]},
+{id:9,name:"BOUDRAA Adam",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0769853540",status:"ok",paid:3990,total:4990,bank:"CIC",email:"",notes:"",echeances:[]},
+{id:10,name:"KEITA Siriman",formation:"BTS CG 2",rythme:"Alternance",phone:"0621083426",status:"late",paid:323,total:3690,bank:"LCL",email:"",notes:"Relance effectuée le 15/01",echeances:[]},
+{id:11,name:"LANGLOIS Léo",formation:"M2 INFO BD",rythme:"IOA",phone:"0783389741",status:"ok",paid:1507,total:3690,bank:"SG",email:"",notes:"",echeances:[]},
+{id:12,name:"FOMO Océane",formation:"BTS CG 2",rythme:"Alternance",phone:"0759575007",status:"ok",paid:1406,total:3690,bank:"SG",email:"",notes:"",echeances:[]}
 ];
+let currentStudentId=null,tempPayments=[],editingEcheanceIndex=null;
 
-let currentStudentId = null;
+function sortStudentsAlphabetically(){students.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}))}
+function updateStats(){document.getElementById("totalCount").textContent=students.length;document.getElementById("okCount").textContent=students.filter(s=>s.status==="ok").length;document.getElementById("pendingCount").textContent=students.filter(s=>s.status==="pending").length;document.getElementById("lateCount").textContent=students.filter(s=>s.status==="late").length}
+function renderStudents(data){data=data||students;data=[...data].sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));let html="";for(let i=0;i<data.length;i++){const s=data[i];const st=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ Retard";const pct=Math.round(s.paid/s.total*100);html+='<div class="student-card" onclick="openDetailModal('+s.id+')"><div class="student-header"><div><div class="student-name">'+s.name+'</div><span class="student-formation">'+s.formation+'</span></div><span class="status-badge '+s.status+'">'+st+'</span></div><div class="student-details"><div class="detail-row">📞 '+s.phone+'</div><div class="detail-row">📚 '+s.rythme+'</div>'+(s.bank?'<div class="detail-row">🏦 '+s.bank+'</div>':'')+'</div><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-info"><span>'+s.paid+'€ payés</span><span>'+s.total+'€ total</span></div></div>'}document.getElementById("studentsGrid").innerHTML=html}
+function filterStudents(){const search=document.getElementById("searchInput").value.toLowerCase();const formation=document.getElementById("formationFilter").value;const status=document.getElementById("statusFilter").value;const filtered=students.filter(s=>{const matchSearch=s.name.toLowerCase().includes(search);const matchFormation=!formation||s.formation===formation;const matchStatus=!status||s.status===status;return matchSearch&&matchFormation&&matchStatus});renderStudents(filtered)}
+function openModal(){document.getElementById("modalOverlay").classList.add("active");tempPayments=[]}
+function closeModal(){document.getElementById("modalOverlay").classList.remove("active");document.getElementById("paymentInput").value="";document.getElementById("studentName").value="";document.getElementById("studentPhone").value="";document.getElementById("studentBank").value="";document.getElementById("previewTimeline").innerHTML='<p class="empty">Saisissez une formule ci-dessus...</p>';document.getElementById("previewTotal").textContent="Total: 0€";tempPayments=[]}
 
-// Trier les étudiants par ordre alphabétique
-function sortStudentsAlphabetically() {
-    students.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
-}
-
-function updateStats(){
-document.getElementById("totalCount").textContent=students.length;
-document.getElementById("okCount").textContent=students.filter(s=>s.status==="ok").length;
-document.getElementById("pendingCount").textContent=students.filter(s=>s.status==="pending").length;
-document.getElementById("lateCount").textContent=students.filter(s=>s.status==="late").length;
-}
- 
-function renderStudents(data){
-data=data||students;
-// Trier par ordre alphabétique
-data = [...data].sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
-let html="";
-for(let i=0;i<data.length;i++){
-const s=data[i];
-const st=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ Retard";
-const pct=Math.round(s.paid/s.total*100);
-html+='<div class="student-card" onclick="openDetailModal('+s.id+')"><div class="student-header"><div><div class="student-name">'+s.name+'</div><span class="student-formation">'+s.formation+'</span></div><span class="status-badge '+s.status+'">'+st+'</span></div><div class="student-details"><div class="detail-row">📞 '+s.phone+'</div><div class="detail-row">📚 '+s.rythme+'</div>'+(s.bank?'<div class="detail-row">🏦 '+s.bank+'</div>':'')+'</div><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-info"><span>'+s.paid+'€ payés</span><span>'+s.total+'€ total</span></div></div>';
-}
-document.getElementById("studentsGrid").innerHTML=html;
-}
- 
-function filterStudents(){
-const search=document.getElementById("searchInput").value.toLowerCase();
-const formation=document.getElementById("formationFilter").value;
-const status=document.getElementById("statusFilter").value;
-const filtered=students.filter(s=>{
-const matchSearch=s.name.toLowerCase().includes(search);
-const matchFormation=!formation||s.formation===formation;
-const matchStatus=!status||s.status===status;
-return matchSearch&&matchFormation&&matchStatus;
-});
-renderStudents(filtered);
+function recalculateStudentPayments(s){
+    if(s.echeances&&s.echeances.length>0){
+        s.paid=s.echeances.filter(e=>e.paid).reduce((sum,e)=>sum+e.amount,0);
+        s.total=s.echeances.reduce((sum,e)=>sum+e.amount,0);
+    }
+    updateStudentStatus(s);
 }
 
-// Fonctions pour le modal de création
-function openModal(){document.getElementById("modalOverlay").classList.add("active")}
-function closeModal(){
-    document.getElementById("modalOverlay").classList.remove("active");
-    document.getElementById("paymentInput").value="";
-    document.getElementById("studentName").value="";
-    document.getElementById("studentPhone").value="";
-    document.getElementById("studentBank").value="";
-    document.getElementById("previewTimeline").innerHTML='<p class="empty">Saisissez une formule ci-dessus...</p>';
-    document.getElementById("previewTotal").textContent="Total: 0€";
-}
-
-// Fonctions pour le modal de détail
-function openDetailModal(id) {
-    currentStudentId = id;
-    const s = students.find(st => st.id === id);
-    if (!s) return;
+function openDetailModal(id){
+    currentStudentId=id;
+    editingEcheanceIndex=null;
+    const s=students.find(st=>st.id===id);
+    if(!s)return;
+    const pct=s.total>0?Math.round(s.paid/s.total*100):0;
+    const remaining=s.total-s.paid;
+    const statusText=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ En retard";
+    const initials=s.name.split(' ').map(n=>n[0]).join('').substring(0,2);
     
-    const pct = Math.round(s.paid / s.total * 100);
-    const remaining = s.total - s.paid;
-    const statusText = s.status === "ok" ? "✅ À jour" : s.status === "pending" ? "⏳ En attente" : "⚠️ En retard";
-    const initials = s.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+    let echeancesHtml='';
+    if(s.echeances&&s.echeances.length>0){
+        echeancesHtml='<div class="echeances-list">';
+        for(let i=0;i<s.echeances.length;i++){
+            const e=s.echeances[i];
+            const dateObj=new Date(e.date);
+            const dateStr=dateObj.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+            echeancesHtml+='<div class="echeance-item '+(e.paid?'is-paid':'')+'" id="echeance-'+i+'">';
+            echeancesHtml+='<div class="echeance-check '+(e.paid?'checked':'')+'" onclick="toggleEcheance('+s.id+','+i+',event)"></div>';
+            echeancesHtml+='<div class="echeance-info"><div class="echeance-date">'+dateStr+'</div><div class="echeance-type">'+e.type+'</div></div>';
+            echeancesHtml+='<div class="echeance-amount '+(e.paid?'':'unpaid')+'">'+e.amount+'€</div>';
+            echeancesHtml+='<div class="echeance-actions">';
+            echeancesHtml+='<button class="echeance-edit-btn" onclick="startEditEcheance('+i+',event)" title="Modifier">✏️</button>';
+            echeancesHtml+='<button class="echeance-delete-btn" onclick="deleteEcheance('+i+',event)" title="Supprimer">🗑️</button>';
+            echeancesHtml+='</div></div>';
+        }
+        echeancesHtml+='</div>';
+    }else{
+        echeancesHtml='<p class="empty">Aucune échéance définie</p>';
+    }
+    echeancesHtml+='<button class="add-echeance-btn" onclick="addNewEcheance()">+ Ajouter une échéance</button>';
     
-    const html = `
-        <div class="student-profile">
-            <div class="student-avatar">${initials}</div>
-            <h3>${s.name}</h3>
-            <span class="student-formation">${s.formation}</span>
-        </div>
-        
-        <div class="status-section">
-            <span>Statut de paiement:</span>
-            <span class="status-badge ${s.status}">${statusText}</span>
-        </div>
-        
-        <div class="info-section">
-            <h4>📋 Informations personnelles</h4>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Téléphone</div>
-                    <div class="info-value"><a href="tel:${s.phone}">${s.phone}</a></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Email</div>
-                    <div class="info-value"><a href="mailto:${s.email || ''}">${s.email || 'Non renseigné'}</a></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Rythme</div>
-                    <div class="info-value">${s.rythme}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Banque</div>
-                    <div class="info-value">${s.bank || 'Non renseignée'}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="info-section">
-            <h4>💳 Situation financière</h4>
-            <div class="info-grid">
-                <div class="info-item full">
-                    <div class="payment-detail">
-                        <div class="payment-progress">
-                            <div class="payment-bar ${s.status}" style="width:${pct}%"></div>
-                        </div>
-                        <div class="payment-stats">
-                            <span class="paid">${s.paid}€ payés (${pct}%)</span>
-                            <span class="remaining">${remaining}€ restant</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Montant payé</div>
-                    <div class="info-value" style="color:#2ed573">${s.paid} €</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Montant total</div>
-                    <div class="info-value">${s.total} €</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="info-section notes-section">
-            <h4>📝 Notes</h4>
-            <textarea id="studentNotes" placeholder="Ajouter des notes sur cet étudiant...">${s.notes || ''}</textarea>
-        </div>
-    `;
+    const html='<div class="student-profile"><div class="student-avatar">'+initials+'</div><h3>'+s.name+'</h3><span class="student-formation">'+s.formation+'</span></div><div class="status-section"><span>Statut:</span><span class="status-badge '+s.status+'">'+statusText+'</span></div><div class="info-section"><h4>📋 Informations</h4><div class="info-grid"><div class="info-item"><div class="info-label">Téléphone</div><div class="info-value"><a href="tel:'+s.phone+'">'+s.phone+'</a></div></div><div class="info-item"><div class="info-label">Rythme</div><div class="info-value">'+s.rythme+'</div></div><div class="info-item"><div class="info-label">Banque</div><div class="info-value">'+(s.bank||'Non renseignée')+'</div></div><div class="info-item"><div class="info-label">Email</div><div class="info-value">'+(s.email||'Non renseigné')+'</div></div></div></div><div class="info-section"><h4>💳 Situation financière</h4><div class="info-grid"><div class="info-item full"><div class="payment-detail"><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-stats"><span class="paid">'+s.paid+'€ payés ('+pct+'%)</span><span class="remaining">'+remaining+'€ restant</span></div></div></div></div></div><div class="info-section"><div class="section-header"><h4>📅 Échéances</h4></div>'+echeancesHtml+'</div><div class="info-section notes-section"><h4>📝 Notes</h4><textarea id="studentNotes" placeholder="Ajouter des notes...">'+(s.notes||'')+'</textarea></div>';
     
-    document.getElementById("detailContent").innerHTML = html;
+    document.getElementById("detailContent").innerHTML=html;
+    document.getElementById("detailFooter").innerHTML='<button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button><button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button><button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>';
     document.getElementById("detailModal").classList.add("active");
 }
 
-function closeDetailModal() {
-    // Sauvegarder les notes avant de fermer
-    if (currentStudentId) {
-        const notesEl = document.getElementById("studentNotes");
-        if (notesEl) {
-            const s = students.find(st => st.id === currentStudentId);
-            if (s) s.notes = notesEl.value;
-        }
-    }
-    document.getElementById("detailModal").classList.remove("active");
-    currentStudentId = null;
-}
-
-function editStudent() {
-    const s = students.find(st => st.id === currentStudentId);
-    if (!s) return;
+function startEditEcheance(index,event){
+    event.stopPropagation();
+    const s=students.find(st=>st.id===currentStudentId);
+    if(!s||!s.echeances||!s.echeances[index])return;
+    const e=s.echeances[index];
+    const item=document.getElementById('echeance-'+index);
+    if(!item)return;
     
-    const statusOptions = `
-        <option value="ok" ${s.status === 'ok' ? 'selected' : ''}>✅ À jour</option>
-        <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>⏳ En attente</option>
-        <option value="late" ${s.status === 'late' ? 'selected' : ''}>⚠️ En retard</option>
-    `;
-    
-    const formationOptions = ['M1 RH', 'M1 INFO CS', 'M2 INFO BD', 'M2 MSC', 'BTS SIO 2 SLAM', 'BTS SIO 2 SISR', 'BTS CG 2']
-        .map(f => `<option value="${f}" ${s.formation === f ? 'selected' : ''}>${f}</option>`).join('');
-    
-    const rythmeOptions = ['IOA', 'Initiale', 'Alternance']
-        .map(r => `<option value="${r}" ${s.rythme === r ? 'selected' : ''}>${r}</option>`).join('');
-    
-    const initials = s.name.split(' ').map(n => n[0]).join('').substring(0, 2);
-    
-    const html = `
-        <div class="student-profile">
-            <div class="student-avatar">${initials}</div>
+    item.innerHTML=`
+        <div class="echeance-check ${e.paid?'checked':''}" onclick="toggleEcheance(${s.id},${index},event)"></div>
+        <div class="echeance-edit-row">
+            <input type="date" id="editEcheanceDate-${index}" value="${e.date}">
+            <input type="number" id="editEcheanceAmount-${index}" value="${e.amount}" min="0" style="width:80px">
+            <select id="editEcheanceType-${index}">
+                <option value="Paiement" ${e.type==='Paiement'?'selected':''}>Paiement</option>
+                <option value="Prélèvement" ${e.type==='Prélèvement'?'selected':''}>Prélèvement</option>
+                <option value="Mensualité" ${e.type==='Mensualité'?'selected':''}>Mensualité</option>
+                <option value="Virement" ${e.type==='Virement'?'selected':''}>Virement</option>
+                <option value="Chèque" ${e.type==='Chèque'?'selected':''}>Chèque</option>
+                <option value="Espèces" ${e.type==='Espèces'?'selected':''}>Espèces</option>
+                <option value="Carte" ${e.type==='Carte'?'selected':''}>Carte</option>
+            </select>
+            <button class="echeance-save-btn" onclick="saveEcheanceEdit(${index},event)">✓</button>
+            <button class="echeance-cancel-btn" onclick="openDetailModal(${currentStudentId})">✕</button>
         </div>
-        
-        <div class="info-section">
-            <h4>📋 Informations personnelles</h4>
-            <div class="info-grid">
-                <div class="info-item full">
-                    <div class="info-label">Nom complet</div>
-                    <input type="text" id="editName" class="edit-input" value="${s.name}">
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Téléphone</div>
-                    <input type="text" id="editPhone" class="edit-input" value="${s.phone}">
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Email</div>
-                    <input type="email" id="editEmail" class="edit-input" value="${s.email || ''}">
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Formation</div>
-                    <select id="editFormation" class="edit-input">${formationOptions}</select>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Rythme</div>
-                    <select id="editRythme" class="edit-input">${rythmeOptions}</select>
-                </div>
-                <div class="info-item full">
-                    <div class="info-label">Banque</div>
-                    <input type="text" id="editBank" class="edit-input" value="${s.bank || ''}">
-                </div>
-            </div>
-        </div>
-        
-        <div class="info-section">
-            <h4>💳 Situation financière</h4>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Statut</div>
-                    <select id="editStatus" class="edit-input">${statusOptions}</select>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Montant payé (€)</div>
-                    <input type="number" id="editPaid" class="edit-input" value="${s.paid}" min="0">
-                </div>
-                <div class="info-item full">
-                    <div class="info-label">Montant total (€)</div>
-                    <input type="number" id="editTotal" class="edit-input" value="${s.total}" min="0">
-                </div>
-            </div>
-        </div>
-        
-        <div class="info-section notes-section">
-            <h4>📝 Notes</h4>
-            <textarea id="editNotes" placeholder="Ajouter des notes...">${s.notes || ''}</textarea>
-        </div>
-    `;
-    
-    document.getElementById("detailContent").innerHTML = html;
-    
-    // Changer les boutons du footer
-    document.querySelector("#detailModal .modal-footer").innerHTML = `
-        <button class="btn btn-secondary" onclick="cancelEdit()">Annuler</button>
-        <button class="btn btn-primary" onclick="saveEdit()">💾 Enregistrer</button>
     `;
 }
 
-function cancelEdit() {
-    openDetailModal(currentStudentId);
-    // Restaurer les boutons originaux
-    document.querySelector("#detailModal .modal-footer").innerHTML = `
-        <button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button>
-        <button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button>
-        <button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>
-    `;
-}
-
-function saveEdit() {
-    const s = students.find(st => st.id === currentStudentId);
-    if (!s) return;
+function saveEcheanceEdit(index,event){
+    event.stopPropagation();
+    const s=students.find(st=>st.id===currentStudentId);
+    if(!s||!s.echeances||!s.echeances[index])return;
     
-    const name = document.getElementById("editName").value.trim();
-    const phone = document.getElementById("editPhone").value.trim();
+    const newDate=document.getElementById('editEcheanceDate-'+index).value;
+    const newAmount=parseInt(document.getElementById('editEcheanceAmount-'+index).value)||0;
+    const newType=document.getElementById('editEcheanceType-'+index).value;
     
-    if (!name || !phone) {
-        alert("Le nom et le téléphone sont obligatoires.");
+    if(!newDate||newAmount<=0){
+        alert('Veuillez remplir une date et un montant valide');
         return;
     }
     
-    s.name = name;
-    s.phone = phone;
-    s.email = document.getElementById("editEmail").value.trim();
-    s.formation = document.getElementById("editFormation").value;
-    s.rythme = document.getElementById("editRythme").value;
-    s.bank = document.getElementById("editBank").value.trim();
-    s.status = document.getElementById("editStatus").value;
-    s.paid = parseInt(document.getElementById("editPaid").value) || 0;
-    s.total = parseInt(document.getElementById("editTotal").value) || 0;
-    s.notes = document.getElementById("editNotes").value;
+    s.echeances[index].date=newDate;
+    s.echeances[index].amount=newAmount;
+    s.echeances[index].type=newType;
     
-    // Restaurer les boutons et afficher la fiche mise à jour
-    document.querySelector("#detailModal .modal-footer").innerHTML = `
-        <button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button>
-        <button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button>
-        <button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>
-    `;
+    // Trier les échéances par date
+    s.echeances.sort((a,b)=>new Date(a.date)-new Date(b.date));
     
+    recalculateStudentPayments(s);
+    updateStats();
+    renderStudents();
+    openDetailModal(currentStudentId);
+}
+
+function deleteEcheance(index,event){
+    event.stopPropagation();
+    const s=students.find(st=>st.id===currentStudentId);
+    if(!s||!s.echeances)return;
+    
+    if(confirm('Supprimer cette échéance ?')){
+        s.echeances.splice(index,1);
+        recalculateStudentPayments(s);
+        updateStats();
+        renderStudents();
+        openDetailModal(currentStudentId);
+    }
+}
+
+function addNewEcheance(){
+    const s=students.find(st=>st.id===currentStudentId);
+    if(!s)return;
+    if(!s.echeances)s.echeances=[];
+    
+    // Date par défaut: aujourd'hui
+    const today=new Date().toISOString().split('T')[0];
+    s.echeances.push({
+        date:today,
+        amount:0,
+        type:'Mensualité',
+        paid:false
+    });
+    
+    // Trier par date
+    s.echeances.sort((a,b)=>new Date(a.date)-new Date(b.date));
+    
+    recalculateStudentPayments(s);
+    openDetailModal(currentStudentId);
+    
+    // Trouver l'index de la nouvelle échéance et l'éditer
+    const newIndex=s.echeances.findIndex(e=>e.amount===0);
+    if(newIndex>=0){
+        setTimeout(()=>startEditEcheance(newIndex,{stopPropagation:()=>{}}),100);
+    }
+}
+
+function toggleEcheance(studentId,echeanceIndex,event){
+    event.stopPropagation();
+    const s=students.find(st=>st.id===studentId);
+    if(!s||!s.echeances||!s.echeances[echeanceIndex])return;
+    s.echeances[echeanceIndex].paid=!s.echeances[echeanceIndex].paid;
+    recalculateStudentPayments(s);
+    updateStats();
+    renderStudents();
+    openDetailModal(studentId);
+}
+
+function updateStudentStatus(s){
+    if(!s.echeances||s.echeances.length===0)return;
+    const now=new Date();
+    const unpaidPastDue=s.echeances.some(e=>!e.paid&&new Date(e.date)<now);
+    const allPaid=s.echeances.every(e=>e.paid);
+    if(allPaid||s.paid>=s.total){s.status="ok"}
+    else if(unpaidPastDue){
+        const oldestUnpaid=s.echeances.filter(e=>!e.paid&&new Date(e.date)<now).sort((a,b)=>new Date(a.date)-new Date(b.date))[0];
+        if(oldestUnpaid){
+            const daysDiff=Math.floor((now-new Date(oldestUnpaid.date))/(1000*60*60*24));
+            s.status=daysDiff>15?"late":"pending";
+        }
+    }else{s.status="ok"}
+}
+
+function closeDetailModal(){
+    if(currentStudentId){
+        const notesEl=document.getElementById("studentNotes");
+        if(notesEl){
+            const s=students.find(st=>st.id===currentStudentId);
+            if(s)s.notes=notesEl.value;
+        }
+    }
+    document.getElementById("detailModal").classList.remove("active");
+    currentStudentId=null;
+}
+
+function editStudent(){
+    const s=students.find(st=>st.id===currentStudentId);
+    if(!s)return;
+    const statusOptions='<option value="ok" '+(s.status==='ok'?'selected':'')+'>✅ À jour</option><option value="pending" '+(s.status==='pending'?'selected':'')+'>⏳ En attente</option><option value="late" '+(s.status==='late'?'selected':'')+'>⚠️ En retard</option>';
+    const formationOptions=['M1 RH','M1 INFO CS','M2 INFO BD','M2 MSC','BTS SIO 2 SLAM','BTS SIO 2 SISR','BTS CG 2'].map(f=>'<option value="'+f+'" '+(s.formation===f?'selected':'')+'>'+f+'</option>').join('');
+    const rythmeOptions=['IOA','Initiale','Alternance'].map(r=>'<option value="'+r+'" '+(s.rythme===r?'selected':'')+'>'+r+'</option>').join('');
+    const initials=s.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+    const html='<div class="student-profile"><div class="student-avatar">'+initials+'</div></div><div class="info-section"><h4>📋 Informations</h4><div class="info-grid"><div class="info-item full"><div class="info-label">Nom complet</div><input type="text" id="editName" class="edit-input" value="'+s.name+'"></div><div class="info-item"><div class="info-label">Téléphone</div><input type="text" id="editPhone" class="edit-input" value="'+s.phone+'"></div><div class="info-item"><div class="info-label">Email</div><input type="email" id="editEmail" class="edit-input" value="'+(s.email||'')+'"></div><div class="info-item"><div class="info-label">Formation</div><select id="editFormation" class="edit-input">'+formationOptions+'</select></div><div class="info-item"><div class="info-label">Rythme</div><select id="editRythme" class="edit-input">'+rythmeOptions+'</select></div><div class="info-item full"><div class="info-label">Banque</div><input type="text" id="editBank" class="edit-input" value="'+(s.bank||'')+'"></div></div></div><div class="info-section"><h4>💳 Statut</h4><div class="info-grid"><div class="info-item full"><div class="info-label">Statut de paiement</div><select id="editStatus" class="edit-input">'+statusOptions+'</select></div></div></div><div class="info-section notes-section"><h4>📝 Notes</h4><textarea id="editNotes" placeholder="Notes...">'+(s.notes||'')+'</textarea></div>';
+    document.getElementById("detailContent").innerHTML=html;
+    document.getElementById("detailFooter").innerHTML='<button class="btn btn-secondary" onclick="cancelEdit()">Annuler</button><button class="btn btn-primary" onclick="saveEdit()">💾 Enregistrer</button>';
+}
+
+function cancelEdit(){openDetailModal(currentStudentId)}
+
+function saveEdit(){
+    const s=students.find(st=>st.id===currentStudentId);
+    if(!s)return;
+    const name=document.getElementById("editName").value.trim();
+    const phone=document.getElementById("editPhone").value.trim();
+    if(!name||!phone){alert("Le nom et le téléphone sont obligatoires.");return}
+    s.name=name;
+    s.phone=phone;
+    s.email=document.getElementById("editEmail").value.trim();
+    s.formation=document.getElementById("editFormation").value;
+    s.rythme=document.getElementById("editRythme").value;
+    s.bank=document.getElementById("editBank").value.trim();
+    s.status=document.getElementById("editStatus").value;
+    s.notes=document.getElementById("editNotes").value;
     sortStudentsAlphabetically();
     updateStats();
     renderStudents();
     openDetailModal(currentStudentId);
 }
 
-function deleteStudent() {
-    if (!currentStudentId) return;
-    const s = students.find(st => st.id === currentStudentId);
-    if (confirm(`Êtes-vous sûr de vouloir supprimer ${s.name} ?`)) {
-        students = students.filter(st => st.id !== currentStudentId);
+function deleteStudent(){
+    if(!currentStudentId)return;
+    const s=students.find(st=>st.id===currentStudentId);
+    if(confirm('Supprimer '+s.name+' ?')){
+        students=students.filter(st=>st.id!==currentStudentId);
         closeDetailModal();
         updateStats();
         renderStudents();
     }
 }
- 
+
 function parsePayment(){
-const input=document.getElementById("paymentInput").value;
-const timeline=document.getElementById("previewTimeline");
-const totalEl=document.getElementById("previewTotal");
-if(!input.trim()){timeline.innerHTML='<p class="empty">Saisissez une formule ci-dessus...</p>';totalEl.textContent="Total: 0€";return}
-const payments=parsePaymentString(input);
-if(!payments.length){timeline.innerHTML='<p class="empty">Format non reconnu. Essayez: 760€ pvt le 20/08/2025</p>';return}
-let total=0,html="";
-for(let i=0;i<payments.length;i++){
-const p=payments[i];total+=p.amount;
-html+='<div class="timeline-item"><div class="timeline-dot"></div><span class="timeline-date">'+p.date+'</span><span class="timeline-amount">'+p.amount+'€</span><span class="timeline-type">'+p.type+'</span></div>';
+    const input=document.getElementById("paymentInput").value;
+    const timeline=document.getElementById("previewTimeline");
+    const totalEl=document.getElementById("previewTotal");
+    if(!input.trim()){timeline.innerHTML='<p class="empty">Saisissez une formule ci-dessus...</p>';totalEl.textContent="Total: 0€";tempPayments=[];return}
+    const payments=parsePaymentString(input);
+    if(!payments.length){timeline.innerHTML='<p class="empty">Format non reconnu</p>';tempPayments=[];return}
+    tempPayments=payments;
+    let total=0,html="";
+    for(let i=0;i<payments.length;i++){
+        const p=payments[i];total+=p.amount;
+        const isPast=new Date(p.rawDate)<new Date();
+        html+='<div class="timeline-item"><div class="timeline-dot '+(isPast?'paid':'')+'"></div><span class="timeline-date">'+p.date+'</span><span class="timeline-amount">'+p.amount+'€</span><span class="timeline-type">'+p.type+'</span></div>';
+    }
+    timeline.innerHTML=html;
+    totalEl.textContent="Total: "+total+"€";
 }
-timeline.innerHTML=html;
-totalEl.textContent="Total: "+total+"€";
-}
- 
+
 function parsePaymentString(str){
-const payments=[];
-const parts=str.split(/\s+puis\s+|\s+et\s+|\s*\+\s*/i);
-for(let i=0;i<parts.length;i++){
-let part=parts[i].trim();
-
-// Format: 260€/mois du 20/10/2025 au 20/07/2026
-const monthlyMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*\/\s*mois\s+du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-if(monthlyMatch){
-const amt=parseFloat(monthlyMatch[1].replace(",","."));
-const startDate=parseDate(monthlyMatch[2]);
-const endDate=parseDate(monthlyMatch[3]);
-let cur=new Date(startDate);
-while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
-continue;
+    const payments=[];
+    const parts=str.split(/\s+puis\s+|\s+et\s+|\s*\+\s*/i);
+    for(let i=0;i<parts.length;i++){
+        let part=parts[i].trim();
+        const monthlyMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*\/\s*mois\s+du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
+        if(monthlyMatch){
+            const amt=parseFloat(monthlyMatch[1].replace(",","."));
+            const startDate=parseDate(monthlyMatch[2]);
+            const endDate=parseDate(monthlyMatch[3]);
+            let cur=new Date(startDate);
+            while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),rawDate:cur.toISOString().split('T')[0],type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
+            continue;
+        }
+        const everyMonthMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*tous\s+les\s+(\d{1,2})\s+(?:du\s+mois\s+)?(?:a\s+partir\s+du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+)?jusqu['\u2019]?\s*au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
+        if(everyMonthMatch){
+            const amt=parseFloat(everyMonthMatch[1].replace(",","."));
+            const dayOfMonth=parseInt(everyMonthMatch[2]);
+            const startDate=everyMonthMatch[3]?parseDate(everyMonthMatch[3]):new Date();
+            const endDate=parseDate(everyMonthMatch[4]);
+            let cur=new Date(startDate.getFullYear(),startDate.getMonth(),dayOfMonth);
+            if(cur<startDate)cur.setMonth(cur.getMonth()+1);
+            while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),rawDate:cur.toISOString().split('T')[0],type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
+            continue;
+        }
+        const everyMonthFromTo=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*tous\s+les\s+(\d{1,2})\s+(?:du\s+mois\s+)?du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
+        if(everyMonthFromTo){
+            const amt=parseFloat(everyMonthFromTo[1].replace(",","."));
+            const dayOfMonth=parseInt(everyMonthFromTo[2]);
+            const startDate=parseDate(everyMonthFromTo[3]);
+            const endDate=parseDate(everyMonthFromTo[4]);
+            let cur=new Date(startDate.getFullYear(),startDate.getMonth(),dayOfMonth);
+            if(cur<startDate)cur.setMonth(cur.getMonth()+1);
+            while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),rawDate:cur.toISOString().split('T')[0],type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
+            continue;
+        }
+        const singleMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*(?:pvt|PVT|prelevement|prélèvement|espece|espèce|cb|CB|chq|chèque|virement)?\s*(?:le|LE)?\s*(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
+        if(singleMatch){
+            const dateObj=parseDate(singleMatch[2]);
+            payments.push({amount:parseFloat(singleMatch[1].replace(",",".")),date:formatDate(dateObj),rawDate:dateObj.toISOString().split('T')[0],type:getType(part)});
+        }
+    }
+    return payments;
 }
 
-// Format: 260€ tous les 5 du mois jusqu'au 20/08/2026 (à partir d'aujourd'hui ou d'une date précédente)
-const everyMonthMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*tous\s+les\s+(\d{1,2})\s+(?:du\s+mois\s+)?(?:a\s+partir\s+du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+)?jusqu['\u2019]?\s*au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-if(everyMonthMatch){
-const amt=parseFloat(everyMonthMatch[1].replace(",","."));
-const dayOfMonth=parseInt(everyMonthMatch[2]);
-const startDate=everyMonthMatch[3]?parseDate(everyMonthMatch[3]):new Date();
-const endDate=parseDate(everyMonthMatch[4]);
-let cur=new Date(startDate.getFullYear(),startDate.getMonth(),dayOfMonth);
-if(cur<startDate)cur.setMonth(cur.getMonth()+1);
-while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
-continue;
-}
-
-// Format: 260€ tous les 5 du mois du 01/09/2025 au 20/08/2026
-const everyMonthFromTo=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*tous\s+les\s+(\d{1,2})\s+(?:du\s+mois\s+)?du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-if(everyMonthFromTo){
-const amt=parseFloat(everyMonthFromTo[1].replace(",","."));
-const dayOfMonth=parseInt(everyMonthFromTo[2]);
-const startDate=parseDate(everyMonthFromTo[3]);
-const endDate=parseDate(everyMonthFromTo[4]);
-let cur=new Date(startDate.getFullYear(),startDate.getMonth(),dayOfMonth);
-if(cur<startDate)cur.setMonth(cur.getMonth()+1);
-while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
-continue;
-}
-
-// Format simple: 760€ pvt le 20/08/2025
-const singleMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*(?:pvt|PVT|prelevement|prélèvement|espece|espèce|cb|CB|chq|chèque|virement)?\s*(?:le|LE)?\s*(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-if(singleMatch){payments.push({amount:parseFloat(singleMatch[1].replace(",",".")),date:formatDate(parseDate(singleMatch[2])),type:getType(part)})}
-}
-return payments;
-}
- 
-function getType(s){s=s.toLowerCase();if(s.includes("pvt")||s.includes("prélèvement"))return"Prélèvement";if(s.includes("espece")||s.includes("espèce"))return"Espèces";if(s.includes("cb"))return"Carte";if(s.includes("chq")||s.includes("chèque"))return"Chèque";if(s.includes("virement"))return"Virement";return"Paiement"}
+function getType(s){s=s.toLowerCase();if(s.includes("pvt")||s.includes("prélèvement")||s.includes("prelevement"))return"Prélèvement";if(s.includes("espece")||s.includes("espèce"))return"Espèces";if(s.includes("cb"))return"Carte";if(s.includes("chq")||s.includes("chèque"))return"Chèque";if(s.includes("virement"))return"Virement";return"Paiement"}
 function parseDate(d){const p=d.split("/");let y=parseInt(p[2]);if(y<100)y+=2000;return new Date(y,parseInt(p[1])-1,parseInt(p[0]))}
 function formatDate(d){const m=["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];return d.getDate()+" "+m[d.getMonth()]+" "+d.getFullYear()}
 
 function saveStudent(){
-    const name = document.getElementById("studentName").value.trim();
-    const phone = document.getElementById("studentPhone").value.trim();
-    const formation = document.getElementById("studentFormation").value;
-    const rythme = document.getElementById("studentRythme").value;
-    const bank = document.getElementById("studentBank").value.trim();
-    
-    if (!name || !phone) {
-        alert("Veuillez remplir au moins le nom et le téléphone.");
-        return;
-    }
-    
-    const payments = parsePaymentString(document.getElementById("paymentInput").value);
-    const total = payments.reduce((sum, p) => sum + p.amount, 0) || 3690;
-    
-    const newStudent = {
-        id: Date.now(),
-        name: name,
-        formation: formation,
-        rythme: rythme,
-        phone: phone,
-        status: "pending",
-        paid: 0,
-        total: total,
-        bank: bank,
-        email: "",
-        notes: ""
-    };
-    
+    const name=document.getElementById("studentName").value.trim();
+    const phone=document.getElementById("studentPhone").value.trim();
+    const formation=document.getElementById("studentFormation").value;
+    const rythme=document.getElementById("studentRythme").value;
+    const bank=document.getElementById("studentBank").value.trim();
+    if(!name||!phone){alert("Veuillez remplir le nom et le téléphone.");return}
+    const echeances=tempPayments.map(p=>({date:p.rawDate,amount:p.amount,type:p.type,paid:new Date(p.rawDate)<new Date()}));
+    const total=echeances.reduce((sum,e)=>sum+e.amount,0)||3690;
+    const paid=echeances.filter(e=>e.paid).reduce((sum,e)=>sum+e.amount,0);
+    let status="ok";
+    if(paid<total){const hasUnpaidPastDue=echeances.some(e=>!e.paid&&new Date(e.date)<new Date());status=hasUnpaidPastDue?"pending":"ok"}
+    const newStudent={id:Date.now(),name:name,formation:formation,rythme:rythme,phone:phone,status:status,paid:paid,total:total,bank:bank,email:"",notes:"",echeances:echeances};
     students.push(newStudent);
     sortStudentsAlphabetically();
     updateStats();
     renderStudents();
     closeModal();
-    alert("✅ Étudiant " + name + " enregistré avec succès!");
+    alert("✅ "+name+" enregistré!\n\n💰 Total: "+total+"€\n✅ Déjà payé: "+paid+"€\n📅 "+echeances.length+" échéances");
 }
- 
+
 sortStudentsAlphabetically();
 updateStats();
 renderStudents();
