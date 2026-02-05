@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestion Effectifs 2025-26</title>
+<title>Gestion Effectifs 2024-25</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;color:#fff}
@@ -56,7 +56,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .payment-info{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;color:rgba(255,255,255,0.6)}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px)}
 .modal-overlay.active{display:flex}
-.modal{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:20px;width:90%;max-width:600px;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.1)}
+.modal{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:20px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.1)}
 .modal-header{display:flex;justify-content:space-between;align-items:center;padding:24px;border-bottom:1px solid rgba(255,255,255,0.1)}
 .modal-header h2{font-size:20px;font-weight:600}
 .close-btn{width:36px;height:36px;border:none;background:rgba(255,255,255,0.1);color:#fff;border-radius:50%;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -81,7 +81,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .timeline-amount{font-weight:600;color:#2ed573;min-width:70px}
 .timeline-type{font-size:12px;color:rgba(255,255,255,0.4);flex:1}
 .modal-footer{padding:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:flex-end;gap:12px}
-.detail-modal .modal{max-width:650px}
+.detail-modal .modal{max-width:700px}
 .student-profile{text-align:center;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:20px}
 .student-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;font-weight:700}
 .student-profile h3{font-size:24px;font-weight:600;margin-bottom:8px}
@@ -95,7 +95,6 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .info-value{font-size:15px;font-weight:500}
 .info-value a{color:#667eea;text-decoration:none}
 .info-value a:hover{text-decoration:underline}
-.payment-detail{margin-top:8px}
 .payment-detail .payment-progress{height:12px;margin-bottom:12px}
 .payment-stats{display:flex;justify-content:space-between;font-size:14px}
 .payment-stats .paid{color:#2ed573}
@@ -126,7 +125,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .echeance-edit-btn:hover{background:rgba(102,126,234,0.4)}
 .echeance-delete-btn{background:rgba(255,71,87,0.2);color:#ff4757}
 .echeance-delete-btn:hover{background:rgba(255,71,87,0.4)}
-.echeance-edit-row{display:flex;gap:8px;align-items:center;flex:1}
+.echeance-edit-row{display:flex;gap:8px;align-items:center;flex:1;flex-wrap:wrap}
 .echeance-edit-row input{padding:8px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#fff;font-size:13px;width:auto}
 .echeance-edit-row input[type="date"]{width:140px}
 .echeance-edit-row input[type="number"]{width:80px}
@@ -136,8 +135,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .echeance-cancel-btn{background:rgba(255,255,255,0.1);color:#fff}
 .add-echeance-btn{width:100%;padding:12px;margin-top:10px;background:rgba(102,126,234,0.1);border:2px dashed rgba(102,126,234,0.3);border-radius:10px;color:#667eea;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
 .add-echeance-btn:hover{background:rgba(102,126,234,0.2);border-color:rgba(102,126,234,0.5)}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.section-header h4{margin-bottom:0}
+.echeances-raw{background:rgba(255,255,255,0.03);border-radius:8px;padding:12px;font-size:13px;color:rgba(255,255,255,0.7);margin-top:8px;white-space:pre-wrap;word-break:break-word}
 @media(max-width:900px){.dashboard{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.dashboard{grid-template-columns:1fr}.header{flex-direction:column;gap:16px;text-align:center}.echeance-edit-row{flex-wrap:wrap}}
 </style>
@@ -145,7 +143,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 <body>
 <div class="app">
 <header class="header">
-<div class="logo"><span>🎓</span><h1>Gestion Effectifs 2025-26</h1></div>
+<div class="logo"><span>🎓</span><h1>Gestion Effectifs 2024-25</h1></div>
 <button class="btn btn-primary" onclick="openModal()">+ Nouvel étudiant</button>
 </header>
 <div class="dashboard">
@@ -156,7 +154,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 </div>
 <div class="filters">
 <div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher un étudiant..." oninput="filterStudents()"></div>
-<select id="formationFilter" onchange="filterStudents()"><option value="">Toutes les formations</option><option value="M1 RH">M1 RH</option><option value="M1 INFO CS">M1 INFO CS</option><option value="M2 INFO BD">M2 INFO BD</option><option value="M2 MSC">M2 MSC</option><option value="BTS SIO 2 SLAM">BTS SIO 2 SLAM</option><option value="BTS SIO 2 SISR">BTS SIO 2 SISR</option><option value="BTS CG 2">BTS CG 2</option></select>
+<select id="formationFilter" onchange="filterStudents()"><option value="">Toutes les formations</option></select>
 <select id="statusFilter" onchange="filterStudents()"><option value="">Tous les statuts</option><option value="ok">✅ À jour</option><option value="pending">⏳ En attente</option><option value="late">⚠️ En retard</option></select>
 </div>
 <div class="students-grid" id="studentsGrid"></div>
@@ -167,11 +165,10 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 <div class="modal-body">
 <div class="form-group"><label>Nom complet</label><input type="text" id="studentName" placeholder="Ex: DUPONT Marie"></div>
 <div class="form-group"><label>Téléphone</label><input type="text" id="studentPhone" placeholder="Ex: 0612345678"></div>
-<div class="form-group"><label>Formation</label><select id="studentFormation"><option value="M1 RH">M1 RH</option><option value="M1 INFO CS">M1 INFO CS</option><option value="M2 INFO BD">M2 INFO BD</option><option value="M2 MSC">M2 MSC</option><option value="BTS SIO 2 SLAM">BTS SIO 2 SLAM</option><option value="BTS SIO 2 SISR">BTS SIO 2 SISR</option><option value="BTS CG 2">BTS CG 2</option></select></div>
-<div class="form-group"><label>Rythme</label><select id="studentRythme"><option value="IOA">IOA</option><option value="Initiale">Initiale</option><option value="Alternance">Alternance</option></select></div>
+<div class="form-group"><label>Formation</label><input type="text" id="studentFormation" placeholder="Ex: M1 INFO CS"></div>
+<div class="form-group"><label>Rythme</label><select id="studentRythme"><option value="IOA">IOA</option><option value="Initiale">Initiale</option><option value="Alternance">Alternance</option><option value="SFP">SFP</option></select></div>
 <div class="form-group"><label>Banque</label><input type="text" id="studentBank" placeholder="Ex: BNP, LCL, SG..."></div>
-<div class="form-group"><label>Échéances de paiement <span class="hint">Format intelligent</span></label><textarea id="paymentInput" placeholder="Ex: 760€ pvt le 20/08/2025 puis 260€ tous les 5 du mois jusqu'au 20/07/2026" oninput="parsePayment()"></textarea></div>
-<div class="payment-preview"><div class="preview-header"><span>📅 Aperçu des échéances</span><span id="previewTotal">Total: 0€</span></div><div id="previewTimeline"><p class="empty">Saisissez une formule ci-dessus pour voir l'aperçu...</p></div></div>
+<div class="form-group"><label>Échéances (texte brut)</label><textarea id="paymentInput" placeholder="Ex: 760€ pvt le 20/08/2025 puis 323€/mois du 20/10/2025 au 20/07/2026"></textarea></div>
 </div>
 <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="saveStudent()">💾 Enregistrer</button></div>
 </div>
@@ -180,200 +177,214 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 <div class="modal" onclick="event.stopPropagation()">
 <div class="modal-header"><h2>👤 Fiche étudiant</h2><button class="close-btn" onclick="closeDetailModal()">×</button></div>
 <div class="modal-body" id="detailContent"></div>
-<div class="modal-footer" id="detailFooter"><button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button><button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button><button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button></div>
+<div class="modal-footer" id="detailFooter"></div>
 </div>
 </div>
 <script>
 let students=[
-{id:1,name:"ESSAGA Flora",formation:"M1 RH",rythme:"IOA",phone:"0744139534",status:"ok",paid:2280,total:3690,bank:"BANQUE POSTALE",email:"",notes:"",echeances:[{date:"2024-09-01",amount:760,type:"Prélèvement",paid:true},{date:"2024-10-05",amount:380,type:"Mensualité",paid:true},{date:"2024-11-05",amount:380,type:"Mensualité",paid:true},{date:"2024-12-05",amount:380,type:"Mensualité",paid:true},{date:"2025-01-05",amount:380,type:"Mensualité",paid:true},{date:"2025-02-05",amount:380,type:"Mensualité",paid:false}]},
-{id:2,name:"MOUNGUERI Rich",formation:"M1 INFO CS",rythme:"IOA",phone:"0758779884",status:"ok",paid:1507,total:3690,bank:"LCL",email:"",notes:"",echeances:[]},
-{id:3,name:"ANANI Koffi",formation:"M1 INFO CS",rythme:"IOA",phone:"0759367370",status:"pending",paid:760,total:3690,bank:"",email:"",notes:"En attente de justificatif",echeances:[]},
-{id:4,name:"SOGBOSSI Max",formation:"M1 INFO CS",rythme:"IOA",phone:"0743307010",status:"pending",paid:760,total:3690,bank:"",email:"",notes:"",echeances:[]},
-{id:5,name:"TCHINDA Loïc",formation:"M1 INFO CS",rythme:"IOA",phone:"0764844814",status:"ok",paid:1836,total:3690,bank:"",email:"",notes:"",echeances:[]},
-{id:6,name:"SOUMAHORO Hafsoitou",formation:"M2 MSC",rythme:"IOA",phone:"0753594359",status:"ok",paid:2329,total:3690,bank:"BOURSOBANK",email:"",notes:"",echeances:[]},
-{id:7,name:"TRAORE Diarah",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0753291991",status:"ok",paid:1083,total:3690,bank:"BQ POPULAIRE",email:"",notes:"",echeances:[]},
-{id:8,name:"KAM KEFUYANTSAP Eve",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0613198352",status:"pending",paid:3000,total:4990,bank:"",email:"",notes:"Formation initiale",echeances:[]},
-{id:9,name:"BOUDRAA Adam",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0769853540",status:"ok",paid:3990,total:4990,bank:"CIC",email:"",notes:"",echeances:[]},
-{id:10,name:"KEITA Siriman",formation:"BTS CG 2",rythme:"Alternance",phone:"0621083426",status:"late",paid:323,total:3690,bank:"LCL",email:"",notes:"Relance effectuée le 15/01",echeances:[]},
-{id:11,name:"LANGLOIS Léo",formation:"M2 INFO BD",rythme:"IOA",phone:"0783389741",status:"ok",paid:1507,total:3690,bank:"SG",email:"",notes:"",echeances:[]},
-{id:12,name:"FOMO Océane",formation:"BTS CG 2",rythme:"Alternance",phone:"0759575007",status:"ok",paid:1406,total:3690,bank:"SG",email:"",notes:"",echeances:[]}
+{id:1,name:"ESSAGA Flora",formation:"M1 RH",rythme:"IOA",phone:"0744139534",bank:"BANQUE POSTALE",echeancesRaw:"760€ réglé en espèce le 20/02/25 PUIS PVT DE 747,15€/mois du 5/01/26 AU 5/07/26",status:"ok",paid:760,total:5243},
+{id:2,name:"MOUNGUERI Rich Varland",formation:"M1 INFO CS",rythme:"IOA",phone:"0758779884",bank:"LCL",echeancesRaw:"760€/CB LE 04/03/25 puis pvt de 747,15€/mois du 25/01/26 au 25/07/26",status:"ok",paid:760,total:5243},
+{id:3,name:"ANANI Koffi",formation:"M1 INFO CS",rythme:"IOA",phone:"0759367370",bank:"",echeancesRaw:"760€/PVT LE 10/10/25 PUIS PVT DE 653,75/mois du 25/01/26 au 25/08/26",status:"pending",paid:0,total:5990},
+{id:4,name:"SOGBOSSI Max Ronaldo",formation:"M1 INFO CS",rythme:"IOA",phone:"0743307010",bank:"",echeancesRaw:"760€/PVT le 12/10/2025 puis pvt de 653,75/mois du 28/01/26 au 28/08/26",status:"pending",paid:0,total:5990},
+{id:5,name:"TCHINDA Loïc",formation:"M1 INFO CS",rythme:"IOA",phone:"0764844814",bank:"",echeancesRaw:"760€/PVT le 28/06/2025 puis pvt de 653,75/mois du 28/01/26 au 28/08/26",status:"pending",paid:0,total:5990},
+{id:6,name:"SOUMAHORO Hafsoitou",formation:"M2 MSC",rythme:"IOA",phone:"0753594359",bank:"BOURSOBANK",echeancesRaw:"760€/ESPECE LE 07/03/2025 a réglé 1569€/ESP le 15/10/25 puis pvt de 523€/mois du 20/01/26 au 20/07/26",status:"ok",paid:2329,total:5467},
+{id:7,name:"TRAORE Diarah",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0753291991",bank:"BQ POPULAIRE",echeancesRaw:"760€ va regler le 11/09/25 en espèce puis pvt de 323€ du 30/10/25 au 30/07/26",status:"pending",paid:0,total:3690},
+{id:8,name:"KAM KEFUYANTSAP Eve Manuela",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0613198352",bank:"",echeancesRaw:"A réglé 3000€/ VIREMENT LE 23/08/25 puis pvt de 990€ 15/01/26",status:"ok",paid:3000,total:3990},
+{id:9,name:"BOUDRAA Adam",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0769853540",bank:"CIC",echeancesRaw:"760€/PVT et 3230€ réglé par chèque",status:"ok",paid:3990,total:4990},
+{id:10,name:"KEITA Siriman",formation:"BTS CG 2",rythme:"Alternance",phone:"0621083426",bank:"LCL",echeancesRaw:"760€/PVT LE 30/08/2025 puis pvt de 323€ du 30/10/25 au 30/07/26",status:"pending",paid:0,total:3690},
+{id:11,name:"LANGLOIS Léo",formation:"M2 INFO BD",rythme:"IOA",phone:"0783389741",bank:"SG",echeancesRaw:"760€/chq le 11/03/2025 puis pvt de 747,15€ du 30/01/26 au 30/07/26",status:"ok",paid:760,total:5243},
+{id:12,name:"BASOL Théo",formation:"Bachelor AIS",rythme:"Alternance",phone:"0786060906",bank:"",echeancesRaw:"PVT 760€ LE 01/09/2025 puis pvt de 604,29€ du 01/01/2026 au 01/07/2026",status:"pending",paid:0,total:4386},
+{id:13,name:"LIKOUANGA Clotaire Marthin",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0758441199",bank:"LCL",echeancesRaw:"380€/PVT LE 30/08/25 et 380€/pvt le 30/09/25 puis pvt de 323€ du 30/10/25 au 30/07/26",status:"pending",paid:0,total:3690},
+{id:14,name:"FOMO Océane",formation:"BTS CG 2",rythme:"Alternance",phone:"0759575007",bank:"SG",echeancesRaw:"760€ pvt le 20/08/2025 puis 323€/mois du 20/10/2025 au 20/07/2026",status:"pending",paid:0,total:3690},
+{id:15,name:"LOMPALA Onesimo",formation:"BTS CG 2",rythme:"IOA",phone:"0766575115",bank:"",echeancesRaw:"380€ PVT LE 30/08/2025 et 380€ pvt le 30/09/2025 puis pvt de 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
+{id:16,name:"ALOLI ROBERT VICTOR Gloria",formation:"BTS CG 2",rythme:"Initiale",phone:"0744864346",bank:"",echeancesRaw:"760€ pvt le 30/08/2025 puis 323€/mois du 30/09/2025 au 30/06/2026",status:"pending",paid:0,total:3990},
+{id:17,name:"MHOUMADI Mwindjou",formation:"BTS SIO 2 SISR",rythme:"Alternance",phone:"0766940502",bank:"CE",echeancesRaw:"380€ PVT LE 30/08/2025 et 380€ pvt le 30/09/2025 puis pvt de 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
+{id:18,name:"MFINA NGOUARI Hubert",formation:"BTS SIO 2 SISR",rythme:"IOA",phone:"0759694164",bank:"LCL",echeancesRaw:"380€ PVT LE 30/08/2025 et 380€ pvt le 30/09/2025 puis pvt de 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
+{id:19,name:"NGOLA Gloire Celeste",formation:"BTS SIO 2 SLAM",rythme:"Initiale",phone:"0615279495",bank:"BANQUE POSTALE",echeancesRaw:"(A EU LA REDUCTION DE 1000€) (A réglé 760€/CB le 3/09/2025) puis pvt de 470€ LE 20/09 ET 470€ LE 20/10 PUIS PVT DE 286,25€ DU 20/11/25 AU 20/06/26",status:"ok",paid:760,total:3990},
+{id:20,name:"TIENMENI NGUEGA Emmanuel Roswelt",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0780879770",bank:"SG",echeancesRaw:"EARLY BIRDS 1000€ - pvt 380€ 08/25 et 380€ 09/25 puis pvt de 470€ du 30/10/25 au 30/11/25 puis pvt de 327,14 DU 30/12/25 AU 30/06/26",status:"ok",paid:1000,total:4990},
+{id:21,name:"SAMBA LOUZEY Roméo Aristide",formation:"BACH CDA",rythme:"IOA",phone:"0780879770",bank:"LCL",echeancesRaw:"737€ pris sur l'avance de son frère - A REGLE 23€/CB 604,3€/mois du 15/01/26 au 15/07/26",status:"ok",paid:760,total:4386},
+{id:22,name:"KOUGBLENOU Cyberia",formation:"M2 INFO CS",rythme:"IOA",phone:"0744742224",bank:"",echeancesRaw:"760€/ESP LE 11/09/25 puis 653,75 du 30/01/26 au 30/08/26",status:"pending",paid:0,total:5990},
+{id:23,name:"GOUEDAN Anne-Audrey",formation:"BTS CG 2",rythme:"IOA",phone:"0758792041",bank:"SG",echeancesRaw:"3990€ virés le 26/06/25",status:"ok",paid:3990,total:3990},
+{id:24,name:"FELLON Alice",formation:"BTS NDRC 2",rythme:"Initiale",phone:"0768705616",bank:"LCL",echeancesRaw:"999,50 pvt du 05/09/2025 au 05/12/2025",status:"pending",paid:0,total:3998},
+{id:25,name:"NDIR Ndey Fatime",formation:"BTS COM 2",rythme:"Initiale",phone:"0601929515",bank:"CM",echeancesRaw:"760€ PVT LE 20/08/2025 PUIS PVT DE 323€ DU 20/09/2025 AU 20/06/2026",status:"pending",paid:0,total:3990},
+{id:26,name:"VALDEZ KEVIN HAROLD DINDE",formation:"M2 MSFO",rythme:"Alternance",phone:"0751150995",bank:"BNP",echeancesRaw:"A réglé 1550€/CB + 130€/ESP +PVT 1000 LE 10/09/25 + PUIS PVT DE 472,86€ DU 10/01/2026 AU 10/07/2026",status:"ok",paid:1680,total:5517},
+{id:27,name:"FANOINASON Ida",formation:"M2 MSFO",rythme:"Alternance",phone:"0622065825",bank:"LCL",echeancesRaw:"",status:"pending",paid:0,total:0},
+{id:28,name:"KOUMBA MOUNGUENGUI Staël",formation:"M2 MSFO",rythme:"IOA",phone:"0680770699",bank:"",echeancesRaw:"760€ PVT LE 12/09/25 PUIS PVT DE 747,15€ DU 12/01/2026 AU 12/07/2026",status:"pending",paid:0,total:5243},
+{id:29,name:"PEMADJEU NGAKANOU Oriance Duchele",formation:"M2 MSFO",rythme:"IOA",phone:"0749745175",bank:"BNP",echeancesRaw:"A réglé 400€/esp le 09/10/25 puis 300€/CB ET PVT DE 60€ LE 30/10/25 380€ PVT LE 30/08/2025 ET 380€ PVT LE 30/09/2025 PUIS 747,15€ DU 30/01/2026 AU 30/07/2026",status:"ok",paid:760,total:5983},
+{id:30,name:"ILOKI Dorcas",formation:"M1 COM",rythme:"IOA",phone:"0768989681",bank:"",echeancesRaw:"760€ PVT LE 10/06/2025 PUIS 747,75€ PVT LE 12/01/26 AU 12/07/2026",status:"pending",paid:0,total:5254},
+{id:31,name:"MAMPOUYA IBARA Ranelle",formation:"BTS SIO 2 SLAM",rythme:"Alternance",phone:"0667725348",bank:"LBP",echeancesRaw:"760€ pvt le 30/08/2025 puis 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
+{id:32,name:"MODZINU Kofi Stéphane",formation:"BACH CDA",rythme:"IOA",phone:"0745601699",bank:"BNP",echeancesRaw:"760€ PVT LE 30/09/2025 puis 604,30 du 30/01/2026 au 30/07/2026",status:"pending",paid:0,total:4986},
+{id:33,name:"AKDIM Anass",formation:"BTS SIO 2 SISR",rythme:"IOA",phone:"0759594767",bank:"SG",echeancesRaw:"760€ PVT LE 28/09/2025 puis 323€ du 28/10/2025 au 28/07/2026",status:"pending",paid:0,total:3690},
+{id:34,name:"NDOUMBE MASSODI Blonde Lapensée",formation:"BTS MCO 2",rythme:"IOA",phone:"0745058130",bank:"BRED",echeancesRaw:"PVT DE 443,4€ DU 25/10/25 AU 25/06/26",status:"pending",paid:0,total:3990},
+{id:35,name:"BOUNXOU Ilies",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0627645649",bank:"LCL",echeancesRaw:"PVT DE 760€ LE 30/08/25 PUIS 323€ LE 30/10/25 AU 30/07/26",status:"pending",paid:0,total:3690},
+{id:36,name:"SOUMARE Fily",formation:"BTS CG 2",rythme:"IOA",phone:"0760805551",bank:"BNP",echeancesRaw:"PVT 760€ LE 20/08/2025 PUIS 323€ PVT LE 28/10/25 AU 28/07/26",status:"pending",paid:0,total:3690},
+{id:37,name:"SCHNEIDER Komlan Irene",formation:"BTS MCO 2",rythme:"Initiale",phone:"0751075045",bank:"BANQUE POSTALE",echeancesRaw:"PVT 760€ LE 06/10/2025 PUIS 323€ DU 15/09/2025 pvt 30/10/25 au 30/06/26",status:"pending",paid:0,total:3990},
+{id:38,name:"DOGBEVI SHALOM",formation:"BTS SIO 2 SLAM",rythme:"Initiale",phone:"0759295147",bank:"BANQUE POSTALE",echeancesRaw:"PVT 760€ LE 15/08/2025 PUIS 323€ DU 15/09/2025 AU 15/06/2026",status:"pending",paid:0,total:3990},
+{id:39,name:"MONDE DASO Gloria",formation:"BTS CG 2",rythme:"IOA",phone:"0758829078",bank:"SG",echeancesRaw:"PVT DE 443,4€ DU 25/10/25 AU 25/06/26",status:"pending",paid:0,total:3990},
+{id:40,name:"SEUKOU SEUKOU Yvan",formation:"M1 INFO CS",rythme:"IOA",phone:"0624266040",bank:"",echeancesRaw:"760€ PVT LE 30/09/2025 PUIS PVT 747,15€ DU 30/01/2026 AU 30/07/2026",status:"pending",paid:0,total:5243},
+{id:41,name:"ZEUFACK Lucresse",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0664623985",bank:"SG",echeancesRaw:"760€ PVT LE 30/08/2025 PUIS PVT DE 358,89€ DU 30/10/25 AU 30/06/26",status:"pending",paid:0,total:3990},
+{id:42,name:"TOHOUEDE Lyse",formation:"M2 MSC",rythme:"Alternance",phone:"0759313146",bank:"BNP",echeancesRaw:"380€ PVT LE 30/08/2025 380€ PVT LE 30/09/2025 PUIS 747,15€ DU 30/01/2026 AU 30/07/2026",status:"pending",paid:0,total:5243},
+{id:43,name:"MBAKI Laury",formation:"BACH CDME",rythme:"IOA",phone:"0749757775",bank:"SG",echeancesRaw:"747,16/mois du 07/01/2025 au 07/07/2026",status:"pending",paid:0,total:4483},
+{id:44,name:"DIANINGANA Itsono Benie",formation:"BACH CDA",rythme:"IOA",phone:"0745249250",bank:"",echeancesRaw:"PVT 760€ LE 30/09/2025 ET 604,29€ DU 15/01/2026 AU 15/07/2026",status:"pending",paid:0,total:4386},
+{id:45,name:"NGONO ASSOGO Pierre Thierry",formation:"Bachelor AIS",rythme:"IOA",phone:"0699020519",bank:"CE",echeancesRaw:"PVT 760€ le 25/09/2025 puis 604,29€ du 25/01/2026 au 25/07/2026",status:"pending",paid:0,total:4386},
+{id:46,name:"TAIROU Marcel",formation:"BTS COM 2",rythme:"IOA",phone:"0779536538",bank:"BANQUE POPULAIRE",echeancesRaw:"pvt 380€ le 30/08/25 et 380€ le 30/09/25 puis 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
+{id:47,name:"CHICHA Gad",formation:"BTS CG 2",rythme:"IOA",phone:"0695189610",bank:"LCL",echeancesRaw:"pvt 399€ du 25/10/25 au 25/06/26",status:"pending",paid:0,total:3591},
+{id:48,name:"AHONDO Victoria",formation:"M1 MSC",rythme:"IOA",phone:"0745335215",bank:"SG",echeancesRaw:"PVT 760€LE 15/09/2025 puis 747,15 du 15/01/2026 au 15/07/2026",status:"pending",paid:0,total:5990},
+{id:49,name:"FOWOUE Malick",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0761424069",bank:"BNP",echeancesRaw:"pvt 760€ le 25/09/2025 puis 323€ du 25/10/25 au 25/07/2026",status:"pending",paid:0,total:3690},
+{id:50,name:"NDJAFANG Quentin",formation:"BTS SIO 2 SISR",rythme:"IOA",phone:"0780604873",bank:"",echeancesRaw:"pvt 760€ le 25/09/2025 puis 323€ du 25/10/25 au 25/07/2026",status:"pending",paid:0,total:3690},
+{id:51,name:"HEFNY Emma",formation:"BTS COM 2",rythme:"Alternance",phone:"0612632681",bank:"",echeancesRaw:"PVT 380€LE 30/08/2025 ET 380€ LE 30/09/2025 PUIS 323€DU 30/10/2025 AU 30/07/2026",status:"pending",paid:0,total:3690},
+{id:52,name:"BA Ndeye Fatou",formation:"BTS MCO 2",rythme:"Alternance",phone:"0763798575",bank:"",echeancesRaw:"",status:"pending",paid:0,total:0},
+{id:53,name:"NIALI BISSELO Claude",formation:"M2 MSFO",rythme:"IOA",phone:"0766342796",bank:"",echeancesRaw:"PVT 380€ LE 18/09/25 ET 380€LE 18/10/25 PUIS 782,86€du 19/01/2026 au 19/07/2026",status:"pending",paid:0,total:5460},
+{id:54,name:"SARHOU Aymane",formation:"M2 INFO BD",rythme:"IOA",phone:"0753322129",bank:"LCL",echeancesRaw:"PVT 760€ LE 15/09/2025 ET 782,26€ DU 15/01/26 AU 10/07/26",status:"pending",paid:0,total:5454},
+{id:55,name:"DARMINE SIDI DARMATY",formation:"BTS COM 2",rythme:"IOA",phone:"0650814318",bank:"CM",echeancesRaw:"a regle 760€ le 18/07/25 ET 348€ DU 29/10/25 AU 29/07/26",status:"ok",paid:760,total:3892},
+{id:56,name:"MPIKA Tony",formation:"M1 RH",rythme:"IOA",phone:"0768474975",bank:"",echeancesRaw:"PVT 760€ LE 12/05/2025 PUIS 782,86€ DU 12/01/2026 AU 12/07/26",status:"pending",paid:0,total:5460},
+{id:57,name:"KADAYI Emmanuella",formation:"M1 MSC",rythme:"IOA",phone:"0613692756",bank:"",echeancesRaw:"PVT 380€LE 30/08/2025 ET 380€ LE 30/09/2025 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:5460},
+{id:58,name:"KHAIRALLAH Anass",formation:"M2 INFO BD",rythme:"IOA",phone:"0609391620",bank:"CHQ CAUTION",echeancesRaw:"PVT 380€LE 30/08/2025 ET 380€ LE 30/09/2025 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:5460},
+{id:59,name:"MADJIRE Bénédicte",formation:"Bachelor RH",rythme:"Initiale",phone:"0753781833",bank:"",echeancesRaw:"Réglé par chq 400€ et 200€ puis PVT de 464€ du 30/10/2025 au 30/07/26",status:"ok",paid:600,total:4776},
+{id:60,name:"KALEMA KIPELE Voldie",formation:"BTS MCO 2",rythme:"Initiale",phone:"0766292742",bank:"SG",echeancesRaw:"PVT 424€DU 25/09/25 AU 25/06/26",status:"pending",paid:0,total:4240},
+{id:61,name:"MAMA IBOURAIMA Rehanath",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0699921954",bank:"SG",echeancesRaw:"VRMT DE 760€ LE 30/04/25 puis PVT DE 348€ DU 10/09/25 AU 10/06/26",status:"ok",paid:760,total:4240},
+{id:62,name:"AGNIMEL Agnimel Marc",formation:"M1 RH",rythme:"IOA",phone:"0668325807",bank:"BNP",echeancesRaw:"Réglé 360€ en espèce le 15/04/25 réglé 400€/esp le 13/05/25 et PVT 782,86€ du 30/01/25 au 30/07/26",status:"ok",paid:760,total:5460},
+{id:63,name:"NDIAYE Astou",formation:"BTS NDRC 2",rythme:"Initiale",phone:"0759479487",bank:"",echeancesRaw:"A réglé 760€ le 26/08/25 A réglé 2250€/virt A réglé 2000€ le 7/10/25",status:"ok",paid:5010,total:5010},
+{id:64,name:"ANANFAH NGUENGAND Belvira",formation:"M2 INFO BD",rythme:"IOA",phone:"0651588929",bank:"",echeancesRaw:"PVT 760€ LE 05/09/2025 PUIS 782,86€ DU 05/01/26 AU 05/07/26",status:"pending",paid:0,total:5460},
+{id:65,name:"BANGOURA Aminata",formation:"BTS CG 2",rythme:"IOA",phone:"0780349051",bank:"",echeancesRaw:"PVT 760€ LE 30/09/25 PUIS PVT DE 348€ DU 30/10/25 AU 30/07/26",status:"pending",paid:0,total:3892},
+{id:66,name:"TINDO Kenne",formation:"M2 MSC",rythme:"IOA",phone:"0775745607",bank:"LCL",echeancesRaw:"PVT 380€ LE 30/09/25 ET 380€ LE 30/10/25 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:5460},
+{id:67,name:"AMADI ALWA Arlette",formation:"BTS MCO 2",rythme:"Initiale",phone:"0780014070",bank:"",echeancesRaw:"A régélé 1060€/esp puis pvt de 345,34€ du 20/01/26 au 20/06/26",status:"ok",paid:1060,total:3132},
+{id:68,name:"ATABA Magnim",formation:"M2 MSFO",rythme:"IOA",phone:"0699264284",bank:"",echeancesRaw:"VRT 760€ LE 30/06/25 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"ok",paid:760,total:5460},
+{id:69,name:"BA Mbeugue",formation:"M1 MSC",rythme:"IOA",phone:"0763109012",bank:"SG",echeancesRaw:"Réglé 760€/CB PUIS PVT DE 782,86€ DU 10/01/26 AU 10/07/26",status:"ok",paid:760,total:5460},
+{id:70,name:"BEHANZIN Darnell",formation:"M1 MSC",rythme:"IOA",phone:"0773052141",bank:"",echeancesRaw:"PVT 760€ LE 25/08/2025 PUIS PVT DE 782,86 DU 26/01/26 AU 26/07/26",status:"pending",paid:0,total:5460},
+{id:71,name:"ABILANGA Orlaine",formation:"M2 MSC",rythme:"IOA",phone:"0775871803",bank:"",echeancesRaw:"VRMT 760€ LE 30/04/2025 PUIS 782,86€ DU 10/01/26 AU 10/07/26",status:"ok",paid:760,total:5460},
+{id:72,name:"TEKOBOU KENFACK Rose",formation:"M1 FSO",rythme:"Initiale",phone:"0783831255",bank:"",echeancesRaw:"Réglé 760€/CB LE 12/05/2025 PUIS 548€ DU 15/10/25 AU 15/07/26",status:"ok",paid:760,total:5692},
+{id:73,name:"TRAORE Souleyman",formation:"M1 INFO CS",rythme:"IOA",phone:"0744909976",bank:"",echeancesRaw:"Réglé 760€/CB LE 13/05/2025 PUIS PVT 782,86 € DU 30/01/2026 AU 30/07/2026",status:"ok",paid:760,total:5460},
+{id:74,name:"MOUNTOU Anders",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0766620889",bank:"BNP",echeancesRaw:"PVT DE 760€ LE 22/09/2025 PUIS PVT DE 386,67€ DU 22/10/25 AU 22/06/26",status:"pending",paid:0,total:4240},
+{id:75,name:"GUETCHO YOMPA Mireille",formation:"Bachelor AIS",rythme:"IOA",phone:"0761021402",bank:"BNP",echeancesRaw:"PVT 760€ LE 20/10/2025 PUIS PVT 528,75€ DU 30/01/2026 AU 30/08/2026",status:"pending",paid:0,total:4990},
+{id:76,name:"ONANGA Love Ness",formation:"Bachelor RH",rythme:"IOA",phone:"0611725705",bank:"CIC",echeancesRaw:"REGLE 760€/ESP l'année dernière puis 640€ du 30/01/2026 au 30/07/2026",status:"ok",paid:760,total:5240},
+{id:77,name:"MBANI LAKABI Khessie",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0744292942",bank:"LCL",echeancesRaw:"424€ par PT du 30/10/25 au 30/07/26",status:"pending",paid:0,total:4240},
+{id:78,name:"MALEMISA Laurette",formation:"BTS NDRC 2",rythme:"IOA",phone:"0744292942",bank:"LCL",echeancesRaw:"750€ par cb le 19/9/25 + 424€ PAR PVT DU 15/10/25 AU 15/07/26",status:"ok",paid:750,total:4990},
+{id:79,name:"CHARLES Pierreinne",formation:"BACH CDME",rythme:"Alternance",phone:"0627562203",bank:"",echeancesRaw:"",status:"pending",paid:0,total:0},
+{id:80,name:"SIDJE Amstrong",formation:"M1 MSC",rythme:"IOA",phone:"0699670981",bank:"CE",echeancesRaw:"PVT 380€ LE 30/08/25 - 380€ le 30/09/2025 puis pvt de 818,57€du 30/01/26 au 30/07/26",status:"pending",paid:0,total:5690},
+{id:81,name:"TANGHAWAYE Ngamba Bénédicte",formation:"M2 RH",rythme:"IOA",phone:"0745995760",bank:"SG",echeancesRaw:"REGLE 760€/ESP LE 24/09/25 a réglé 1370€/ESP LE 02/02/26 puis PVT DE 554,66€ DU 28/02/26 AU 30/07/26",status:"ok",paid:2130,total:4903},
+{id:82,name:"MOUSSAVOU Morgane",formation:"M1 MSC",rythme:"Initiale",phone:"0776964197",bank:"CM",echeancesRaw:"PVT 760€ LE 30/08/25 PUIS PVT DE 498,18€ DU 07/09/2025 AU 07/07/26",status:"pending",paid:0,total:6250},
+{id:83,name:"ELO Yann Sorrel",formation:"M1 MSC",rythme:"IOA",phone:"0781514525",bank:"",echeancesRaw:"PVT 380€ le 01/09/25 et 380€ le 01/10/25 puis PVT DE 818,58€ du 01/01/2026 au 01/07/2026",status:"pending",paid:0,total:5671},
+{id:84,name:"ASSOH Akissi Marie Doris",formation:"M1 MSC",rythme:"IOA",phone:"0753036158",bank:"SG",echeancesRaw:"PVT 760€ LE 28/10/25 ET PUIS PVT 818,58€ DU 28/01/26 AU 28/07/26",status:"pending",paid:0,total:5690},
+{id:85,name:"VENGEON Sacha",formation:"BTS COM 1",rythme:"IOA",phone:"0638227708",bank:"SG",echeancesRaw:"A réglé 760€/CB puis pvt de 528,75€ du 10/12/25 au 10/07/26",status:"ok",paid:760,total:4990},
+{id:86,name:"FOFANA FANTA",formation:"M2 RH",rythme:"IOA",phone:"0762980406",bank:"BNP",echeancesRaw:"a réglé 260€ /CB LE 24/06/25 PUIS PVT DE 623€ DU 05/01/26 AU 05/10/26",status:"ok",paid:260,total:6490},
+{id:87,name:"CHARLES Junel",formation:"BTS COM 2",rythme:"IOA",phone:"0765770912",bank:"",echeancesRaw:"PVT 1884,48€ LE 06/01/26 ET PVT DE 471,12€ DU 06/02/2026 AU 06/06/26",status:"pending",paid:0,total:4240},
+{id:88,name:"DJOMATIN Ayaba Mawousse",formation:"M2 RH",rythme:"IOA",phone:"0695561915",bank:"SG",echeancesRaw:"PVT DE 927,15€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:6490},
+{id:89,name:"DASSOU Firidam",formation:"M2 RH",rythme:"IOA",phone:"0759300467",bank:"SG",echeancesRaw:"PVT 760€ LE 06/10/25 PUIS 818,58€/CB LE 27/11/25 DU 06/02/26 AU 06/07/26",status:"pending",paid:0,total:5690},
+{id:90,name:"DIALLO Ibrahim Oumarou",formation:"M1 FSO",rythme:"IOA",phone:"0759213627",bank:"LCL",echeancesRaw:"PVT 760E LE 15/10/25 PUIS PVT 818,58€ DU 15/01/26 AU 15/07/26",status:"pending",paid:0,total:5690},
 ];
-let currentStudentId=null,tempPayments=[],editingEcheanceIndex=null;
+
+let currentStudentId=null;
 
 function sortStudentsAlphabetically(){students.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}))}
-function updateStats(){document.getElementById("totalCount").textContent=students.length;document.getElementById("okCount").textContent=students.filter(s=>s.status==="ok").length;document.getElementById("pendingCount").textContent=students.filter(s=>s.status==="pending").length;document.getElementById("lateCount").textContent=students.filter(s=>s.status==="late").length}
-function renderStudents(data){data=data||students;data=[...data].sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));let html="";for(let i=0;i<data.length;i++){const s=data[i];const st=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ Retard";const pct=Math.round(s.paid/s.total*100);html+='<div class="student-card" onclick="openDetailModal('+s.id+')"><div class="student-header"><div><div class="student-name">'+s.name+'</div><span class="student-formation">'+s.formation+'</span></div><span class="status-badge '+s.status+'">'+st+'</span></div><div class="student-details"><div class="detail-row">📞 '+s.phone+'</div><div class="detail-row">📚 '+s.rythme+'</div>'+(s.bank?'<div class="detail-row">🏦 '+s.bank+'</div>':'')+'</div><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-info"><span>'+s.paid+'€ payés</span><span>'+s.total+'€ total</span></div></div>'}document.getElementById("studentsGrid").innerHTML=html}
-function filterStudents(){const search=document.getElementById("searchInput").value.toLowerCase();const formation=document.getElementById("formationFilter").value;const status=document.getElementById("statusFilter").value;const filtered=students.filter(s=>{const matchSearch=s.name.toLowerCase().includes(search);const matchFormation=!formation||s.formation===formation;const matchStatus=!status||s.status===status;return matchSearch&&matchFormation&&matchStatus});renderStudents(filtered)}
-function openModal(){document.getElementById("modalOverlay").classList.add("active");tempPayments=[]}
-function closeModal(){document.getElementById("modalOverlay").classList.remove("active");document.getElementById("paymentInput").value="";document.getElementById("studentName").value="";document.getElementById("studentPhone").value="";document.getElementById("studentBank").value="";document.getElementById("previewTimeline").innerHTML='<p class="empty">Saisissez une formule ci-dessus...</p>';document.getElementById("previewTotal").textContent="Total: 0€";tempPayments=[]}
+function updateStats(){
+    document.getElementById("totalCount").textContent=students.length;
+    document.getElementById("okCount").textContent=students.filter(s=>s.status==="ok").length;
+    document.getElementById("pendingCount").textContent=students.filter(s=>s.status==="pending").length;
+    document.getElementById("lateCount").textContent=students.filter(s=>s.status==="late").length;
+}
 
-function recalculateStudentPayments(s){
-    if(s.echeances&&s.echeances.length>0){
-        s.paid=s.echeances.filter(e=>e.paid).reduce((sum,e)=>sum+e.amount,0);
-        s.total=s.echeances.reduce((sum,e)=>sum+e.amount,0);
+function updateFormationFilter(){
+    const formations=[...new Set(students.map(s=>s.formation).filter(f=>f))].sort();
+    const select=document.getElementById("formationFilter");
+    select.innerHTML='<option value="">Toutes les formations</option>'+formations.map(f=>'<option value="'+f+'">'+f+'</option>').join('');
+}
+
+function renderStudents(data){
+    data=data||students;
+    data=[...data].sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
+    let html="";
+    for(let i=0;i<data.length;i++){
+        const s=data[i];
+        const st=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ Retard";
+        const pct=s.total>0?Math.round(s.paid/s.total*100):0;
+        html+='<div class="student-card" onclick="openDetailModal('+s.id+')"><div class="student-header"><div><div class="student-name">'+s.name+'</div><span class="student-formation">'+s.formation+'</span></div><span class="status-badge '+s.status+'">'+st+'</span></div><div class="student-details"><div class="detail-row">📞 '+s.phone+'</div><div class="detail-row">📚 '+s.rythme+'</div>'+(s.bank?'<div class="detail-row">🏦 '+s.bank+'</div>':'')+'</div><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-info"><span>'+s.paid+'€ payés</span><span>'+s.total+'€ total</span></div></div>';
     }
-    updateStudentStatus(s);
+    document.getElementById("studentsGrid").innerHTML=html;
+}
+
+function filterStudents(){
+    const search=document.getElementById("searchInput").value.toLowerCase();
+    const formation=document.getElementById("formationFilter").value;
+    const status=document.getElementById("statusFilter").value;
+    const filtered=students.filter(s=>{
+        const matchSearch=s.name.toLowerCase().includes(search)||s.phone.includes(search);
+        const matchFormation=!formation||s.formation===formation;
+        const matchStatus=!status||s.status===status;
+        return matchSearch&&matchFormation&&matchStatus;
+    });
+    renderStudents(filtered);
+}
+
+function openModal(){document.getElementById("modalOverlay").classList.add("active")}
+function closeModal(){
+    document.getElementById("modalOverlay").classList.remove("active");
+    document.getElementById("paymentInput").value="";
+    document.getElementById("studentName").value="";
+    document.getElementById("studentPhone").value="";
+    document.getElementById("studentBank").value="";
+    document.getElementById("studentFormation").value="";
 }
 
 function openDetailModal(id){
     currentStudentId=id;
-    editingEcheanceIndex=null;
     const s=students.find(st=>st.id===id);
     if(!s)return;
     const pct=s.total>0?Math.round(s.paid/s.total*100):0;
     const remaining=s.total-s.paid;
     const statusText=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ En retard";
-    const initials=s.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+    const initials=s.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
     
-    let echeancesHtml='';
-    if(s.echeances&&s.echeances.length>0){
-        echeancesHtml='<div class="echeances-list">';
-        for(let i=0;i<s.echeances.length;i++){
-            const e=s.echeances[i];
-            const dateObj=new Date(e.date);
-            const dateStr=dateObj.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
-            echeancesHtml+='<div class="echeance-item '+(e.paid?'is-paid':'')+'" id="echeance-'+i+'">';
-            echeancesHtml+='<div class="echeance-check '+(e.paid?'checked':'')+'" onclick="toggleEcheance('+s.id+','+i+',event)"></div>';
-            echeancesHtml+='<div class="echeance-info"><div class="echeance-date">'+dateStr+'</div><div class="echeance-type">'+e.type+'</div></div>';
-            echeancesHtml+='<div class="echeance-amount '+(e.paid?'':'unpaid')+'">'+e.amount+'€</div>';
-            echeancesHtml+='<div class="echeance-actions">';
-            echeancesHtml+='<button class="echeance-edit-btn" onclick="startEditEcheance('+i+',event)" title="Modifier">✏️</button>';
-            echeancesHtml+='<button class="echeance-delete-btn" onclick="deleteEcheance('+i+',event)" title="Supprimer">🗑️</button>';
-            echeancesHtml+='</div></div>';
-        }
-        echeancesHtml+='</div>';
-    }else{
-        echeancesHtml='<p class="empty">Aucune échéance définie</p>';
-    }
-    echeancesHtml+='<button class="add-echeance-btn" onclick="addNewEcheance()">+ Ajouter une échéance</button>';
-    
-    const html='<div class="student-profile"><div class="student-avatar">'+initials+'</div><h3>'+s.name+'</h3><span class="student-formation">'+s.formation+'</span></div><div class="status-section"><span>Statut:</span><span class="status-badge '+s.status+'">'+statusText+'</span></div><div class="info-section"><h4>📋 Informations</h4><div class="info-grid"><div class="info-item"><div class="info-label">Téléphone</div><div class="info-value"><a href="tel:'+s.phone+'">'+s.phone+'</a></div></div><div class="info-item"><div class="info-label">Rythme</div><div class="info-value">'+s.rythme+'</div></div><div class="info-item"><div class="info-label">Banque</div><div class="info-value">'+(s.bank||'Non renseignée')+'</div></div><div class="info-item"><div class="info-label">Email</div><div class="info-value">'+(s.email||'Non renseigné')+'</div></div></div></div><div class="info-section"><h4>💳 Situation financière</h4><div class="info-grid"><div class="info-item full"><div class="payment-detail"><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-stats"><span class="paid">'+s.paid+'€ payés ('+pct+'%)</span><span class="remaining">'+remaining+'€ restant</span></div></div></div></div></div><div class="info-section"><div class="section-header"><h4>📅 Échéances</h4></div>'+echeancesHtml+'</div><div class="info-section notes-section"><h4>📝 Notes</h4><textarea id="studentNotes" placeholder="Ajouter des notes...">'+(s.notes||'')+'</textarea></div>';
-    
-    document.getElementById("detailContent").innerHTML=html;
-    document.getElementById("detailFooter").innerHTML='<button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button><button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button><button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>';
-    document.getElementById("detailModal").classList.add("active");
-}
-
-function startEditEcheance(index,event){
-    event.stopPropagation();
-    const s=students.find(st=>st.id===currentStudentId);
-    if(!s||!s.echeances||!s.echeances[index])return;
-    const e=s.echeances[index];
-    const item=document.getElementById('echeance-'+index);
-    if(!item)return;
-    
-    item.innerHTML=`
-        <div class="echeance-check ${e.paid?'checked':''}" onclick="toggleEcheance(${s.id},${index},event)"></div>
-        <div class="echeance-edit-row">
-            <input type="date" id="editEcheanceDate-${index}" value="${e.date}">
-            <input type="number" id="editEcheanceAmount-${index}" value="${e.amount}" min="0" style="width:80px">
-            <select id="editEcheanceType-${index}">
-                <option value="Paiement" ${e.type==='Paiement'?'selected':''}>Paiement</option>
-                <option value="Prélèvement" ${e.type==='Prélèvement'?'selected':''}>Prélèvement</option>
-                <option value="Mensualité" ${e.type==='Mensualité'?'selected':''}>Mensualité</option>
-                <option value="Virement" ${e.type==='Virement'?'selected':''}>Virement</option>
-                <option value="Chèque" ${e.type==='Chèque'?'selected':''}>Chèque</option>
-                <option value="Espèces" ${e.type==='Espèces'?'selected':''}>Espèces</option>
-                <option value="Carte" ${e.type==='Carte'?'selected':''}>Carte</option>
-            </select>
-            <button class="echeance-save-btn" onclick="saveEcheanceEdit(${index},event)">✓</button>
-            <button class="echeance-cancel-btn" onclick="openDetailModal(${currentStudentId})">✕</button>
+    const html=`
+        <div class="student-profile">
+            <div class="student-avatar">${initials}</div>
+            <h3>${s.name}</h3>
+            <span class="student-formation">${s.formation}</span>
+        </div>
+        <div class="status-section">
+            <span>Statut:</span>
+            <span class="status-badge ${s.status}">${statusText}</span>
+        </div>
+        <div class="info-section">
+            <h4>📋 Informations</h4>
+            <div class="info-grid">
+                <div class="info-item"><div class="info-label">Téléphone</div><div class="info-value"><a href="tel:${s.phone}">${s.phone}</a></div></div>
+                <div class="info-item"><div class="info-label">Rythme</div><div class="info-value">${s.rythme}</div></div>
+                <div class="info-item"><div class="info-label">Banque</div><div class="info-value">${s.bank||'Non renseignée'}</div></div>
+                <div class="info-item"><div class="info-label">Formation</div><div class="info-value">${s.formation}</div></div>
+            </div>
+        </div>
+        <div class="info-section">
+            <h4>💳 Situation financière</h4>
+            <div class="info-grid">
+                <div class="info-item full">
+                    <div class="payment-detail">
+                        <div class="payment-progress"><div class="payment-bar ${s.status}" style="width:${pct}%"></div></div>
+                        <div class="payment-stats">
+                            <span class="paid">${s.paid}€ payés (${pct}%)</span>
+                            <span class="remaining">${remaining}€ restant</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="info-section">
+            <h4>📅 Échéances</h4>
+            <div class="echeances-raw">${s.echeancesRaw||'Aucune échéance définie'}</div>
+        </div>
+        <div class="info-section notes-section">
+            <h4>📝 Notes</h4>
+            <textarea id="studentNotes" placeholder="Ajouter des notes...">${s.notes||''}</textarea>
         </div>
     `;
-}
-
-function saveEcheanceEdit(index,event){
-    event.stopPropagation();
-    const s=students.find(st=>st.id===currentStudentId);
-    if(!s||!s.echeances||!s.echeances[index])return;
     
-    const newDate=document.getElementById('editEcheanceDate-'+index).value;
-    const newAmount=parseInt(document.getElementById('editEcheanceAmount-'+index).value)||0;
-    const newType=document.getElementById('editEcheanceType-'+index).value;
-    
-    if(!newDate||newAmount<=0){
-        alert('Veuillez remplir une date et un montant valide');
-        return;
-    }
-    
-    s.echeances[index].date=newDate;
-    s.echeances[index].amount=newAmount;
-    s.echeances[index].type=newType;
-    
-    // Trier les échéances par date
-    s.echeances.sort((a,b)=>new Date(a.date)-new Date(b.date));
-    
-    recalculateStudentPayments(s);
-    updateStats();
-    renderStudents();
-    openDetailModal(currentStudentId);
-}
-
-function deleteEcheance(index,event){
-    event.stopPropagation();
-    const s=students.find(st=>st.id===currentStudentId);
-    if(!s||!s.echeances)return;
-    
-    if(confirm('Supprimer cette échéance ?')){
-        s.echeances.splice(index,1);
-        recalculateStudentPayments(s);
-        updateStats();
-        renderStudents();
-        openDetailModal(currentStudentId);
-    }
-}
-
-function addNewEcheance(){
-    const s=students.find(st=>st.id===currentStudentId);
-    if(!s)return;
-    if(!s.echeances)s.echeances=[];
-    
-    // Date par défaut: aujourd'hui
-    const today=new Date().toISOString().split('T')[0];
-    s.echeances.push({
-        date:today,
-        amount:0,
-        type:'Mensualité',
-        paid:false
-    });
-    
-    // Trier par date
-    s.echeances.sort((a,b)=>new Date(a.date)-new Date(b.date));
-    
-    recalculateStudentPayments(s);
-    openDetailModal(currentStudentId);
-    
-    // Trouver l'index de la nouvelle échéance et l'éditer
-    const newIndex=s.echeances.findIndex(e=>e.amount===0);
-    if(newIndex>=0){
-        setTimeout(()=>startEditEcheance(newIndex,{stopPropagation:()=>{}}),100);
-    }
-}
-
-function toggleEcheance(studentId,echeanceIndex,event){
-    event.stopPropagation();
-    const s=students.find(st=>st.id===studentId);
-    if(!s||!s.echeances||!s.echeances[echeanceIndex])return;
-    s.echeances[echeanceIndex].paid=!s.echeances[echeanceIndex].paid;
-    recalculateStudentPayments(s);
-    updateStats();
-    renderStudents();
-    openDetailModal(studentId);
-}
-
-function updateStudentStatus(s){
-    if(!s.echeances||s.echeances.length===0)return;
-    const now=new Date();
-    const unpaidPastDue=s.echeances.some(e=>!e.paid&&new Date(e.date)<now);
-    const allPaid=s.echeances.every(e=>e.paid);
-    if(allPaid||s.paid>=s.total){s.status="ok"}
-    else if(unpaidPastDue){
-        const oldestUnpaid=s.echeances.filter(e=>!e.paid&&new Date(e.date)<now).sort((a,b)=>new Date(a.date)-new Date(b.date))[0];
-        if(oldestUnpaid){
-            const daysDiff=Math.floor((now-new Date(oldestUnpaid.date))/(1000*60*60*24));
-            s.status=daysDiff>15?"late":"pending";
-        }
-    }else{s.status="ok"}
+    document.getElementById("detailContent").innerHTML=html;
+    document.getElementById("detailFooter").innerHTML=`
+        <button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button>
+        <button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button>
+        <button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>
+    `;
+    document.getElementById("detailModal").classList.add("active");
 }
 
 function closeDetailModal(){
@@ -392,32 +403,59 @@ function editStudent(){
     const s=students.find(st=>st.id===currentStudentId);
     if(!s)return;
     const statusOptions='<option value="ok" '+(s.status==='ok'?'selected':'')+'>✅ À jour</option><option value="pending" '+(s.status==='pending'?'selected':'')+'>⏳ En attente</option><option value="late" '+(s.status==='late'?'selected':'')+'>⚠️ En retard</option>';
-    const formationOptions=['M1 RH','M1 INFO CS','M2 INFO BD','M2 MSC','BTS SIO 2 SLAM','BTS SIO 2 SISR','BTS CG 2'].map(f=>'<option value="'+f+'" '+(s.formation===f?'selected':'')+'>'+f+'</option>').join('');
-    const rythmeOptions=['IOA','Initiale','Alternance'].map(r=>'<option value="'+r+'" '+(s.rythme===r?'selected':'')+'>'+r+'</option>').join('');
-    const initials=s.name.split(' ').map(n=>n[0]).join('').substring(0,2);
-    const html='<div class="student-profile"><div class="student-avatar">'+initials+'</div></div><div class="info-section"><h4>📋 Informations</h4><div class="info-grid"><div class="info-item full"><div class="info-label">Nom complet</div><input type="text" id="editName" class="edit-input" value="'+s.name+'"></div><div class="info-item"><div class="info-label">Téléphone</div><input type="text" id="editPhone" class="edit-input" value="'+s.phone+'"></div><div class="info-item"><div class="info-label">Email</div><input type="email" id="editEmail" class="edit-input" value="'+(s.email||'')+'"></div><div class="info-item"><div class="info-label">Formation</div><select id="editFormation" class="edit-input">'+formationOptions+'</select></div><div class="info-item"><div class="info-label">Rythme</div><select id="editRythme" class="edit-input">'+rythmeOptions+'</select></div><div class="info-item full"><div class="info-label">Banque</div><input type="text" id="editBank" class="edit-input" value="'+(s.bank||'')+'"></div></div></div><div class="info-section"><h4>💳 Statut</h4><div class="info-grid"><div class="info-item full"><div class="info-label">Statut de paiement</div><select id="editStatus" class="edit-input">'+statusOptions+'</select></div></div></div><div class="info-section notes-section"><h4>📝 Notes</h4><textarea id="editNotes" placeholder="Notes...">'+(s.notes||'')+'</textarea></div>';
+    const rythmeOptions=['IOA','Initiale','Alternance','SFP'].map(r=>'<option value="'+r+'" '+(s.rythme===r?'selected':'')+'>'+r+'</option>').join('');
+    
+    const html=`
+        <div class="info-section">
+            <h4>📋 Informations</h4>
+            <div class="info-grid">
+                <div class="info-item full"><div class="info-label">Nom complet</div><input type="text" id="editName" class="edit-input" value="${s.name}"></div>
+                <div class="info-item"><div class="info-label">Téléphone</div><input type="text" id="editPhone" class="edit-input" value="${s.phone}"></div>
+                <div class="info-item"><div class="info-label">Formation</div><input type="text" id="editFormation" class="edit-input" value="${s.formation}"></div>
+                <div class="info-item"><div class="info-label">Rythme</div><select id="editRythme" class="edit-input">${rythmeOptions}</select></div>
+                <div class="info-item full"><div class="info-label">Banque</div><input type="text" id="editBank" class="edit-input" value="${s.bank||''}"></div>
+            </div>
+        </div>
+        <div class="info-section">
+            <h4>💳 Finances</h4>
+            <div class="info-grid">
+                <div class="info-item"><div class="info-label">Statut</div><select id="editStatus" class="edit-input">${statusOptions}</select></div>
+                <div class="info-item"><div class="info-label">Montant payé (€)</div><input type="number" id="editPaid" class="edit-input" value="${s.paid}" min="0"></div>
+                <div class="info-item full"><div class="info-label">Montant total (€)</div><input type="number" id="editTotal" class="edit-input" value="${s.total}" min="0"></div>
+            </div>
+        </div>
+        <div class="info-section">
+            <h4>📅 Échéances (texte)</h4>
+            <textarea id="editEcheances" class="edit-input" style="min-height:100px">${s.echeancesRaw||''}</textarea>
+        </div>
+        <div class="info-section notes-section">
+            <h4>📝 Notes</h4>
+            <textarea id="editNotes">${s.notes||''}</textarea>
+        </div>
+    `;
     document.getElementById("detailContent").innerHTML=html;
-    document.getElementById("detailFooter").innerHTML='<button class="btn btn-secondary" onclick="cancelEdit()">Annuler</button><button class="btn btn-primary" onclick="saveEdit()">💾 Enregistrer</button>';
+    document.getElementById("detailFooter").innerHTML=`
+        <button class="btn btn-secondary" onclick="openDetailModal(${currentStudentId})">Annuler</button>
+        <button class="btn btn-primary" onclick="saveEdit()">💾 Enregistrer</button>
+    `;
 }
-
-function cancelEdit(){openDetailModal(currentStudentId)}
 
 function saveEdit(){
     const s=students.find(st=>st.id===currentStudentId);
     if(!s)return;
-    const name=document.getElementById("editName").value.trim();
-    const phone=document.getElementById("editPhone").value.trim();
-    if(!name||!phone){alert("Le nom et le téléphone sont obligatoires.");return}
-    s.name=name;
-    s.phone=phone;
-    s.email=document.getElementById("editEmail").value.trim();
-    s.formation=document.getElementById("editFormation").value;
+    s.name=document.getElementById("editName").value.trim();
+    s.phone=document.getElementById("editPhone").value.trim();
+    s.formation=document.getElementById("editFormation").value.trim();
     s.rythme=document.getElementById("editRythme").value;
     s.bank=document.getElementById("editBank").value.trim();
     s.status=document.getElementById("editStatus").value;
+    s.paid=parseInt(document.getElementById("editPaid").value)||0;
+    s.total=parseInt(document.getElementById("editTotal").value)||0;
+    s.echeancesRaw=document.getElementById("editEcheances").value;
     s.notes=document.getElementById("editNotes").value;
     sortStudentsAlphabetically();
     updateStats();
+    updateFormationFilter();
     renderStudents();
     openDetailModal(currentStudentId);
 }
@@ -429,100 +467,47 @@ function deleteStudent(){
         students=students.filter(st=>st.id!==currentStudentId);
         closeDetailModal();
         updateStats();
+        updateFormationFilter();
         renderStudents();
     }
 }
 
-function parsePayment(){
-    const input=document.getElementById("paymentInput").value;
-    const timeline=document.getElementById("previewTimeline");
-    const totalEl=document.getElementById("previewTotal");
-    if(!input.trim()){timeline.innerHTML='<p class="empty">Saisissez une formule ci-dessus...</p>';totalEl.textContent="Total: 0€";tempPayments=[];return}
-    const payments=parsePaymentString(input);
-    if(!payments.length){timeline.innerHTML='<p class="empty">Format non reconnu</p>';tempPayments=[];return}
-    tempPayments=payments;
-    let total=0,html="";
-    for(let i=0;i<payments.length;i++){
-        const p=payments[i];total+=p.amount;
-        const isPast=new Date(p.rawDate)<new Date();
-        html+='<div class="timeline-item"><div class="timeline-dot '+(isPast?'paid':'')+'"></div><span class="timeline-date">'+p.date+'</span><span class="timeline-amount">'+p.amount+'€</span><span class="timeline-type">'+p.type+'</span></div>';
-    }
-    timeline.innerHTML=html;
-    totalEl.textContent="Total: "+total+"€";
-}
-
-function parsePaymentString(str){
-    const payments=[];
-    const parts=str.split(/\s+puis\s+|\s+et\s+|\s*\+\s*/i);
-    for(let i=0;i<parts.length;i++){
-        let part=parts[i].trim();
-        const monthlyMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*\/\s*mois\s+du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-        if(monthlyMatch){
-            const amt=parseFloat(monthlyMatch[1].replace(",","."));
-            const startDate=parseDate(monthlyMatch[2]);
-            const endDate=parseDate(monthlyMatch[3]);
-            let cur=new Date(startDate);
-            while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),rawDate:cur.toISOString().split('T')[0],type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
-            continue;
-        }
-        const everyMonthMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*tous\s+les\s+(\d{1,2})\s+(?:du\s+mois\s+)?(?:a\s+partir\s+du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+)?jusqu['\u2019]?\s*au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-        if(everyMonthMatch){
-            const amt=parseFloat(everyMonthMatch[1].replace(",","."));
-            const dayOfMonth=parseInt(everyMonthMatch[2]);
-            const startDate=everyMonthMatch[3]?parseDate(everyMonthMatch[3]):new Date();
-            const endDate=parseDate(everyMonthMatch[4]);
-            let cur=new Date(startDate.getFullYear(),startDate.getMonth(),dayOfMonth);
-            if(cur<startDate)cur.setMonth(cur.getMonth()+1);
-            while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),rawDate:cur.toISOString().split('T')[0],type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
-            continue;
-        }
-        const everyMonthFromTo=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*tous\s+les\s+(\d{1,2})\s+(?:du\s+mois\s+)?du\s+(\d{1,2}\/\d{1,2}\/\d{2,4})\s+au\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-        if(everyMonthFromTo){
-            const amt=parseFloat(everyMonthFromTo[1].replace(",","."));
-            const dayOfMonth=parseInt(everyMonthFromTo[2]);
-            const startDate=parseDate(everyMonthFromTo[3]);
-            const endDate=parseDate(everyMonthFromTo[4]);
-            let cur=new Date(startDate.getFullYear(),startDate.getMonth(),dayOfMonth);
-            if(cur<startDate)cur.setMonth(cur.getMonth()+1);
-            while(cur<=endDate){payments.push({amount:amt,date:formatDate(cur),rawDate:cur.toISOString().split('T')[0],type:"Mensualité"});cur.setMonth(cur.getMonth()+1)}
-            continue;
-        }
-        const singleMatch=part.match(/(\d+(?:[.,]\d+)?)\s*€?\s*(?:pvt|PVT|prelevement|prélèvement|espece|espèce|cb|CB|chq|chèque|virement)?\s*(?:le|LE)?\s*(\d{1,2}\/\d{1,2}\/\d{2,4})/i);
-        if(singleMatch){
-            const dateObj=parseDate(singleMatch[2]);
-            payments.push({amount:parseFloat(singleMatch[1].replace(",",".")),date:formatDate(dateObj),rawDate:dateObj.toISOString().split('T')[0],type:getType(part)});
-        }
-    }
-    return payments;
-}
-
-function getType(s){s=s.toLowerCase();if(s.includes("pvt")||s.includes("prélèvement")||s.includes("prelevement"))return"Prélèvement";if(s.includes("espece")||s.includes("espèce"))return"Espèces";if(s.includes("cb"))return"Carte";if(s.includes("chq")||s.includes("chèque"))return"Chèque";if(s.includes("virement"))return"Virement";return"Paiement"}
-function parseDate(d){const p=d.split("/");let y=parseInt(p[2]);if(y<100)y+=2000;return new Date(y,parseInt(p[1])-1,parseInt(p[0]))}
-function formatDate(d){const m=["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];return d.getDate()+" "+m[d.getMonth()]+" "+d.getFullYear()}
-
 function saveStudent(){
     const name=document.getElementById("studentName").value.trim();
     const phone=document.getElementById("studentPhone").value.trim();
-    const formation=document.getElementById("studentFormation").value;
+    const formation=document.getElementById("studentFormation").value.trim();
     const rythme=document.getElementById("studentRythme").value;
     const bank=document.getElementById("studentBank").value.trim();
-    if(!name||!phone){alert("Veuillez remplir le nom et le téléphone.");return}
-    const echeances=tempPayments.map(p=>({date:p.rawDate,amount:p.amount,type:p.type,paid:new Date(p.rawDate)<new Date()}));
-    const total=echeances.reduce((sum,e)=>sum+e.amount,0)||3690;
-    const paid=echeances.filter(e=>e.paid).reduce((sum,e)=>sum+e.amount,0);
-    let status="ok";
-    if(paid<total){const hasUnpaidPastDue=echeances.some(e=>!e.paid&&new Date(e.date)<new Date());status=hasUnpaidPastDue?"pending":"ok"}
-    const newStudent={id:Date.now(),name:name,formation:formation,rythme:rythme,phone:phone,status:status,paid:paid,total:total,bank:bank,email:"",notes:"",echeances:echeances};
+    const echeancesRaw=document.getElementById("paymentInput").value.trim();
+    
+    if(!name){alert("Veuillez remplir le nom.");return}
+    
+    const newStudent={
+        id:Date.now(),
+        name:name,
+        formation:formation,
+        rythme:rythme,
+        phone:phone,
+        bank:bank,
+        echeancesRaw:echeancesRaw,
+        status:"pending",
+        paid:0,
+        total:0,
+        notes:""
+    };
+    
     students.push(newStudent);
     sortStudentsAlphabetically();
     updateStats();
+    updateFormationFilter();
     renderStudents();
     closeModal();
-    alert("✅ "+name+" enregistré!\n\n💰 Total: "+total+"€\n✅ Déjà payé: "+paid+"€\n📅 "+echeances.length+" échéances");
+    alert("✅ "+name+" enregistré!");
 }
 
 sortStudentsAlphabetically();
 updateStats();
+updateFormationFilter();
 renderStudents();
 </script>
 </body>
