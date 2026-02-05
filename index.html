@@ -8,18 +8,26 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;color:#fff}
 .app{max-width:1400px;margin:0 auto;padding:20px}
-.header{display:flex;justify-content:space-between;align-items:center;padding:20px;background:rgba(255,255,255,0.05);border-radius:16px;margin-bottom:24px;backdrop-filter:blur(10px)}
+.header{display:flex;justify-content:space-between;align-items:center;padding:20px;background:rgba(255,255,255,0.05);border-radius:16px;margin-bottom:24px;backdrop-filter:blur(10px);flex-wrap:wrap;gap:12px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo span{font-size:32px}
 .logo h1{font-size:22px;font-weight:600}
+.header-buttons{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.user-info{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.1);padding:8px 16px;border-radius:20px;font-size:14px}
+.user-info span{color:#2ed573}
 .btn{padding:12px 24px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:8px}
 .btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,0.4)}
 .btn-secondary{background:rgba(255,255,255,0.1);color:#fff}
 .btn-secondary:hover{background:rgba(255,255,255,0.15)}
+.btn-success{background:linear-gradient(135deg,#2ed573 0%,#7bed9f 100%);color:#1a1a2e}
+.btn-success:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(46,213,115,0.4)}
+.btn-warning{background:linear-gradient(135deg,#ff9f43 0%,#ffc048 100%);color:#1a1a2e}
+.btn-warning:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,159,67,0.4)}
 .btn-danger{background:rgba(255,71,87,0.2);color:#ff4757}
 .btn-danger:hover{background:rgba(255,71,87,0.3)}
-.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn-sm{padding:8px 16px;font-size:13px}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
 .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:24px}
 .stat-card{background:rgba(255,255,255,0.05);border-radius:16px;padding:24px;display:flex;align-items:center;gap:16px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s}
 .stat-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.2)}
@@ -54,38 +62,42 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .payment-bar.pending{background:linear-gradient(90deg,#ff9f43,#ffc048)}
 .payment-bar.late{background:linear-gradient(90deg,#ff4757,#ff6b81)}
 .payment-info{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;color:rgba(255,255,255,0.6)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px)}
+
+/* Login */
+.login-container{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.login-box{background:rgba(255,255,255,0.05);border-radius:20px;padding:40px;width:100%;max-width:400px;border:1px solid rgba(255,255,255,0.1)}
+.login-box h1{text-align:center;margin-bottom:10px;font-size:28px}
+.login-box .subtitle{text-align:center;color:rgba(255,255,255,0.6);margin-bottom:30px}
+.login-box .form-group{margin-bottom:20px}
+.login-box label{display:block;margin-bottom:8px;font-size:14px;font-weight:500}
+.login-box input{width:100%;padding:14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;font-size:15px}
+.login-box input:focus{outline:none;border-color:#667eea}
+.login-box .btn{width:100%;justify-content:center;padding:16px}
+.login-error{background:rgba(255,71,87,0.2);color:#ff4757;padding:12px;border-radius:10px;margin-bottom:20px;text-align:center;display:none}
+.login-footer{text-align:center;margin-top:30px;color:rgba(255,255,255,0.4);font-size:13px}
+.login-footer a{color:#667eea;text-decoration:none}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px);padding:20px}
 .modal-overlay.active{display:flex}
-.modal{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:20px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.1)}
+.modal{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:20px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,0.1)}
 .modal-header{display:flex;justify-content:space-between;align-items:center;padding:24px;border-bottom:1px solid rgba(255,255,255,0.1)}
 .modal-header h2{font-size:20px;font-weight:600}
 .close-btn{width:36px;height:36px;border:none;background:rgba(255,255,255,0.1);color:#fff;border-radius:50%;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .close-btn:hover{background:rgba(255,255,255,0.2)}
 .modal-body{padding:24px}
 .form-group{margin-bottom:20px}
-.form-group label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px;font-weight:500}
-.hint{font-size:12px;color:#667eea;font-weight:400}
+.form-group label{display:block;margin-bottom:10px;font-size:14px;font-weight:500}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:14px;outline:none;transition:border-color 0.3s}
 .form-group input:focus,.form-group textarea:focus{border-color:#667eea}
-.form-group textarea{min-height:100px;resize:vertical;font-family:inherit}
-.payment-preview{background:rgba(102,126,234,0.1);border-radius:12px;border:1px solid rgba(102,126,234,0.3);overflow:hidden;margin-top:10px}
-.preview-header{display:flex;justify-content:space-between;padding:14px 16px;background:rgba(102,126,234,0.2);font-size:14px;font-weight:500}
-#previewTotal{color:#2ed573;font-weight:600}
-#previewTimeline{padding:16px;max-height:220px;overflow-y:auto}
-.empty{color:rgba(255,255,255,0.4);font-style:italic;text-align:center;padding:20px 0}
-.timeline-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-.timeline-item:last-child{border-bottom:none}
-.timeline-dot{width:10px;height:10px;border-radius:50%;background:#667eea;flex-shrink:0}
-.timeline-dot.paid{background:#2ed573}
-.timeline-date{font-size:13px;color:rgba(255,255,255,0.6);min-width:100px}
-.timeline-amount{font-weight:600;color:#2ed573;min-width:70px}
-.timeline-type{font-size:12px;color:rgba(255,255,255,0.4);flex:1}
+.form-group textarea{min-height:80px;resize:vertical;font-family:inherit}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .modal-footer{padding:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:flex-end;gap:12px}
-.detail-modal .modal{max-width:700px}
+
+/* Détail étudiant */
 .student-profile{text-align:center;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:20px}
 .student-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;font-weight:700}
 .student-profile h3{font-size:24px;font-weight:600;margin-bottom:8px}
-.student-profile .student-formation{font-size:14px;padding:6px 16px}
 .info-section{margin-bottom:24px}
 .info-section h4{font-size:14px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -94,421 +106,1033 @@ body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(1
 .info-label{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px}
 .info-value{font-size:15px;font-weight:500}
 .info-value a{color:#667eea;text-decoration:none}
-.info-value a:hover{text-decoration:underline}
 .payment-detail .payment-progress{height:12px;margin-bottom:12px}
 .payment-stats{display:flex;justify-content:space-between;font-size:14px}
 .payment-stats .paid{color:#2ed573}
 .payment-stats .remaining{color:#ff9f43}
 .status-section{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:20px}
 .status-section .status-badge{font-size:14px;padding:8px 20px}
+.meta-info{font-size:12px;color:rgba(255,255,255,0.4);text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)}
 .notes-section textarea{width:100%;min-height:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;padding:14px;font-size:14px;resize:vertical;font-family:inherit}
-.notes-section textarea:focus{outline:none;border-color:#667eea}
-.edit-input{width:100%;padding:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;margin-top:6px;transition:all 0.3s}
-.edit-input:focus{outline:none;border-color:#667eea;background:rgba(255,255,255,0.12)}
-.echeances-list{background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);max-height:300px;overflow-y:auto}
-.echeance-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);transition:background 0.2s}
-.echeance-item:last-child{border-bottom:none}
-.echeance-item:hover{background:rgba(255,255,255,0.03)}
-.echeance-item.is-paid{opacity:0.6}
-.echeance-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
-.echeance-check:hover{border-color:#667eea}
+.edit-input{width:100%;padding:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;margin-top:6px}
+.edit-input:focus{outline:none;border-color:#667eea}
+
+/* Échéancier */
+.echeances-section{background:rgba(255,255,255,0.03);border-radius:12px;padding:16px;margin-top:12px}
+.echeances-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.echeances-stats{display:flex;gap:16px}
+.echeances-stats .stat{text-align:center}
+.echeances-stats .stat-value{font-size:18px;font-weight:700}
+.echeances-stats .stat-value.green{color:#2ed573}
+.echeances-stats .stat-value.orange{color:#ff9f43}
+.echeances-stats .stat-label{font-size:10px;color:rgba(255,255,255,0.5)}
+.echeances-list{max-height:250px;overflow-y:auto}
+.echeance-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
+.echeance-item.paid{opacity:0.5}
+.echeance-check{width:20px;height:20px;border-radius:5px;border:2px solid rgba(255,255,255,0.3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .echeance-check.checked{background:#2ed573;border-color:#2ed573}
-.echeance-check.checked::after{content:"✓";color:#fff;font-size:14px;font-weight:bold}
-.echeance-info{flex:1;display:flex;align-items:center;gap:10px}
-.echeance-date{font-size:14px;font-weight:500}
-.echeance-type{font-size:12px;color:rgba(255,255,255,0.5)}
-.echeance-amount{font-size:16px;font-weight:600;color:#2ed573}
-.echeance-amount.unpaid{color:#ff9f43}
-.echeance-actions{display:flex;gap:6px}
-.echeance-edit-btn,.echeance-delete-btn{width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.2s}
-.echeance-edit-btn{background:rgba(102,126,234,0.2);color:#667eea}
-.echeance-edit-btn:hover{background:rgba(102,126,234,0.4)}
-.echeance-delete-btn{background:rgba(255,71,87,0.2);color:#ff4757}
-.echeance-delete-btn:hover{background:rgba(255,71,87,0.4)}
-.echeance-edit-row{display:flex;gap:8px;align-items:center;flex:1;flex-wrap:wrap}
-.echeance-edit-row input{padding:8px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#fff;font-size:13px;width:auto}
-.echeance-edit-row input[type="date"]{width:140px}
-.echeance-edit-row input[type="number"]{width:80px}
-.echeance-edit-row select{padding:8px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#fff;font-size:13px}
-.echeance-save-btn,.echeance-cancel-btn{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
-.echeance-save-btn{background:#2ed573;color:#fff}
-.echeance-cancel-btn{background:rgba(255,255,255,0.1);color:#fff}
-.add-echeance-btn{width:100%;padding:12px;margin-top:10px;background:rgba(102,126,234,0.1);border:2px dashed rgba(102,126,234,0.3);border-radius:10px;color:#667eea;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
-.add-echeance-btn:hover{background:rgba(102,126,234,0.2);border-color:rgba(102,126,234,0.5)}
-.echeances-raw{background:rgba(255,255,255,0.03);border-radius:8px;padding:12px;font-size:13px;color:rgba(255,255,255,0.7);margin-top:8px;white-space:pre-wrap;word-break:break-word}
-@media(max-width:900px){.dashboard{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.dashboard{grid-template-columns:1fr}.header{flex-direction:column;gap:16px;text-align:center}.echeance-edit-row{flex-wrap:wrap}}
+.echeance-check.checked::after{content:"✓";color:#fff;font-size:12px}
+.echeance-date{font-size:13px;min-width:90px}
+.echeance-amount{font-weight:600;color:#ff9f43;min-width:70px}
+.echeance-amount.paid{color:#2ed573}
+.echeance-type{font-size:11px;color:rgba(255,255,255,0.4)}
+.echeances-raw{background:rgba(255,255,255,0.03);border-radius:8px;padding:12px;font-size:13px;color:rgba(255,255,255,0.7);white-space:pre-wrap;word-break:break-word}
+
+/* Import */
+.import-zone{border:2px dashed rgba(102,126,234,0.4);border-radius:16px;padding:40px;text-align:center;margin-bottom:20px;transition:all 0.3s;cursor:pointer}
+.import-zone:hover,.import-zone.dragover{border-color:#667eea;background:rgba(102,126,234,0.1)}
+.import-zone input{display:none}
+.import-stats{display:flex;gap:20px;justify-content:center;margin:20px 0}
+.import-stat{background:rgba(255,255,255,0.05);padding:12px 24px;border-radius:10px;text-align:center}
+.import-stat-value{font-size:24px;font-weight:700;color:#667eea}
+.import-stat-label{font-size:12px;color:rgba(255,255,255,0.5)}
+.import-preview{background:rgba(255,255,255,0.03);border-radius:12px;padding:16px;max-height:200px;overflow-y:auto}
+.import-preview table{width:100%;font-size:12px;border-collapse:collapse}
+.import-preview th,.import-preview td{padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1)}
+
+/* Historique */
+.history-list{max-height:400px;overflow-y:auto}
+.history-item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.history-item:last-child{border-bottom:none}
+.history-date{font-size:12px;color:rgba(255,255,255,0.4);min-width:130px}
+.history-user{font-size:13px;color:#667eea;min-width:80px}
+.history-action{font-size:13px;font-weight:500;min-width:100px}
+.history-action.creation{color:#2ed573}
+.history-action.modification{color:#ff9f43}
+.history-action.suppression{color:#ff4757}
+.history-action.import{color:#667eea}
+.history-details{font-size:13px;color:rgba(255,255,255,0.6)}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;right:30px;background:#2ed573;color:#1a1a2e;padding:16px 24px;border-radius:12px;font-weight:600;transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:2000}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{background:#ff4757;color:#fff}
+
+/* Loading */
+.loading{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:3000}
+.loading.active{display:flex}
+.spinner{width:50px;height:50px;border:4px solid rgba(255,255,255,0.1);border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Footer */
+.footer{text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-size:13px}
+.footer a{color:#667eea;text-decoration:none;font-weight:600}
+
+@media(max-width:900px){.dashboard{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+@media(max-width:600px){.dashboard{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}.header-buttons{justify-content:center}}
 </style>
 </head>
 <body>
-<div class="app">
-<header class="header">
-<div class="logo"><span>🎓</span><h1>Gestion Effectifs 2025-26</h1></div>
-<button class="btn btn-primary" onclick="openModal()">+ Nouvel étudiant</button>
-</header>
-<div class="dashboard">
-<div class="stat-card"><div class="stat-icon blue">👥</div><div><span class="stat-value" id="totalCount">0</span><span class="stat-label">Étudiants</span></div></div>
-<div class="stat-card"><div class="stat-icon green">✅</div><div><span class="stat-value" id="okCount">0</span><span class="stat-label">À jour</span></div></div>
-<div class="stat-card"><div class="stat-icon orange">⏳</div><div><span class="stat-value" id="pendingCount">0</span><span class="stat-label">En attente</span></div></div>
-<div class="stat-card"><div class="stat-icon red">⚠️</div><div><span class="stat-value" id="lateCount">0</span><span class="stat-label">Retard</span></div></div>
-</div>
-<div class="filters">
-<div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher un étudiant..." oninput="filterStudents()"></div>
-<select id="formationFilter" onchange="filterStudents()"><option value="">Toutes les formations</option></select>
-<select id="statusFilter" onchange="filterStudents()"><option value="">Tous les statuts</option><option value="ok">✅ À jour</option><option value="pending">⏳ En attente</option><option value="late">⚠️ En retard</option></select>
-</div>
-<div class="students-grid" id="studentsGrid"></div>
-</div>
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-header"><h2>📝 Nouvel étudiant</h2><button class="close-btn" onclick="closeModal()">×</button></div>
-<div class="modal-body">
-<div class="form-group"><label>Nom complet</label><input type="text" id="studentName" placeholder="Ex: DUPONT Marie"></div>
-<div class="form-group"><label>Téléphone</label><input type="text" id="studentPhone" placeholder="Ex: 0612345678"></div>
-<div class="form-group"><label>Formation</label><input type="text" id="studentFormation" placeholder="Ex: M1 INFO CS"></div>
-<div class="form-group"><label>Rythme</label><select id="studentRythme"><option value="IOA">IOA</option><option value="Initiale">Initiale</option><option value="Alternance">Alternance</option><option value="SFP">SFP</option></select></div>
-<div class="form-group"><label>Banque</label><input type="text" id="studentBank" placeholder="Ex: BNP, LCL, SG..."></div>
-<div class="form-group"><label>Échéances (texte brut)</label><textarea id="paymentInput" placeholder="Ex: 760€ pvt le 20/08/2025 puis 323€/mois du 20/10/2025 au 20/07/2026"></textarea></div>
-</div>
-<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Annuler</button><button class="btn btn-primary" onclick="saveStudent()">💾 Enregistrer</button></div>
-</div>
-</div>
-<div class="modal-overlay detail-modal" id="detailModal" onclick="closeDetailModal()">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-header"><h2>👤 Fiche étudiant</h2><button class="close-btn" onclick="closeDetailModal()">×</button></div>
-<div class="modal-body" id="detailContent"></div>
-<div class="modal-footer" id="detailFooter"></div>
-</div>
-</div>
-<script>
-let students=[
-{id:1,name:"ESSAGA Flora",formation:"M1 RH",rythme:"IOA",phone:"0744139534",bank:"BANQUE POSTALE",echeancesRaw:"760€ réglé en espèce le 20/02/25 PUIS PVT DE 747,15€/mois du 5/01/26 AU 5/07/26",status:"ok",paid:760,total:5243},
-{id:2,name:"MOUNGUERI Rich Varland",formation:"M1 INFO CS",rythme:"IOA",phone:"0758779884",bank:"LCL",echeancesRaw:"760€/CB LE 04/03/25 puis pvt de 747,15€/mois du 25/01/26 au 25/07/26",status:"ok",paid:760,total:5243},
-{id:3,name:"ANANI Koffi",formation:"M1 INFO CS",rythme:"IOA",phone:"0759367370",bank:"",echeancesRaw:"760€/PVT LE 10/10/25 PUIS PVT DE 653,75/mois du 25/01/26 au 25/08/26",status:"pending",paid:0,total:5990},
-{id:4,name:"SOGBOSSI Max Ronaldo",formation:"M1 INFO CS",rythme:"IOA",phone:"0743307010",bank:"",echeancesRaw:"760€/PVT le 12/10/2025 puis pvt de 653,75/mois du 28/01/26 au 28/08/26",status:"pending",paid:0,total:5990},
-{id:5,name:"TCHINDA Loïc",formation:"M1 INFO CS",rythme:"IOA",phone:"0764844814",bank:"",echeancesRaw:"760€/PVT le 28/06/2025 puis pvt de 653,75/mois du 28/01/26 au 28/08/26",status:"pending",paid:0,total:5990},
-{id:6,name:"SOUMAHORO Hafsoitou",formation:"M2 MSC",rythme:"IOA",phone:"0753594359",bank:"BOURSOBANK",echeancesRaw:"760€/ESPECE LE 07/03/2025 a réglé 1569€/ESP le 15/10/25 puis pvt de 523€/mois du 20/01/26 au 20/07/26",status:"ok",paid:2329,total:5467},
-{id:7,name:"TRAORE Diarah",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0753291991",bank:"BQ POPULAIRE",echeancesRaw:"760€ va regler le 11/09/25 en espèce puis pvt de 323€ du 30/10/25 au 30/07/26",status:"pending",paid:0,total:3690},
-{id:8,name:"KAM KEFUYANTSAP Eve Manuela",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0613198352",bank:"",echeancesRaw:"A réglé 3000€/ VIREMENT LE 23/08/25 puis pvt de 990€ 15/01/26",status:"ok",paid:3000,total:3990},
-{id:9,name:"BOUDRAA Adam",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0769853540",bank:"CIC",echeancesRaw:"760€/PVT et 3230€ réglé par chèque",status:"ok",paid:3990,total:4990},
-{id:10,name:"KEITA Siriman",formation:"BTS CG 2",rythme:"Alternance",phone:"0621083426",bank:"LCL",echeancesRaw:"760€/PVT LE 30/08/2025 puis pvt de 323€ du 30/10/25 au 30/07/26",status:"pending",paid:0,total:3690},
-{id:11,name:"LANGLOIS Léo",formation:"M2 INFO BD",rythme:"IOA",phone:"0783389741",bank:"SG",echeancesRaw:"760€/chq le 11/03/2025 puis pvt de 747,15€ du 30/01/26 au 30/07/26",status:"ok",paid:760,total:5243},
-{id:12,name:"BASOL Théo",formation:"Bachelor AIS",rythme:"Alternance",phone:"0786060906",bank:"",echeancesRaw:"PVT 760€ LE 01/09/2025 puis pvt de 604,29€ du 01/01/2026 au 01/07/2026",status:"pending",paid:0,total:4386},
-{id:13,name:"LIKOUANGA Clotaire Marthin",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0758441199",bank:"LCL",echeancesRaw:"380€/PVT LE 30/08/25 et 380€/pvt le 30/09/25 puis pvt de 323€ du 30/10/25 au 30/07/26",status:"pending",paid:0,total:3690},
-{id:14,name:"FOMO Océane",formation:"BTS CG 2",rythme:"Alternance",phone:"0759575007",bank:"SG",echeancesRaw:"760€ pvt le 20/08/2025 puis 323€/mois du 20/10/2025 au 20/07/2026",status:"pending",paid:0,total:3690},
-{id:15,name:"LOMPALA Onesimo",formation:"BTS CG 2",rythme:"IOA",phone:"0766575115",bank:"",echeancesRaw:"380€ PVT LE 30/08/2025 et 380€ pvt le 30/09/2025 puis pvt de 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
-{id:16,name:"ALOLI ROBERT VICTOR Gloria",formation:"BTS CG 2",rythme:"Initiale",phone:"0744864346",bank:"",echeancesRaw:"760€ pvt le 30/08/2025 puis 323€/mois du 30/09/2025 au 30/06/2026",status:"pending",paid:0,total:3990},
-{id:17,name:"MHOUMADI Mwindjou",formation:"BTS SIO 2 SISR",rythme:"Alternance",phone:"0766940502",bank:"CE",echeancesRaw:"380€ PVT LE 30/08/2025 et 380€ pvt le 30/09/2025 puis pvt de 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
-{id:18,name:"MFINA NGOUARI Hubert",formation:"BTS SIO 2 SISR",rythme:"IOA",phone:"0759694164",bank:"LCL",echeancesRaw:"380€ PVT LE 30/08/2025 et 380€ pvt le 30/09/2025 puis pvt de 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
-{id:19,name:"NGOLA Gloire Celeste",formation:"BTS SIO 2 SLAM",rythme:"Initiale",phone:"0615279495",bank:"BANQUE POSTALE",echeancesRaw:"(A EU LA REDUCTION DE 1000€) (A réglé 760€/CB le 3/09/2025) puis pvt de 470€ LE 20/09 ET 470€ LE 20/10 PUIS PVT DE 286,25€ DU 20/11/25 AU 20/06/26",status:"ok",paid:760,total:3990},
-{id:20,name:"TIENMENI NGUEGA Emmanuel Roswelt",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0780879770",bank:"SG",echeancesRaw:"EARLY BIRDS 1000€ - pvt 380€ 08/25 et 380€ 09/25 puis pvt de 470€ du 30/10/25 au 30/11/25 puis pvt de 327,14 DU 30/12/25 AU 30/06/26",status:"ok",paid:1000,total:4990},
-{id:21,name:"SAMBA LOUZEY Roméo Aristide",formation:"BACH CDA",rythme:"IOA",phone:"0780879770",bank:"LCL",echeancesRaw:"737€ pris sur l'avance de son frère - A REGLE 23€/CB 604,3€/mois du 15/01/26 au 15/07/26",status:"ok",paid:760,total:4386},
-{id:22,name:"KOUGBLENOU Cyberia",formation:"M2 INFO CS",rythme:"IOA",phone:"0744742224",bank:"",echeancesRaw:"760€/ESP LE 11/09/25 puis 653,75 du 30/01/26 au 30/08/26",status:"pending",paid:0,total:5990},
-{id:23,name:"GOUEDAN Anne-Audrey",formation:"BTS CG 2",rythme:"IOA",phone:"0758792041",bank:"SG",echeancesRaw:"3990€ virés le 26/06/25",status:"ok",paid:3990,total:3990},
-{id:24,name:"FELLON Alice",formation:"BTS NDRC 2",rythme:"Initiale",phone:"0768705616",bank:"LCL",echeancesRaw:"999,50 pvt du 05/09/2025 au 05/12/2025",status:"pending",paid:0,total:3998},
-{id:25,name:"NDIR Ndey Fatime",formation:"BTS COM 2",rythme:"Initiale",phone:"0601929515",bank:"CM",echeancesRaw:"760€ PVT LE 20/08/2025 PUIS PVT DE 323€ DU 20/09/2025 AU 20/06/2026",status:"pending",paid:0,total:3990},
-{id:26,name:"VALDEZ KEVIN HAROLD DINDE",formation:"M2 MSFO",rythme:"Alternance",phone:"0751150995",bank:"BNP",echeancesRaw:"A réglé 1550€/CB + 130€/ESP +PVT 1000 LE 10/09/25 + PUIS PVT DE 472,86€ DU 10/01/2026 AU 10/07/2026",status:"ok",paid:1680,total:5517},
-{id:27,name:"FANOINASON Ida",formation:"M2 MSFO",rythme:"Alternance",phone:"0622065825",bank:"LCL",echeancesRaw:"",status:"pending",paid:0,total:0},
-{id:28,name:"KOUMBA MOUNGUENGUI Staël",formation:"M2 MSFO",rythme:"IOA",phone:"0680770699",bank:"",echeancesRaw:"760€ PVT LE 12/09/25 PUIS PVT DE 747,15€ DU 12/01/2026 AU 12/07/2026",status:"pending",paid:0,total:5243},
-{id:29,name:"PEMADJEU NGAKANOU Oriance Duchele",formation:"M2 MSFO",rythme:"IOA",phone:"0749745175",bank:"BNP",echeancesRaw:"A réglé 400€/esp le 09/10/25 puis 300€/CB ET PVT DE 60€ LE 30/10/25 380€ PVT LE 30/08/2025 ET 380€ PVT LE 30/09/2025 PUIS 747,15€ DU 30/01/2026 AU 30/07/2026",status:"ok",paid:760,total:5983},
-{id:30,name:"ILOKI Dorcas",formation:"M1 COM",rythme:"IOA",phone:"0768989681",bank:"",echeancesRaw:"760€ PVT LE 10/06/2025 PUIS 747,75€ PVT LE 12/01/26 AU 12/07/2026",status:"pending",paid:0,total:5254},
-{id:31,name:"MAMPOUYA IBARA Ranelle",formation:"BTS SIO 2 SLAM",rythme:"Alternance",phone:"0667725348",bank:"LBP",echeancesRaw:"760€ pvt le 30/08/2025 puis 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
-{id:32,name:"MODZINU Kofi Stéphane",formation:"BACH CDA",rythme:"IOA",phone:"0745601699",bank:"BNP",echeancesRaw:"760€ PVT LE 30/09/2025 puis 604,30 du 30/01/2026 au 30/07/2026",status:"pending",paid:0,total:4986},
-{id:33,name:"AKDIM Anass",formation:"BTS SIO 2 SISR",rythme:"IOA",phone:"0759594767",bank:"SG",echeancesRaw:"760€ PVT LE 28/09/2025 puis 323€ du 28/10/2025 au 28/07/2026",status:"pending",paid:0,total:3690},
-{id:34,name:"NDOUMBE MASSODI Blonde Lapensée",formation:"BTS MCO 2",rythme:"IOA",phone:"0745058130",bank:"BRED",echeancesRaw:"PVT DE 443,4€ DU 25/10/25 AU 25/06/26",status:"pending",paid:0,total:3990},
-{id:35,name:"BOUNXOU Ilies",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0627645649",bank:"LCL",echeancesRaw:"PVT DE 760€ LE 30/08/25 PUIS 323€ LE 30/10/25 AU 30/07/26",status:"pending",paid:0,total:3690},
-{id:36,name:"SOUMARE Fily",formation:"BTS CG 2",rythme:"IOA",phone:"0760805551",bank:"BNP",echeancesRaw:"PVT 760€ LE 20/08/2025 PUIS 323€ PVT LE 28/10/25 AU 28/07/26",status:"pending",paid:0,total:3690},
-{id:37,name:"SCHNEIDER Komlan Irene",formation:"BTS MCO 2",rythme:"Initiale",phone:"0751075045",bank:"BANQUE POSTALE",echeancesRaw:"PVT 760€ LE 06/10/2025 PUIS 323€ DU 15/09/2025 pvt 30/10/25 au 30/06/26",status:"pending",paid:0,total:3990},
-{id:38,name:"DOGBEVI SHALOM",formation:"BTS SIO 2 SLAM",rythme:"Initiale",phone:"0759295147",bank:"BANQUE POSTALE",echeancesRaw:"PVT 760€ LE 15/08/2025 PUIS 323€ DU 15/09/2025 AU 15/06/2026",status:"pending",paid:0,total:3990},
-{id:39,name:"MONDE DASO Gloria",formation:"BTS CG 2",rythme:"IOA",phone:"0758829078",bank:"SG",echeancesRaw:"PVT DE 443,4€ DU 25/10/25 AU 25/06/26",status:"pending",paid:0,total:3990},
-{id:40,name:"SEUKOU SEUKOU Yvan",formation:"M1 INFO CS",rythme:"IOA",phone:"0624266040",bank:"",echeancesRaw:"760€ PVT LE 30/09/2025 PUIS PVT 747,15€ DU 30/01/2026 AU 30/07/2026",status:"pending",paid:0,total:5243},
-{id:41,name:"ZEUFACK Lucresse",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0664623985",bank:"SG",echeancesRaw:"760€ PVT LE 30/08/2025 PUIS PVT DE 358,89€ DU 30/10/25 AU 30/06/26",status:"pending",paid:0,total:3990},
-{id:42,name:"TOHOUEDE Lyse",formation:"M2 MSC",rythme:"Alternance",phone:"0759313146",bank:"BNP",echeancesRaw:"380€ PVT LE 30/08/2025 380€ PVT LE 30/09/2025 PUIS 747,15€ DU 30/01/2026 AU 30/07/2026",status:"pending",paid:0,total:5243},
-{id:43,name:"MBAKI Laury",formation:"BACH CDME",rythme:"IOA",phone:"0749757775",bank:"SG",echeancesRaw:"747,16/mois du 07/01/2025 au 07/07/2026",status:"pending",paid:0,total:4483},
-{id:44,name:"DIANINGANA Itsono Benie",formation:"BACH CDA",rythme:"IOA",phone:"0745249250",bank:"",echeancesRaw:"PVT 760€ LE 30/09/2025 ET 604,29€ DU 15/01/2026 AU 15/07/2026",status:"pending",paid:0,total:4386},
-{id:45,name:"NGONO ASSOGO Pierre Thierry",formation:"Bachelor AIS",rythme:"IOA",phone:"0699020519",bank:"CE",echeancesRaw:"PVT 760€ le 25/09/2025 puis 604,29€ du 25/01/2026 au 25/07/2026",status:"pending",paid:0,total:4386},
-{id:46,name:"TAIROU Marcel",formation:"BTS COM 2",rythme:"IOA",phone:"0779536538",bank:"BANQUE POPULAIRE",echeancesRaw:"pvt 380€ le 30/08/25 et 380€ le 30/09/25 puis 323€ du 30/10/2025 au 30/07/2026",status:"pending",paid:0,total:3690},
-{id:47,name:"CHICHA Gad",formation:"BTS CG 2",rythme:"IOA",phone:"0695189610",bank:"LCL",echeancesRaw:"pvt 399€ du 25/10/25 au 25/06/26",status:"pending",paid:0,total:3591},
-{id:48,name:"AHONDO Victoria",formation:"M1 MSC",rythme:"IOA",phone:"0745335215",bank:"SG",echeancesRaw:"PVT 760€LE 15/09/2025 puis 747,15 du 15/01/2026 au 15/07/2026",status:"pending",paid:0,total:5990},
-{id:49,name:"FOWOUE Malick",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0761424069",bank:"BNP",echeancesRaw:"pvt 760€ le 25/09/2025 puis 323€ du 25/10/25 au 25/07/2026",status:"pending",paid:0,total:3690},
-{id:50,name:"NDJAFANG Quentin",formation:"BTS SIO 2 SISR",rythme:"IOA",phone:"0780604873",bank:"",echeancesRaw:"pvt 760€ le 25/09/2025 puis 323€ du 25/10/25 au 25/07/2026",status:"pending",paid:0,total:3690},
-{id:51,name:"HEFNY Emma",formation:"BTS COM 2",rythme:"Alternance",phone:"0612632681",bank:"",echeancesRaw:"PVT 380€LE 30/08/2025 ET 380€ LE 30/09/2025 PUIS 323€DU 30/10/2025 AU 30/07/2026",status:"pending",paid:0,total:3690},
-{id:52,name:"BA Ndeye Fatou",formation:"BTS MCO 2",rythme:"Alternance",phone:"0763798575",bank:"",echeancesRaw:"",status:"pending",paid:0,total:0},
-{id:53,name:"NIALI BISSELO Claude",formation:"M2 MSFO",rythme:"IOA",phone:"0766342796",bank:"",echeancesRaw:"PVT 380€ LE 18/09/25 ET 380€LE 18/10/25 PUIS 782,86€du 19/01/2026 au 19/07/2026",status:"pending",paid:0,total:5460},
-{id:54,name:"SARHOU Aymane",formation:"M2 INFO BD",rythme:"IOA",phone:"0753322129",bank:"LCL",echeancesRaw:"PVT 760€ LE 15/09/2025 ET 782,26€ DU 15/01/26 AU 10/07/26",status:"pending",paid:0,total:5454},
-{id:55,name:"DARMINE SIDI DARMATY",formation:"BTS COM 2",rythme:"IOA",phone:"0650814318",bank:"CM",echeancesRaw:"a regle 760€ le 18/07/25 ET 348€ DU 29/10/25 AU 29/07/26",status:"ok",paid:760,total:3892},
-{id:56,name:"MPIKA Tony",formation:"M1 RH",rythme:"IOA",phone:"0768474975",bank:"",echeancesRaw:"PVT 760€ LE 12/05/2025 PUIS 782,86€ DU 12/01/2026 AU 12/07/26",status:"pending",paid:0,total:5460},
-{id:57,name:"KADAYI Emmanuella",formation:"M1 MSC",rythme:"IOA",phone:"0613692756",bank:"",echeancesRaw:"PVT 380€LE 30/08/2025 ET 380€ LE 30/09/2025 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:5460},
-{id:58,name:"KHAIRALLAH Anass",formation:"M2 INFO BD",rythme:"IOA",phone:"0609391620",bank:"CHQ CAUTION",echeancesRaw:"PVT 380€LE 30/08/2025 ET 380€ LE 30/09/2025 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:5460},
-{id:59,name:"MADJIRE Bénédicte",formation:"Bachelor RH",rythme:"Initiale",phone:"0753781833",bank:"",echeancesRaw:"Réglé par chq 400€ et 200€ puis PVT de 464€ du 30/10/2025 au 30/07/26",status:"ok",paid:600,total:4776},
-{id:60,name:"KALEMA KIPELE Voldie",formation:"BTS MCO 2",rythme:"Initiale",phone:"0766292742",bank:"SG",echeancesRaw:"PVT 424€DU 25/09/25 AU 25/06/26",status:"pending",paid:0,total:4240},
-{id:61,name:"MAMA IBOURAIMA Rehanath",formation:"BTS SIO 2 SISR",rythme:"Initiale",phone:"0699921954",bank:"SG",echeancesRaw:"VRMT DE 760€ LE 30/04/25 puis PVT DE 348€ DU 10/09/25 AU 10/06/26",status:"ok",paid:760,total:4240},
-{id:62,name:"AGNIMEL Agnimel Marc",formation:"M1 RH",rythme:"IOA",phone:"0668325807",bank:"BNP",echeancesRaw:"Réglé 360€ en espèce le 15/04/25 réglé 400€/esp le 13/05/25 et PVT 782,86€ du 30/01/25 au 30/07/26",status:"ok",paid:760,total:5460},
-{id:63,name:"NDIAYE Astou",formation:"BTS NDRC 2",rythme:"Initiale",phone:"0759479487",bank:"",echeancesRaw:"A réglé 760€ le 26/08/25 A réglé 2250€/virt A réglé 2000€ le 7/10/25",status:"ok",paid:5010,total:5010},
-{id:64,name:"ANANFAH NGUENGAND Belvira",formation:"M2 INFO BD",rythme:"IOA",phone:"0651588929",bank:"",echeancesRaw:"PVT 760€ LE 05/09/2025 PUIS 782,86€ DU 05/01/26 AU 05/07/26",status:"pending",paid:0,total:5460},
-{id:65,name:"BANGOURA Aminata",formation:"BTS CG 2",rythme:"IOA",phone:"0780349051",bank:"",echeancesRaw:"PVT 760€ LE 30/09/25 PUIS PVT DE 348€ DU 30/10/25 AU 30/07/26",status:"pending",paid:0,total:3892},
-{id:66,name:"TINDO Kenne",formation:"M2 MSC",rythme:"IOA",phone:"0775745607",bank:"LCL",echeancesRaw:"PVT 380€ LE 30/09/25 ET 380€ LE 30/10/25 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:5460},
-{id:67,name:"AMADI ALWA Arlette",formation:"BTS MCO 2",rythme:"Initiale",phone:"0780014070",bank:"",echeancesRaw:"A régélé 1060€/esp puis pvt de 345,34€ du 20/01/26 au 20/06/26",status:"ok",paid:1060,total:3132},
-{id:68,name:"ATABA Magnim",formation:"M2 MSFO",rythme:"IOA",phone:"0699264284",bank:"",echeancesRaw:"VRT 760€ LE 30/06/25 PUIS PVT DE 782,86€ DU 30/01/26 AU 30/07/26",status:"ok",paid:760,total:5460},
-{id:69,name:"BA Mbeugue",formation:"M1 MSC",rythme:"IOA",phone:"0763109012",bank:"SG",echeancesRaw:"Réglé 760€/CB PUIS PVT DE 782,86€ DU 10/01/26 AU 10/07/26",status:"ok",paid:760,total:5460},
-{id:70,name:"BEHANZIN Darnell",formation:"M1 MSC",rythme:"IOA",phone:"0773052141",bank:"",echeancesRaw:"PVT 760€ LE 25/08/2025 PUIS PVT DE 782,86 DU 26/01/26 AU 26/07/26",status:"pending",paid:0,total:5460},
-{id:71,name:"ABILANGA Orlaine",formation:"M2 MSC",rythme:"IOA",phone:"0775871803",bank:"",echeancesRaw:"VRMT 760€ LE 30/04/2025 PUIS 782,86€ DU 10/01/26 AU 10/07/26",status:"ok",paid:760,total:5460},
-{id:72,name:"TEKOBOU KENFACK Rose",formation:"M1 FSO",rythme:"Initiale",phone:"0783831255",bank:"",echeancesRaw:"Réglé 760€/CB LE 12/05/2025 PUIS 548€ DU 15/10/25 AU 15/07/26",status:"ok",paid:760,total:5692},
-{id:73,name:"TRAORE Souleyman",formation:"M1 INFO CS",rythme:"IOA",phone:"0744909976",bank:"",echeancesRaw:"Réglé 760€/CB LE 13/05/2025 PUIS PVT 782,86 € DU 30/01/2026 AU 30/07/2026",status:"ok",paid:760,total:5460},
-{id:74,name:"MOUNTOU Anders",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0766620889",bank:"BNP",echeancesRaw:"PVT DE 760€ LE 22/09/2025 PUIS PVT DE 386,67€ DU 22/10/25 AU 22/06/26",status:"pending",paid:0,total:4240},
-{id:75,name:"GUETCHO YOMPA Mireille",formation:"Bachelor AIS",rythme:"IOA",phone:"0761021402",bank:"BNP",echeancesRaw:"PVT 760€ LE 20/10/2025 PUIS PVT 528,75€ DU 30/01/2026 AU 30/08/2026",status:"pending",paid:0,total:4990},
-{id:76,name:"ONANGA Love Ness",formation:"Bachelor RH",rythme:"IOA",phone:"0611725705",bank:"CIC",echeancesRaw:"REGLE 760€/ESP l'année dernière puis 640€ du 30/01/2026 au 30/07/2026",status:"ok",paid:760,total:5240},
-{id:77,name:"MBANI LAKABI Khessie",formation:"BTS SIO 2 SLAM",rythme:"IOA",phone:"0744292942",bank:"LCL",echeancesRaw:"424€ par PT du 30/10/25 au 30/07/26",status:"pending",paid:0,total:4240},
-{id:78,name:"MALEMISA Laurette",formation:"BTS NDRC 2",rythme:"IOA",phone:"0744292942",bank:"LCL",echeancesRaw:"750€ par cb le 19/9/25 + 424€ PAR PVT DU 15/10/25 AU 15/07/26",status:"ok",paid:750,total:4990},
-{id:79,name:"CHARLES Pierreinne",formation:"BACH CDME",rythme:"Alternance",phone:"0627562203",bank:"",echeancesRaw:"",status:"pending",paid:0,total:0},
-{id:80,name:"SIDJE Amstrong",formation:"M1 MSC",rythme:"IOA",phone:"0699670981",bank:"CE",echeancesRaw:"PVT 380€ LE 30/08/25 - 380€ le 30/09/2025 puis pvt de 818,57€du 30/01/26 au 30/07/26",status:"pending",paid:0,total:5690},
-{id:81,name:"TANGHAWAYE Ngamba Bénédicte",formation:"M2 RH",rythme:"IOA",phone:"0745995760",bank:"SG",echeancesRaw:"REGLE 760€/ESP LE 24/09/25 a réglé 1370€/ESP LE 02/02/26 puis PVT DE 554,66€ DU 28/02/26 AU 30/07/26",status:"ok",paid:2130,total:4903},
-{id:82,name:"MOUSSAVOU Morgane",formation:"M1 MSC",rythme:"Initiale",phone:"0776964197",bank:"CM",echeancesRaw:"PVT 760€ LE 30/08/25 PUIS PVT DE 498,18€ DU 07/09/2025 AU 07/07/26",status:"pending",paid:0,total:6250},
-{id:83,name:"ELO Yann Sorrel",formation:"M1 MSC",rythme:"IOA",phone:"0781514525",bank:"",echeancesRaw:"PVT 380€ le 01/09/25 et 380€ le 01/10/25 puis PVT DE 818,58€ du 01/01/2026 au 01/07/2026",status:"pending",paid:0,total:5671},
-{id:84,name:"ASSOH Akissi Marie Doris",formation:"M1 MSC",rythme:"IOA",phone:"0753036158",bank:"SG",echeancesRaw:"PVT 760€ LE 28/10/25 ET PUIS PVT 818,58€ DU 28/01/26 AU 28/07/26",status:"pending",paid:0,total:5690},
-{id:85,name:"VENGEON Sacha",formation:"BTS COM 1",rythme:"IOA",phone:"0638227708",bank:"SG",echeancesRaw:"A réglé 760€/CB puis pvt de 528,75€ du 10/12/25 au 10/07/26",status:"ok",paid:760,total:4990},
-{id:86,name:"FOFANA FANTA",formation:"M2 RH",rythme:"IOA",phone:"0762980406",bank:"BNP",echeancesRaw:"a réglé 260€ /CB LE 24/06/25 PUIS PVT DE 623€ DU 05/01/26 AU 05/10/26",status:"ok",paid:260,total:6490},
-{id:87,name:"CHARLES Junel",formation:"BTS COM 2",rythme:"IOA",phone:"0765770912",bank:"",echeancesRaw:"PVT 1884,48€ LE 06/01/26 ET PVT DE 471,12€ DU 06/02/2026 AU 06/06/26",status:"pending",paid:0,total:4240},
-{id:88,name:"DJOMATIN Ayaba Mawousse",formation:"M2 RH",rythme:"IOA",phone:"0695561915",bank:"SG",echeancesRaw:"PVT DE 927,15€ DU 30/01/26 AU 30/07/26",status:"pending",paid:0,total:6490},
-{id:89,name:"DASSOU Firidam",formation:"M2 RH",rythme:"IOA",phone:"0759300467",bank:"SG",echeancesRaw:"PVT 760€ LE 06/10/25 PUIS 818,58€/CB LE 27/11/25 DU 06/02/26 AU 06/07/26",status:"pending",paid:0,total:5690},
-{id:90,name:"DIALLO Ibrahim Oumarou",formation:"M1 FSO",rythme:"IOA",phone:"0759213627",bank:"LCL",echeancesRaw:"PVT 760E LE 15/10/25 PUIS PVT 818,58€ DU 15/01/26 AU 15/07/26",status:"pending",paid:0,total:5690},
-];
 
-let currentStudentId=null;
+<!-- PAGE LOGIN -->
+<div id="loginPage" class="login-container">
+    <div class="login-box">
+        <h1>🎓 Gestion Effectifs</h1>
+        <p class="subtitle">2025-26</p>
+        <div class="login-error" id="loginError">Identifiants incorrects</div>
+        <div class="form-group">
+            <label>Nom d'utilisateur</label>
+            <input type="text" id="loginUsername" placeholder="Votre identifiant">
+        </div>
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" id="loginPassword" placeholder="Votre mot de passe" onkeypress="if(event.key==='Enter')login()">
+        </div>
+        <button class="btn btn-primary" onclick="login()">🔐 Se connecter</button>
+        <div class="login-footer">Propulsé par <a href="https://770lab.com" target="_blank">770 Lab</a></div>
+    </div>
+</div>
 
-function sortStudentsAlphabetically(){students.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}))}
-function updateStats(){
-    document.getElementById("totalCount").textContent=students.length;
-    document.getElementById("okCount").textContent=students.filter(s=>s.status==="ok").length;
-    document.getElementById("pendingCount").textContent=students.filter(s=>s.status==="pending").length;
-    document.getElementById("lateCount").textContent=students.filter(s=>s.status==="late").length;
-}
-
-function updateFormationFilter(){
-    const formations=[...new Set(students.map(s=>s.formation).filter(f=>f))].sort();
-    const select=document.getElementById("formationFilter");
-    select.innerHTML='<option value="">Toutes les formations</option>'+formations.map(f=>'<option value="'+f+'">'+f+'</option>').join('');
-}
-
-function renderStudents(data){
-    data=data||students;
-    data=[...data].sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
-    let html="";
-    for(let i=0;i<data.length;i++){
-        const s=data[i];
-        const st=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ Retard";
-        const pct=s.total>0?Math.round(s.paid/s.total*100):0;
-        html+='<div class="student-card" onclick="openDetailModal('+s.id+')"><div class="student-header"><div><div class="student-name">'+s.name+'</div><span class="student-formation">'+s.formation+'</span></div><span class="status-badge '+s.status+'">'+st+'</span></div><div class="student-details"><div class="detail-row">📞 '+s.phone+'</div><div class="detail-row">📚 '+s.rythme+'</div>'+(s.bank?'<div class="detail-row">🏦 '+s.bank+'</div>':'')+'</div><div class="payment-progress"><div class="payment-bar '+s.status+'" style="width:'+pct+'%"></div></div><div class="payment-info"><span>'+s.paid+'€ payés</span><span>'+s.total+'€ total</span></div></div>';
-    }
-    document.getElementById("studentsGrid").innerHTML=html;
-}
-
-function filterStudents(){
-    const search=document.getElementById("searchInput").value.toLowerCase();
-    const formation=document.getElementById("formationFilter").value;
-    const status=document.getElementById("statusFilter").value;
-    const filtered=students.filter(s=>{
-        const matchSearch=s.name.toLowerCase().includes(search)||s.phone.includes(search);
-        const matchFormation=!formation||s.formation===formation;
-        const matchStatus=!status||s.status===status;
-        return matchSearch&&matchFormation&&matchStatus;
-    });
-    renderStudents(filtered);
-}
-
-function openModal(){document.getElementById("modalOverlay").classList.add("active")}
-function closeModal(){
-    document.getElementById("modalOverlay").classList.remove("active");
-    document.getElementById("paymentInput").value="";
-    document.getElementById("studentName").value="";
-    document.getElementById("studentPhone").value="";
-    document.getElementById("studentBank").value="";
-    document.getElementById("studentFormation").value="";
-}
-
-function openDetailModal(id){
-    currentStudentId=id;
-    const s=students.find(st=>st.id===id);
-    if(!s)return;
-    const pct=s.total>0?Math.round(s.paid/s.total*100):0;
-    const remaining=s.total-s.paid;
-    const statusText=s.status==="ok"?"✅ À jour":s.status==="pending"?"⏳ En attente":"⚠️ En retard";
-    const initials=s.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+<!-- PAGE PRINCIPALE -->
+<div id="mainPage" class="app" style="display:none">
+    <header class="header">
+        <div class="logo"><span>🎓</span><h1>Gestion Effectifs 2025-26</h1></div>
+        <div class="header-buttons">
+            <div class="user-info">👤 <span id="currentUser">-</span></div>
+            <button class="btn btn-success btn-sm" onclick="openImportModal()">📥 Importer</button>
+            <button class="btn btn-secondary btn-sm" onclick="openHistoryModal()">📜 Historique</button>
+            <button class="btn btn-primary btn-sm" onclick="openModal()">+ Nouvel étudiant</button>
+            <button class="btn btn-danger btn-sm" onclick="logout()">🚪</button>
+        </div>
+    </header>
     
-    const html=`
+    <div class="dashboard">
+        <div class="stat-card"><div class="stat-icon blue">👥</div><div><span class="stat-value" id="totalCount">0</span><span class="stat-label">Étudiants</span></div></div>
+        <div class="stat-card"><div class="stat-icon green">✅</div><div><span class="stat-value" id="okCount">0</span><span class="stat-label">À jour</span></div></div>
+        <div class="stat-card"><div class="stat-icon orange">⏳</div><div><span class="stat-value" id="pendingCount">0</span><span class="stat-label">En attente</span></div></div>
+        <div class="stat-card"><div class="stat-icon red">⚠️</div><div><span class="stat-value" id="lateCount">0</span><span class="stat-label">Retard</span></div></div>
+    </div>
+    
+    <div class="filters">
+        <div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher un étudiant..." oninput="renderStudents()"></div>
+        <select id="formationFilter" onchange="renderStudents()"><option value="">Toutes formations</option></select>
+        <select id="statusFilter" onchange="renderStudents()"><option value="">Tous statuts</option><option value="ok">✅ À jour</option><option value="pending">⏳ En attente</option><option value="late">⚠️ En retard</option></select>
+        <button class="btn btn-secondary btn-sm" onclick="loadStudents()">🔄 Actualiser</button>
+    </div>
+    
+    <div class="students-grid" id="studentsGrid"></div>
+    
+    <div class="footer">Propulsé par <a href="https://770lab.com" target="_blank">770 Lab</a></div>
+</div>
+
+<!-- MODAL NOUVEL ÉTUDIANT -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header"><h2>📝 Nouvel étudiant</h2><button class="close-btn" onclick="closeModal()">×</button></div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group"><label>Nom</label><input type="text" id="studentNom" placeholder="NOM"></div>
+                <div class="form-group"><label>Prénom</label><input type="text" id="studentPrenom" placeholder="Prénom"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Formation</label><input type="text" id="studentFormation" placeholder="Ex: M1 INFO CS"></div>
+                <div class="form-group"><label>Rythme</label><select id="studentRythme"><option value="IOA">IOA</option><option value="Initiale">Initiale</option><option value="Alternance">Alternance</option><option value="SFP">SFP</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Téléphone</label><input type="text" id="studentPhone" placeholder="0612345678"></div>
+                <div class="form-group"><label>Banque</label><input type="text" id="studentBank" placeholder="BNP, LCL, SG..."></div>
+            </div>
+            <div class="form-group">
+                <label>Échéances</label>
+                <textarea id="studentEcheances" placeholder="Ex: 760 le 5/9/25 puis 323 du 5/10/25 au 5/6/26" oninput="previewEcheances(this.value)"></textarea>
+                <div id="echeancesPreview" class="echeances-section" style="display:none"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+            <button class="btn btn-primary" onclick="saveStudent()">💾 Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DÉTAIL ÉTUDIANT -->
+<div class="modal-overlay" id="detailModal" onclick="closeDetailModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header"><h2>👤 Fiche étudiant</h2><button class="close-btn" onclick="closeDetailModal()">×</button></div>
+        <div class="modal-body" id="detailContent"></div>
+        <div class="modal-footer" id="detailFooter"></div>
+    </div>
+</div>
+
+<!-- MODAL IMPORT -->
+<div class="modal-overlay" id="importModal" onclick="closeImportModal()">
+    <div class="modal" onclick="event.stopPropagation()" style="max-width:800px">
+        <div class="modal-header"><h2>📥 Importer des données</h2><button class="close-btn" onclick="closeImportModal()">×</button></div>
+        <div class="modal-body">
+            <div class="import-zone" id="importZone" onclick="document.getElementById('fileInput').click()">
+                <span style="font-size:48px">📄</span>
+                <p style="color:rgba(255,255,255,0.6);margin-top:10px">Cliquez ou glissez un fichier CSV/TSV</p>
+                <input type="file" id="fileInput" accept=".csv,.tsv,.txt" onchange="handleFileSelect(event)">
+            </div>
+            <div id="importPreview" style="display:none">
+                <div class="import-stats">
+                    <div class="import-stat"><div class="import-stat-value" id="previewCount">0</div><div class="import-stat-label">Détectés</div></div>
+                    <div class="import-stat"><div class="import-stat-value" id="previewNew">0</div><div class="import-stat-label">Nouveaux</div></div>
+                    <div class="import-stat"><div class="import-stat-value" id="previewUpdate">0</div><div class="import-stat-label">Màj</div></div>
+                </div>
+                <div class="import-preview"><table><thead><tr><th>Nom</th><th>Formation</th><th>Rythme</th><th>Tél</th></tr></thead><tbody id="previewTable"></tbody></table></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeImportModal()">Annuler</button>
+            <button class="btn btn-primary" id="importBtn" onclick="confirmImport()" disabled>📥 Importer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HISTORIQUE -->
+<div class="modal-overlay" id="historyModal" onclick="closeHistoryModal()">
+    <div class="modal" onclick="event.stopPropagation()" style="max-width:800px">
+        <div class="modal-header"><h2>📜 Historique des modifications</h2><button class="close-btn" onclick="closeHistoryModal()">×</button></div>
+        <div class="modal-body">
+            <div class="history-list" id="historyList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST & LOADING -->
+<div class="toast" id="toast"></div>
+<div class="loading" id="loading"><div class="spinner"></div></div>
+
+<script>
+// ==========================================
+// CONFIGURATION - REMPLACEZ CETTE URL
+// ==========================================
+const API_URL = 'VOTRE_URL_APPS_SCRIPT';
+
+let students = [];
+let currentUser = null;
+let currentStudentId = null;
+let pendingImport = [];
+
+// ==========================================
+// AUTHENTIFICATION
+// ==========================================
+function login() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    
+    if (!username || !password) {
+        showLoginError('Veuillez remplir tous les champs');
+        return;
+    }
+    
+    // Mode test si l'API n'est pas configurée
+    if (API_URL === 'VOTRE_URL_APPS_SCRIPT') {
+        currentUser = { username: username, role: 'admin' };
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        showMainPage();
+        showToast('⚠️ Mode test - Configurez l\'API pour la prod', true);
+        return;
+    }
+    
+    showLoading(true);
+    
+    fetch(`${API_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(r => r.json())
+        .then(data => {
+            showLoading(false);
+            if (data.success) {
+                currentUser = data.user;
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                showMainPage();
+            } else {
+                showLoginError(data.error || 'Identifiants incorrects');
+            }
+        })
+        .catch(err => {
+            showLoading(false);
+            showLoginError('Erreur de connexion au serveur');
+        });
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('user');
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('mainPage').style.display = 'none';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+}
+
+function showLoginError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+function showMainPage() {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('mainPage').style.display = 'block';
+    document.getElementById('currentUser').textContent = currentUser.username;
+    document.getElementById('loginError').style.display = 'none';
+    loadStudents();
+}
+
+// ==========================================
+// CHARGEMENT DES DONNÉES
+// ==========================================
+function loadStudents() {
+    // Mode test
+    if (API_URL === 'VOTRE_URL_APPS_SCRIPT') {
+        students = JSON.parse(localStorage.getItem('students_test') || '[]');
+        updateStats();
+        updateFormationFilter();
+        renderStudents();
+        return;
+    }
+    
+    showLoading(true);
+    
+    fetch(`${API_URL}?action=getStudents`)
+        .then(r => r.json())
+        .then(data => {
+            showLoading(false);
+            if (data.success) {
+                students = data.students;
+                students.sort((a, b) => (a.nom || '').localeCompare(b.nom || '', 'fr'));
+                updateStats();
+                updateFormationFilter();
+                renderStudents();
+            } else {
+                showToast('Erreur: ' + data.error, true);
+            }
+        })
+        .catch(err => {
+            showLoading(false);
+            showToast('Erreur de connexion', true);
+        });
+}
+
+function saveToServer(student, callback) {
+    // Mode test
+    if (API_URL === 'VOTRE_URL_APPS_SCRIPT') {
+        const now = new Date().toLocaleString('fr-FR');
+        if (!student.id) {
+            student.id = Date.now();
+            student.creePar = currentUser.username;
+            student.creeDate = now;
+        }
+        student.modifiePar = currentUser.username;
+        student.modifieDate = now;
+        
+        const idx = students.findIndex(s => s.id === student.id);
+        if (idx >= 0) students[idx] = student;
+        else students.push(student);
+        
+        localStorage.setItem('students_test', JSON.stringify(students));
+        if (callback) callback({ success: true, student: student });
+        return;
+    }
+    
+    showLoading(true);
+    fetch(`${API_URL}?action=saveStudent&user=${encodeURIComponent(currentUser.username)}&data=${encodeURIComponent(JSON.stringify(student))}`)
+        .then(r => r.json())
+        .then(data => {
+            showLoading(false);
+            if (callback) callback(data);
+        })
+        .catch(err => {
+            showLoading(false);
+            showToast('Erreur de connexion', true);
+        });
+}
+
+function deleteFromServer(id, callback) {
+    // Mode test
+    if (API_URL === 'VOTRE_URL_APPS_SCRIPT') {
+        students = students.filter(s => s.id !== id);
+        localStorage.setItem('students_test', JSON.stringify(students));
+        if (callback) callback({ success: true });
+        return;
+    }
+    
+    showLoading(true);
+    fetch(`${API_URL}?action=deleteStudent&id=${id}&user=${encodeURIComponent(currentUser.username)}`)
+        .then(r => r.json())
+        .then(data => {
+            showLoading(false);
+            if (callback) callback(data);
+        });
+}
+
+function updateStats() {
+    document.getElementById('totalCount').textContent = students.length;
+    document.getElementById('okCount').textContent = students.filter(s => s.status === 'ok').length;
+    document.getElementById('pendingCount').textContent = students.filter(s => s.status === 'pending').length;
+    document.getElementById('lateCount').textContent = students.filter(s => s.status === 'late').length;
+}
+
+function updateFormationFilter() {
+    const formations = [...new Set(students.map(s => s.formation).filter(f => f))].sort();
+    const select = document.getElementById('formationFilter');
+    const current = select.value;
+    select.innerHTML = '<option value="">Toutes formations</option>' + formations.map(f => `<option value="${f}">${f}</option>`).join('');
+    select.value = current;
+}
+
+function renderStudents() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const formation = document.getElementById('formationFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    
+    const filtered = students.filter(s => {
+        const matchSearch = (s.nom || '').toLowerCase().includes(search) || (s.telephone || '').includes(search);
+        const matchFormation = !formation || s.formation === formation;
+        const matchStatus = !status || s.status === status;
+        return matchSearch && matchFormation && matchStatus;
+    });
+    
+    const grid = document.getElementById('studentsGrid');
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(255,255,255,0.4)"><span style="font-size:64px;display:block;margin-bottom:20px">📭</span>Aucun étudiant trouvé</div>';
+        return;
+    }
+    
+    grid.innerHTML = filtered.map(s => {
+        const pct = s.total > 0 ? Math.round((s.paid || 0) / s.total * 100) : 0;
+        const statusText = s.status === 'ok' ? '✅ À jour' : s.status === 'pending' ? '⏳ En attente' : '⚠️ En retard';
+        return `
+            <div class="student-card" onclick="openDetailModal('${s.id}')">
+                <div class="student-header">
+                    <div><div class="student-name">${s.nom || 'Sans nom'}</div><span class="student-formation">${s.formation || '-'}</span></div>
+                    <span class="status-badge ${s.status || 'pending'}">${statusText}</span>
+                </div>
+                <div class="student-details">
+                    <div class="detail-row">📞 ${s.telephone || 'Non renseigné'}</div>
+                    <div class="detail-row">📚 ${s.rythme || '-'}</div>
+                </div>
+                <div class="payment-progress"><div class="payment-bar ${s.status || 'pending'}" style="width:${pct}%"></div></div>
+                <div class="payment-info"><span>${s.paid || 0}€ payés</span><span>${s.total || 0}€ total</span></div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ==========================================
+// MODAL NOUVEL ÉTUDIANT
+// ==========================================
+function openModal() {
+    document.getElementById('studentNom').value = '';
+    document.getElementById('studentPrenom').value = '';
+    document.getElementById('studentFormation').value = '';
+    document.getElementById('studentRythme').value = 'IOA';
+    document.getElementById('studentPhone').value = '';
+    document.getElementById('studentBank').value = '';
+    document.getElementById('studentEcheances').value = '';
+    document.getElementById('echeancesPreview').style.display = 'none';
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function saveStudent() {
+    const nom = document.getElementById('studentNom').value.trim();
+    const prenom = document.getElementById('studentPrenom').value.trim();
+    const fullName = (nom + ' ' + prenom).trim();
+    
+    if (!fullName) {
+        showToast('Veuillez remplir le nom', true);
+        return;
+    }
+    
+    const echeancesRaw = document.getElementById('studentEcheances').value.trim();
+    const parsed = parseEcheances(echeancesRaw);
+    
+    const student = {
+        nom: fullName,
+        formation: document.getElementById('studentFormation').value.trim(),
+        rythme: document.getElementById('studentRythme').value,
+        telephone: document.getElementById('studentPhone').value.trim().replace(/[^0-9]/g, ''),
+        banque: document.getElementById('studentBank').value.trim(),
+        echeancesRaw: echeancesRaw,
+        status: 'pending',
+        paid: parsed.paid,
+        total: parsed.total
+    };
+    
+    saveToServer(student, (data) => {
+        if (data.success) {
+            closeModal();
+            loadStudents();
+            showToast('✅ ' + fullName + ' enregistré!');
+        } else {
+            showToast('Erreur: ' + data.error, true);
+        }
+    });
+}
+
+// ==========================================
+// MODAL DÉTAIL ÉTUDIANT
+// ==========================================
+function openDetailModal(id) {
+    currentStudentId = id;
+    const s = students.find(st => st.id == id);
+    if (!s) return;
+    
+    const pct = s.total > 0 ? Math.round((s.paid || 0) / s.total * 100) : 0;
+    const remaining = (s.total || 0) - (s.paid || 0);
+    const statusText = s.status === 'ok' ? '✅ À jour' : s.status === 'pending' ? '⏳ En attente' : '⚠️ En retard';
+    const initials = (s.nom || 'XX').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    
+    // Parser les échéances
+    const parsed = parseEcheances(s.echeancesRaw || '');
+    let echeancesHtml = '';
+    if (parsed.echeances.length > 0) {
+        echeancesHtml = `
+            <div class="echeances-section">
+                <div class="echeances-header">
+                    <div class="echeances-stats">
+                        <div class="stat"><div class="stat-value green">${parsed.paid}€</div><div class="stat-label">Payé</div></div>
+                        <div class="stat"><div class="stat-value orange">${parsed.remaining}€</div><div class="stat-label">Restant</div></div>
+                    </div>
+                </div>
+                <div class="echeances-list">
+                    ${parsed.echeances.map((e, i) => `
+                        <div class="echeance-item ${e.paid ? 'paid' : ''}">
+                            <div class="echeance-check ${e.paid ? 'checked' : ''}"></div>
+                            <div class="echeance-date">${e.label || formatDate(e.date)}</div>
+                            <div class="echeance-amount ${e.paid ? 'paid' : ''}">${e.montant.toFixed(0)}€</div>
+                            <div class="echeance-type">${e.type}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else if (s.echeancesRaw) {
+        echeancesHtml = `<div class="echeances-raw">${s.echeancesRaw}</div>`;
+    } else {
+        echeancesHtml = '<p style="color:rgba(255,255,255,0.4);font-style:italic">Aucune échéance définie</p>';
+    }
+    
+    const html = `
         <div class="student-profile">
             <div class="student-avatar">${initials}</div>
-            <h3>${s.name}</h3>
-            <span class="student-formation">${s.formation}</span>
+            <h3>${s.nom || 'Sans nom'}</h3>
+            <span class="student-formation">${s.formation || '-'}</span>
         </div>
         <div class="status-section">
             <span>Statut:</span>
-            <span class="status-badge ${s.status}">${statusText}</span>
+            <span class="status-badge ${s.status || 'pending'}">${statusText}</span>
         </div>
         <div class="info-section">
             <h4>📋 Informations</h4>
             <div class="info-grid">
-                <div class="info-item"><div class="info-label">Téléphone</div><div class="info-value"><a href="tel:${s.phone}">${s.phone}</a></div></div>
-                <div class="info-item"><div class="info-label">Rythme</div><div class="info-value">${s.rythme}</div></div>
-                <div class="info-item"><div class="info-label">Banque</div><div class="info-value">${s.bank||'Non renseignée'}</div></div>
-                <div class="info-item"><div class="info-label">Formation</div><div class="info-value">${s.formation}</div></div>
+                <div class="info-item"><div class="info-label">Téléphone</div><div class="info-value"><a href="tel:${s.telephone}">${s.telephone || '-'}</a></div></div>
+                <div class="info-item"><div class="info-label">Rythme</div><div class="info-value">${s.rythme || '-'}</div></div>
+                <div class="info-item"><div class="info-label">Banque</div><div class="info-value">${s.banque || '-'}</div></div>
+                <div class="info-item"><div class="info-label">Formation</div><div class="info-value">${s.formation || '-'}</div></div>
             </div>
         </div>
         <div class="info-section">
             <h4>💳 Situation financière</h4>
-            <div class="info-grid">
-                <div class="info-item full">
-                    <div class="payment-detail">
-                        <div class="payment-progress"><div class="payment-bar ${s.status}" style="width:${pct}%"></div></div>
-                        <div class="payment-stats">
-                            <span class="paid">${s.paid}€ payés (${pct}%)</span>
-                            <span class="remaining">${remaining}€ restant</span>
-                        </div>
-                    </div>
+            <div class="payment-detail">
+                <div class="payment-progress"><div class="payment-bar ${s.status || 'pending'}" style="width:${pct}%"></div></div>
+                <div class="payment-stats">
+                    <span class="paid">${s.paid || 0}€ payés (${pct}%)</span>
+                    <span class="remaining">${remaining}€ restant</span>
                 </div>
             </div>
         </div>
         <div class="info-section">
             <h4>📅 Échéances</h4>
-            <div class="echeances-raw">${s.echeancesRaw||'Aucune échéance définie'}</div>
+            ${echeancesHtml}
         </div>
-        <div class="info-section notes-section">
+        <div class="info-section">
             <h4>📝 Notes</h4>
-            <textarea id="studentNotes" placeholder="Ajouter des notes...">${s.notes||''}</textarea>
+            <textarea id="studentNotes" class="notes-section" placeholder="Ajouter des notes...">${s.notes || ''}</textarea>
+        </div>
+        <div class="meta-info">
+            Créé par <strong>${s.creePar || '-'}</strong> le ${s.creeDate || '-'}<br>
+            Modifié par <strong>${s.modifiePar || '-'}</strong> le ${s.modifieDate || '-'}
         </div>
     `;
     
-    document.getElementById("detailContent").innerHTML=html;
-    document.getElementById("detailFooter").innerHTML=`
+    document.getElementById('detailContent').innerHTML = html;
+    document.getElementById('detailFooter').innerHTML = `
         <button class="btn btn-danger" onclick="deleteStudent()">🗑️ Supprimer</button>
         <button class="btn btn-secondary" onclick="closeDetailModal()">Fermer</button>
         <button class="btn btn-primary" onclick="editStudent()">✏️ Modifier</button>
     `;
-    document.getElementById("detailModal").classList.add("active");
+    document.getElementById('detailModal').classList.add('active');
 }
 
-function closeDetailModal(){
-    if(currentStudentId){
-        const notesEl=document.getElementById("studentNotes");
-        if(notesEl){
-            const s=students.find(st=>st.id===currentStudentId);
-            if(s)s.notes=notesEl.value;
+function closeDetailModal() {
+    if (currentStudentId) {
+        const notesEl = document.getElementById('studentNotes');
+        if (notesEl) {
+            const s = students.find(st => st.id == currentStudentId);
+            if (s && s.notes !== notesEl.value) {
+                s.notes = notesEl.value;
+                saveToServer(s, () => {});
+            }
         }
     }
-    document.getElementById("detailModal").classList.remove("active");
-    currentStudentId=null;
+    document.getElementById('detailModal').classList.remove('active');
+    currentStudentId = null;
 }
 
-function editStudent(){
-    const s=students.find(st=>st.id===currentStudentId);
-    if(!s)return;
-    const statusOptions='<option value="ok" '+(s.status==='ok'?'selected':'')+'>✅ À jour</option><option value="pending" '+(s.status==='pending'?'selected':'')+'>⏳ En attente</option><option value="late" '+(s.status==='late'?'selected':'')+'>⚠️ En retard</option>';
-    const rythmeOptions=['IOA','Initiale','Alternance','SFP'].map(r=>'<option value="'+r+'" '+(s.rythme===r?'selected':'')+'>'+r+'</option>').join('');
+function editStudent() {
+    const s = students.find(st => st.id == currentStudentId);
+    if (!s) return;
     
-    const html=`
-        <div class="info-section">
-            <h4>📋 Informations</h4>
-            <div class="info-grid">
-                <div class="info-item full"><div class="info-label">Nom complet</div><input type="text" id="editName" class="edit-input" value="${s.name}"></div>
-                <div class="info-item"><div class="info-label">Téléphone</div><input type="text" id="editPhone" class="edit-input" value="${s.phone}"></div>
-                <div class="info-item"><div class="info-label">Formation</div><input type="text" id="editFormation" class="edit-input" value="${s.formation}"></div>
-                <div class="info-item"><div class="info-label">Rythme</div><select id="editRythme" class="edit-input">${rythmeOptions}</select></div>
-                <div class="info-item full"><div class="info-label">Banque</div><input type="text" id="editBank" class="edit-input" value="${s.bank||''}"></div>
-            </div>
+    const statusOptions = ['ok', 'pending', 'late'].map(v => 
+        `<option value="${v}" ${s.status === v ? 'selected' : ''}>${v === 'ok' ? '✅ À jour' : v === 'pending' ? '⏳ En attente' : '⚠️ En retard'}</option>`
+    ).join('');
+    
+    const rythmeOptions = ['IOA', 'Initiale', 'Alternance', 'SFP'].map(v =>
+        `<option value="${v}" ${s.rythme === v ? 'selected' : ''}>${v}</option>`
+    ).join('');
+    
+    const html = `
+        <div class="form-group"><label>Nom complet</label><input type="text" id="editNom" class="edit-input" value="${s.nom || ''}"></div>
+        <div class="form-row">
+            <div class="form-group"><label>Téléphone</label><input type="text" id="editPhone" class="edit-input" value="${s.telephone || ''}"></div>
+            <div class="form-group"><label>Formation</label><input type="text" id="editFormation" class="edit-input" value="${s.formation || ''}"></div>
         </div>
-        <div class="info-section">
-            <h4>💳 Finances</h4>
-            <div class="info-grid">
-                <div class="info-item"><div class="info-label">Statut</div><select id="editStatus" class="edit-input">${statusOptions}</select></div>
-                <div class="info-item"><div class="info-label">Montant payé (€)</div><input type="number" id="editPaid" class="edit-input" value="${s.paid}" min="0"></div>
-                <div class="info-item full"><div class="info-label">Montant total (€)</div><input type="number" id="editTotal" class="edit-input" value="${s.total}" min="0"></div>
-            </div>
+        <div class="form-row">
+            <div class="form-group"><label>Rythme</label><select id="editRythme" class="edit-input">${rythmeOptions}</select></div>
+            <div class="form-group"><label>Banque</label><input type="text" id="editBank" class="edit-input" value="${s.banque || ''}"></div>
         </div>
-        <div class="info-section">
-            <h4>📅 Échéances (texte)</h4>
-            <textarea id="editEcheances" class="edit-input" style="min-height:100px">${s.echeancesRaw||''}</textarea>
+        <div class="form-row">
+            <div class="form-group"><label>Statut</label><select id="editStatus" class="edit-input">${statusOptions}</select></div>
+            <div class="form-group"><label>Montant payé (€)</label><input type="number" id="editPaid" class="edit-input" value="${s.paid || 0}"></div>
         </div>
-        <div class="info-section notes-section">
-            <h4>📝 Notes</h4>
-            <textarea id="editNotes">${s.notes||''}</textarea>
-        </div>
+        <div class="form-group"><label>Montant total (€)</label><input type="number" id="editTotal" class="edit-input" value="${s.total || 0}"></div>
+        <div class="form-group"><label>Échéances</label><textarea id="editEcheances" class="edit-input" style="min-height:80px">${s.echeancesRaw || ''}</textarea></div>
+        <div class="form-group"><label>Notes</label><textarea id="editNotes" class="edit-input">${s.notes || ''}</textarea></div>
     `;
-    document.getElementById("detailContent").innerHTML=html;
-    document.getElementById("detailFooter").innerHTML=`
-        <button class="btn btn-secondary" onclick="openDetailModal(${currentStudentId})">Annuler</button>
+    
+    document.getElementById('detailContent').innerHTML = html;
+    document.getElementById('detailFooter').innerHTML = `
+        <button class="btn btn-secondary" onclick="openDetailModal('${currentStudentId}')">Annuler</button>
         <button class="btn btn-primary" onclick="saveEdit()">💾 Enregistrer</button>
     `;
 }
 
-function saveEdit(){
-    const s=students.find(st=>st.id===currentStudentId);
-    if(!s)return;
-    s.name=document.getElementById("editName").value.trim();
-    s.phone=document.getElementById("editPhone").value.trim();
-    s.formation=document.getElementById("editFormation").value.trim();
-    s.rythme=document.getElementById("editRythme").value;
-    s.bank=document.getElementById("editBank").value.trim();
-    s.status=document.getElementById("editStatus").value;
-    s.paid=parseInt(document.getElementById("editPaid").value)||0;
-    s.total=parseInt(document.getElementById("editTotal").value)||0;
-    s.echeancesRaw=document.getElementById("editEcheances").value;
-    s.notes=document.getElementById("editNotes").value;
-    sortStudentsAlphabetically();
-    updateStats();
-    updateFormationFilter();
-    renderStudents();
-    openDetailModal(currentStudentId);
+function saveEdit() {
+    const s = students.find(st => st.id == currentStudentId);
+    if (!s) return;
+    
+    s.nom = document.getElementById('editNom').value.trim();
+    s.telephone = document.getElementById('editPhone').value.trim();
+    s.formation = document.getElementById('editFormation').value.trim();
+    s.rythme = document.getElementById('editRythme').value;
+    s.banque = document.getElementById('editBank').value.trim();
+    s.status = document.getElementById('editStatus').value;
+    s.paid = parseFloat(document.getElementById('editPaid').value) || 0;
+    s.total = parseFloat(document.getElementById('editTotal').value) || 0;
+    s.echeancesRaw = document.getElementById('editEcheances').value;
+    s.notes = document.getElementById('editNotes').value;
+    
+    saveToServer(s, (data) => {
+        if (data.success) {
+            loadStudents();
+            openDetailModal(currentStudentId);
+            showToast('✅ Modifications enregistrées');
+        } else {
+            showToast('Erreur: ' + data.error, true);
+        }
+    });
 }
 
-function deleteStudent(){
-    if(!currentStudentId)return;
-    const s=students.find(st=>st.id===currentStudentId);
-    if(confirm('Supprimer '+s.name+' ?')){
-        students=students.filter(st=>st.id!==currentStudentId);
-        closeDetailModal();
-        updateStats();
-        updateFormationFilter();
-        renderStudents();
+function deleteStudent() {
+    const s = students.find(st => st.id == currentStudentId);
+    if (!s) return;
+    
+    if (!confirm('Supprimer ' + s.nom + ' ?')) return;
+    
+    deleteFromServer(currentStudentId, (data) => {
+        if (data.success) {
+            closeDetailModal();
+            loadStudents();
+            showToast('🗑️ Étudiant supprimé');
+        } else {
+            showToast('Erreur: ' + data.error, true);
+        }
+    });
+}
+
+// ==========================================
+// IMPORT CSV
+// ==========================================
+function openImportModal() {
+    pendingImport = [];
+    document.getElementById('importPreview').style.display = 'none';
+    document.getElementById('importBtn').disabled = true;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('importModal').classList.add('active');
+}
+
+function closeImportModal() {
+    document.getElementById('importModal').classList.remove('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const zone = document.getElementById('importZone');
+    if (zone) {
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+    }
+});
+
+function handleFileSelect(e) {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+}
+
+function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => parseCSV(e.target.result);
+    reader.readAsText(file, 'UTF-8');
+}
+
+function parseCSV(content) {
+    const firstLine = content.split('\n')[0];
+    let sep = '\t';
+    if (firstLine.includes(';') && !firstLine.includes('\t')) sep = ';';
+    else if (firstLine.includes(',') && !firstLine.includes('\t')) sep = ',';
+    
+    const lines = content.split('\n').map(l => l.split(sep).map(c => c.trim()));
+    const headers = lines[0].map(h => h.toUpperCase().replace(/[^A-Z0-9]/g, ''));
+    
+    const col = {
+        nom: headers.findIndex(h => h === 'NOM'),
+        prenom: headers.findIndex(h => h.includes('PRENOM') || h === 'PR2NOM'),
+        formation: headers.findIndex(h => h.includes('FORMATION')),
+        rythme: headers.findIndex(h => h.includes('RYTHME')),
+        telephone: headers.findIndex(h => h.includes('TELEPHONE') || h.includes('TEL')),
+        banque: headers.findIndex(h => h.includes('BANQUE')),
+        echeances: headers.findIndex(h => h.includes('ECHEANCE'))
+    };
+    
+    pendingImport = [];
+    let newCount = 0, updateCount = 0;
+    
+    for (let i = 1; i < lines.length; i++) {
+        const row = lines[i];
+        if (row.length < 2 || !row[col.nom]) continue;
+        
+        const nom = row[col.nom] || '';
+        const prenom = col.prenom >= 0 ? (row[col.prenom] || '') : '';
+        const fullName = (nom + ' ' + prenom).trim();
+        if (!fullName) continue;
+        
+        let phone = col.telephone >= 0 ? (row[col.telephone] || '') : '';
+        phone = phone.replace(/[^0-9]/g, '');
+        if (phone.length === 9 && !phone.startsWith('0')) phone = '0' + phone;
+        if (phone.startsWith('33') && phone.length > 10) phone = '0' + phone.substring(2);
+        
+        let bank = col.banque >= 0 ? (row[col.banque] || '') : '';
+        const bankMatch = bank.match(/^([A-Z\s\.]+)/i);
+        if (bankMatch) bank = bankMatch[1].trim();
+        
+        const echeancesRaw = col.echeances >= 0 ? (row[col.echeances] || '') : '';
+        const parsed = parseEcheances(echeancesRaw);
+        
+        const student = {
+            nom: fullName,
+            formation: col.formation >= 0 ? (row[col.formation] || '') : '',
+            rythme: col.rythme >= 0 ? (row[col.rythme] || 'IOA') : 'IOA',
+            telephone: phone,
+            banque: bank,
+            echeancesRaw: echeancesRaw,
+            status: 'pending',
+            paid: parsed.paid,
+            total: parsed.total
+        };
+        
+        const existing = students.find(s => (s.nom || '').toUpperCase() === fullName.toUpperCase());
+        if (existing) updateCount++; else newCount++;
+        
+        pendingImport.push(student);
+    }
+    
+    document.getElementById('previewCount').textContent = pendingImport.length;
+    document.getElementById('previewNew').textContent = newCount;
+    document.getElementById('previewUpdate').textContent = updateCount;
+    
+    document.getElementById('previewTable').innerHTML = pendingImport.slice(0, 15).map(s =>
+        `<tr><td>${s.nom}</td><td>${s.formation}</td><td>${s.rythme}</td><td>${s.telephone}</td></tr>`
+    ).join('') + (pendingImport.length > 15 ? `<tr><td colspan="4" style="text-align:center;opacity:0.5">... et ${pendingImport.length - 15} autres</td></tr>` : '');
+    
+    document.getElementById('importPreview').style.display = 'block';
+    document.getElementById('importBtn').disabled = false;
+}
+
+function confirmImport() {
+    if (!pendingImport.length) return;
+    
+    // Mode test
+    if (API_URL === 'VOTRE_URL_APPS_SCRIPT') {
+        const now = new Date().toLocaleString('fr-FR');
+        pendingImport.forEach(s => {
+            const existing = students.find(st => (st.nom || '').toUpperCase() === (s.nom || '').toUpperCase());
+            if (existing) {
+                Object.assign(existing, s, { id: existing.id, creePar: existing.creePar, creeDate: existing.creeDate });
+                existing.modifiePar = currentUser.username;
+                existing.modifieDate = now;
+            } else {
+                s.id = Date.now() + Math.random();
+                s.creePar = currentUser.username;
+                s.creeDate = now;
+                s.modifiePar = currentUser.username;
+                s.modifieDate = now;
+                students.push(s);
+            }
+        });
+        localStorage.setItem('students_test', JSON.stringify(students));
+        closeImportModal();
+        loadStudents();
+        showToast(`✅ ${pendingImport.length} étudiants importés!`);
+        return;
+    }
+    
+    showLoading(true);
+    
+    fetch(`${API_URL}?action=importStudents&user=${encodeURIComponent(currentUser.username)}&data=${encodeURIComponent(JSON.stringify(pendingImport))}`)
+        .then(r => r.json())
+        .then(data => {
+            showLoading(false);
+            if (data.success) {
+                closeImportModal();
+                loadStudents();
+                showToast(`✅ ${data.created} créés, ${data.updated} mis à jour`);
+            } else {
+                showToast('Erreur: ' + data.error, true);
+            }
+        });
+}
+
+// ==========================================
+// HISTORIQUE
+// ==========================================
+function openHistoryModal() {
+    document.getElementById('historyModal').classList.add('active');
+    
+    // Mode test
+    if (API_URL === 'VOTRE_URL_APPS_SCRIPT') {
+        document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.4)">Historique non disponible en mode test</p>';
+        return;
+    }
+    
+    document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.4)">Chargement...</p>';
+    
+    fetch(`${API_URL}?action=getHistory`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('historyList').innerHTML = data.history.map(h => `
+                    <div class="history-item">
+                        <div class="history-date">${h.date}</div>
+                        <div class="history-user">${h.utilisateur}</div>
+                        <div class="history-action ${h.action.toLowerCase()}">${h.action}</div>
+                        <div class="history-details"><strong>${h.etudiant}</strong> - ${h.details}</div>
+                    </div>
+                `).join('') || '<p style="text-align:center;color:rgba(255,255,255,0.4)">Aucun historique</p>';
+            }
+        });
+}
+
+function closeHistoryModal() {
+    document.getElementById('historyModal').classList.remove('active');
+}
+
+// ==========================================
+// PARSEUR D'ÉCHÉANCES
+// ==========================================
+function parseEcheances(text) {
+    const result = { echeances: [], paid: 0, remaining: 0, total: 0 };
+    if (!text || !text.trim()) return result;
+    
+    let normalized = text.toLowerCase().replace(/€/g, '').replace(/\s+/g, ' ').trim();
+    const parts = normalized.split(/\s+(?:puis|ensuite|\+|et(?:\s+enfin)?)\s+/);
+    
+    for (const part of parts) {
+        parsePart(part.trim(), result);
+    }
+    
+    result.echeances.sort((a, b) => a.date - b.date);
+    result.echeances.forEach(e => {
+        if (e.paid) result.paid += e.montant;
+        else result.remaining += e.montant;
+    });
+    result.total = result.paid + result.remaining;
+    
+    return result;
+}
+
+function parsePart(text, result) {
+    if (!text) return;
+    
+    // "a réglé X€"
+    const regleMatch = text.match(/(?:a\s+)?(?:réglé|reglé|payé|versé)\s+(\d+(?:[.,]\d+)?)/i);
+    if (regleMatch) {
+        result.echeances.push({
+            date: new Date(),
+            montant: parseFloat(regleMatch[1].replace(',', '.')),
+            type: 'Déjà payé',
+            paid: true,
+            label: 'Déjà réglé'
+        });
+        return;
+    }
+    
+    // "X tous les J jusqu'au DD/MM/YY"
+    const tousMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:par\s+mois\s+)?tous\s+les\s+(\d+)\s+jusqu['\s]?(?:au)?\s*(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/i);
+    if (tousMatch) {
+        const montant = parseFloat(tousMatch[1].replace(',', '.'));
+        const jour = parseInt(tousMatch[2]);
+        const dateFin = makeDate(tousMatch[3], tousMatch[4], tousMatch[5]);
+        dateFin.setDate(dateFin.getDate() + 1);
+        
+        let current = new Date();
+        current.setDate(jour);
+        if (current <= new Date()) current.setMonth(current.getMonth() + 1);
+        
+        while (current < dateFin) {
+            result.echeances.push({ date: new Date(current), montant, type: 'Prélèvement', paid: false });
+            current.setMonth(current.getMonth() + 1);
+        }
+        return;
+    }
+    
+    // "X/mois du DD/MM/YY au DD/MM/YY"
+    const mensMatch = text.match(/(\d+(?:[.,]\d+)?)\s*(?:\/mois|par\s+mois)?\s*(?:du|à\s+partir\s+du)\s+(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})\s+(?:au|jusqu['\s]?au?)\s+(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/i);
+    if (mensMatch) {
+        const montant = parseFloat(mensMatch[1].replace(',', '.'));
+        const dateDebut = makeDate(mensMatch[2], mensMatch[3], mensMatch[4]);
+        const dateFin = makeDate(mensMatch[5], mensMatch[6], mensMatch[7]);
+        dateFin.setDate(dateFin.getDate() + 1);
+        
+        let current = new Date(dateDebut);
+        while (current < dateFin) {
+            result.echeances.push({ date: new Date(current), montant, type: 'Prélèvement', paid: current < new Date() });
+            current.setMonth(current.getMonth() + 1);
+        }
+        return;
+    }
+    
+    // "X le DD/MM/YY"
+    const uniqueMatch = text.match(/(?:(pvt|cb|esp|chq|vrt)\s+)?(\d+(?:[.,]\d+)?)\s*(?:\/(cb|esp|chq|vrt|pvt))?\s*(?:le|pour\s+le)?\s*(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/i);
+    if (uniqueMatch) {
+        const type = getType(uniqueMatch[1] || uniqueMatch[3] || 'pvt');
+        const montant = parseFloat(uniqueMatch[2].replace(',', '.'));
+        const annee = uniqueMatch[6] || new Date().getFullYear();
+        const date = makeDate(uniqueMatch[4], uniqueMatch[5], annee);
+        
+        result.echeances.push({ date, montant, type, paid: date < new Date() });
     }
 }
 
-function saveStudent(){
-    const name=document.getElementById("studentName").value.trim();
-    const phone=document.getElementById("studentPhone").value.trim();
-    const formation=document.getElementById("studentFormation").value.trim();
-    const rythme=document.getElementById("studentRythme").value;
-    const bank=document.getElementById("studentBank").value.trim();
-    const echeancesRaw=document.getElementById("paymentInput").value.trim();
-    
-    if(!name){alert("Veuillez remplir le nom.");return}
-    
-    const newStudent={
-        id:Date.now(),
-        name:name,
-        formation:formation,
-        rythme:rythme,
-        phone:phone,
-        bank:bank,
-        echeancesRaw:echeancesRaw,
-        status:"pending",
-        paid:0,
-        total:0,
-        notes:""
-    };
-    
-    students.push(newStudent);
-    sortStudentsAlphabetically();
-    updateStats();
-    updateFormationFilter();
-    renderStudents();
-    closeModal();
-    alert("✅ "+name+" enregistré!");
+function makeDate(j, m, a) {
+    let annee = parseInt(a);
+    if (annee < 100) annee += 2000;
+    return new Date(annee, parseInt(m) - 1, parseInt(j));
 }
 
-sortStudentsAlphabetically();
-updateStats();
-updateFormationFilter();
-renderStudents();
+function getType(t) {
+    if (!t) return 'Prélèvement';
+    t = t.toLowerCase();
+    if (t.includes('esp')) return 'Espèces';
+    if (t.includes('cb')) return 'CB';
+    if (t.includes('chq')) return 'Chèque';
+    if (t.includes('vrt')) return 'Virement';
+    return 'Prélèvement';
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function previewEcheances(text) {
+    const preview = document.getElementById('echeancesPreview');
+    const parsed = parseEcheances(text);
+    
+    if (parsed.echeances.length === 0) {
+        preview.style.display = 'none';
+        return;
+    }
+    
+    preview.style.display = 'block';
+    preview.innerHTML = `
+        <div class="echeances-header">
+            <strong>Aperçu</strong>
+            <div class="echeances-stats">
+                <div class="stat"><div class="stat-value green">${parsed.paid}€</div><div class="stat-label">Payé</div></div>
+                <div class="stat"><div class="stat-value orange">${parsed.remaining}€</div><div class="stat-label">Restant</div></div>
+                <div class="stat"><div class="stat-value">${parsed.total}€</div><div class="stat-label">Total</div></div>
+            </div>
+        </div>
+        <div class="echeances-list">
+            ${parsed.echeances.slice(0, 8).map(e => `
+                <div class="echeance-item ${e.paid ? 'paid' : ''}">
+                    <div class="echeance-date">${e.label || formatDate(e.date)}</div>
+                    <div class="echeance-amount ${e.paid ? 'paid' : ''}">${e.montant.toFixed(0)}€</div>
+                    <div class="echeance-type">${e.type}</div>
+                </div>
+            `).join('')}
+            ${parsed.echeances.length > 8 ? `<div style="text-align:center;color:rgba(255,255,255,0.4);padding:8px">... et ${parsed.echeances.length - 8} autres</div>` : ''}
+        </div>
+    `;
+}
+
+// ==========================================
+// UTILITAIRES
+// ==========================================
+function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast' + (isError ? ' error' : '');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function showLoading(show) {
+    document.getElementById('loading').classList.toggle('active', show);
+}
+
+// ==========================================
+// INITIALISATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+        try {
+            currentUser = JSON.parse(savedUser);
+            showMainPage();
+        } catch(e) {
+            localStorage.removeItem('user');
+        }
+    }
+});
 </script>
 </body>
 </html>
