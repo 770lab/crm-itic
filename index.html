@@ -220,12 +220,26 @@ function esc(s) { if(!s) return ''; const d=document.createElement('div'); d.tex
 // AUTH
 function doLogin() {
     const u=document.getElementById('loginUser').value.trim(), p=document.getElementById('loginPass').value;
-    if(!u) return;
+    const errEl=document.getElementById('loginError');
+    errEl.style.display='none';
+    if(!u){errEl.textContent='Veuillez saisir un nom d\'utilisateur';errEl.style.display='block';return;}
     if(!API_URL) { currentUser={name:u,role:'admin'}; localStorage.setItem('user',JSON.stringify(currentUser)); showApp(); return; }
     showLoading(true);
-    fetch(API_URL+'?action=login&user='+encodeURIComponent(u)+'&pass='+encodeURIComponent(p))
-        .then(r=>r.json()).then(d=>{ showLoading(false); if(d.success){currentUser=d.user;localStorage.setItem('user',JSON.stringify(currentUser));showApp();}else{document.getElementById('loginError').textContent=d.error||'Identifiants incorrects';document.getElementById('loginError').style.display='block';}})
-        .catch(()=>{showLoading(false);showToast('Erreur de connexion',true);});
+    const url=API_URL+'?action=login&user='+encodeURIComponent(u)+'&pass='+encodeURIComponent(p);
+    fetch(url,{redirect:'follow'})
+        .then(r=>r.text())
+        .then(txt=>{
+            showLoading(false);
+            let d;
+            try{d=JSON.parse(txt);}catch(e){
+                const m=txt.match(/\{[\s\S]*\}/);
+                if(m)try{d=JSON.parse(m[0]);}catch(e2){}
+            }
+            if(!d){errEl.textContent='Réponse invalide du serveur';errEl.style.display='block';return;}
+            if(d.success){currentUser=d.user;localStorage.setItem('user',JSON.stringify(currentUser));showApp();}
+            else{errEl.textContent=d.error||'Identifiants incorrects';errEl.style.display='block';}
+        })
+        .catch(e=>{showLoading(false);errEl.textContent='Erreur de connexion au serveur: '+e.message;errEl.style.display='block';});
 }
 document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('loginUser').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
@@ -241,8 +255,15 @@ function showApp(){
 // API
 function showLoading(v){document.getElementById('loading').classList.toggle('active',v);}
 function showToast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(err?' error':'');setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>t.classList.remove('show'),3000);}
-function apiGet(action,cb){if(!API_URL){cb(getLocalData(action));return;}showLoading(true);fetch(API_URL+'?action='+action).then(r=>r.json()).then(d=>{showLoading(false);cb(d);}).catch(()=>{showLoading(false);showToast('Erreur réseau',true);});}
-function apiPost(action,payload,cb){if(!API_URL){cb(setLocalData(action,payload));return;}showLoading(true);fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload,user:currentUser?.name})}).then(r=>r.json()).then(d=>{showLoading(false);cb(d);}).catch(()=>{showLoading(false);showToast('Erreur réseau',true);});}
+function parseGASResponse(txt){
+    try{return JSON.parse(txt);}catch(e){
+        const m=txt.match(/\{[\s\S]*\}/);
+        if(m)try{return JSON.parse(m[0]);}catch(e2){}
+    }
+    return null;
+}
+function apiGet(action,cb){if(!API_URL){cb(getLocalData(action));return;}showLoading(true);fetch(API_URL+'?action='+action,{redirect:'follow'}).then(r=>r.text()).then(txt=>{showLoading(false);const d=parseGASResponse(txt);if(d)cb(d);else showToast('Réponse serveur invalide',true);}).catch(e=>{showLoading(false);showToast('Erreur réseau: '+e.message,true);});}
+function apiPost(action,payload,cb){if(!API_URL){cb(setLocalData(action,payload));return;}showLoading(true);fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action,...payload,user:currentUser?.name})}).then(r=>r.text()).then(txt=>{showLoading(false);const d=parseGASResponse(txt);if(d)cb(d);else showToast('Réponse serveur invalide',true);}).catch(e=>{showLoading(false);showToast('Erreur réseau: '+e.message,true);});}
 
 function getLocalData(action){
     if(action==='getStudents') return {success:true,students:JSON.parse(localStorage.getItem('students')||'[]')};
