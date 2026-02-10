@@ -264,7 +264,8 @@ function setLocalData(action,payload){
     if(action==='deleteStudent'){const s=list.find(x=>x.id===payload.id);list=list.filter(x=>x.id!==payload.id);localStorage.setItem('students',JSON.stringify(list));if(s)hist.push({date:now,user:currentUser?.name,action:'Suppression',nom:s.nom,details:''});localStorage.setItem('history',JSON.stringify(hist));return {success:true};}
     if(action==='importStudents'){
         for(const s of payload.students){
-            const existing=list.findIndex(x=>x.nom&&s.nom&&x.nom.toUpperCase().trim()===s.nom.toUpperCase().trim());
+            const sNom=(s.nom||'').toUpperCase().trim();const sPre=(s.prenom||'').toUpperCase().trim();
+            const existing=list.findIndex(x=>x.nom&&s.nom&&(x.nom||'').toUpperCase().trim()===sNom&&(x.prenom||'').toUpperCase().trim()===sPre);
             if(existing>=0){list[existing]={...list[existing],...s,modifiePar:currentUser?.name,modifieDate:now};}
             else{s.id=Date.now().toString()+Math.random().toString(36).slice(2,6);s.creePar=currentUser?.name||'';s.creeDate=now;list.push(s);}
         }
@@ -622,11 +623,11 @@ function createStudent(){
 function openImportModal(){
     document.getElementById('importBody').innerHTML=`<p style="margin-bottom:12px;color:var(--text2);font-size:0.85em;">Collez vos données (TSV/CSV) ou choisissez un fichier. Colonnes auto-détectées: NOM, PR2NOM/PRENOM, FORMATION, RYTHME, TELEPHONE, NVX/REINS, PRELEVEMENT, CAUTION, BANQUE, ECHEANCES, TEL TUTEUR, DATE.</p>
     <div class="form-group"><textarea id="importText" rows="8" placeholder="Collez ici votre tableau (copié depuis Excel/Sheets)..."></textarea></div>
-    <div style="display:flex;gap:8px;align-items:center;"><input type="file" id="importFile" accept=".csv,.tsv,.txt" onchange="loadImportFile(this)"><button class="btn btn-primary" onclick="previewImport()">Prévisualiser</button></div>
+    <div style="display:flex;gap:8px;align-items:center;"><input type="file" id="importFile" accept=".csv,.tsv,.txt" onchange="loadImportFile(this)" style="display:none;"><label for="importFile" class="btn btn-outline" style="cursor:pointer;">📁 Choisir un fichier</label><span id="importFileName" style="color:var(--text2);font-size:0.82em;"></span><button class="btn btn-primary" onclick="previewImport()">Prévisualiser</button></div>
     <div id="importPreview"></div>`;
     document.getElementById('importModal').classList.add('active');
 }
-function loadImportFile(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{document.getElementById('importText').value=e.target.result;};r.readAsText(f,'UTF-8');}
+function loadImportFile(input){const f=input.files[0];if(!f)return;document.getElementById('importFileName').textContent=f.name;const r=new FileReader();r.onload=e=>{document.getElementById('importText').value=e.target.result;};r.readAsText(f,'UTF-8');}
 function normalizePhone(p){if(!p)return '';let s=p.replace(/[^\d+]/g,'');if(s.startsWith('33')&&s.length>=11)s='0'+s.slice(2);else if(s.startsWith('+33'))s='0'+s.slice(3);if(s.length===9&&!s.startsWith('0'))s='0'+s;if(s.length===10)s=s.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,'$1 $2 $3 $4 $5');return s;}
 function normalizeHeader(h){return h.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9]/g,'');}
 
@@ -656,7 +657,7 @@ function previewImport(){
         sep=sc>cc?';':',';
     }
     const lines=rawLines.map(l=>parseCSVLine(l,sep));if(lines.length<2)return;
-    const headers=lines[0].map(normalizeHeader);const rows=lines.slice(1).filter(r=>r.some(c=>c));
+    const headers=lines[0].map(normalizeHeader);let rows=lines.slice(1).filter(r=>r.some(c=>c));
     const colMap={};
     headers.forEach((h,i)=>{
         if(/^(NOM|NAME)$/.test(h))colMap.nom=i;
@@ -672,6 +673,7 @@ function previewImport(){
         else if(/^(DATE|DATEINSCRIPTION)$/.test(h))colMap.dateInscription=i;
         else if(/^(TELTUTEUR|TELEPHONETUTEUR)$/.test(h)||h.includes('TUTEUR'))colMap.telTuteur=i;
     });
+    if(colMap.nom!==undefined)rows=rows.filter(r=>(r[colMap.nom]||'').trim()!=='');
     if(colMap.nom!==undefined)rows.sort((a,b)=>(a[colMap.nom]||'').localeCompare(b[colMap.nom]||'','fr',{sensitivity:'base'}));
     let preview=`<div class="import-preview"><p style="margin:8px 0;font-size:0.82em;color:var(--text2);">${rows.length} lignes (triées A→Z). Colonnes: ${Object.keys(colMap).join(', ')}</p><table><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>`;
     rows.slice(0,10).forEach(r=>{preview+=`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`;});
