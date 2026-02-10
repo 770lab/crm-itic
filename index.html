@@ -102,8 +102,6 @@ a { color: var(--primary); }
 .ech-editable:hover { border-bottom-color: var(--primary); color: var(--primary); }
 .ech-add-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
 .ech-add-row input, .ech-add-row select { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.85em; }
-.ech-raw-section { margin-top: 12px; }
-.ech-raw-section summary { cursor: pointer; color: var(--text2); font-size: 0.85em; }
 .stats-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
 .stats-table th { text-align: left; padding: 8px 12px; color: var(--text2); font-weight: 600; font-size: 0.8em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
 .stats-table td { padding: 8px 12px; border-bottom: 1px solid rgba(46,50,70,0.5); }
@@ -469,8 +467,8 @@ function openDetailModal(id){
     <div class="form-row"><div class="form-group"><label>Nom</label><input class="inline-field" id="editNom" value="${esc(s.nom||'')}"></div><div class="form-group"><label>Prénom</label><input class="inline-field" id="editPrenom" value="${esc(s.prenom||'')}"></div></div>
     <div class="form-row"><div class="form-group"><label>Téléphone</label><input class="inline-field" id="editPhone" value="${esc(s.telephone||'')}"></div><div class="form-group"><label>Tél. Tuteur/Contact</label><input class="inline-field" id="editTelTuteur" value="${esc(s.telTuteur||'')}"></div></div>
     <div class="form-row-3"><div class="form-group"><label>Formation</label><select class="inline-select" id="editFormation">${fOpts}</select></div><div class="form-group"><label>Rythme</label><select class="inline-select" id="editRythme">${rOpts}</select></div><div class="form-group"><label>Nvx/Réinscription</label><select class="inline-select" id="editNvxReins">${nOpts}</select></div></div>
-    <div class="form-row-3"><div class="form-group"><label>Prélèvement</label><select class="inline-select" id="editPrelevement"><option value="" ${!s.prelevement?'selected':''}>—</option><option value="OUI" ${s.prelevement==='OUI'?'selected':''}>OUI</option><option value="NON" ${s.prelevement==='NON'?'selected':''}>NON</option></select></div><div class="form-group"><label>Caution</label><input class="inline-field" id="editCaution" value="${esc(s.caution||'')}"></div><div class="form-group"><label>Banque</label><input class="inline-field" id="editBanque" value="${esc(s.banque||'')}"></div></div>
-    <div class="form-row"><div class="form-group"><label>CHQ Caution</label><select class="inline-select" id="editChq" onchange="toggleChqFields()"><option value="false" ${!s.chq?'selected':''}>Non</option><option value="true" ${s.chq?'selected':''}>Oui</option></select></div><div class="form-group" id="chqMontantGroup" style="${s.chq?'':'display:none'}"><label>Montant CHQ</label><input type="number" class="inline-field" id="editChqMontant" value="${s.chqMontant||''}"></div></div>
+    <div class="form-row-3"><div class="form-group"><label>Prélèvement</label><select class="inline-select" id="editPrelevement"><option value="" ${!s.prelevement?'selected':''}>—</option><option value="OUI" ${s.prelevement==='OUI'?'selected':''}>OUI</option><option value="NON" ${s.prelevement==='NON'?'selected':''}>NON</option></select></div><div class="form-group"><label>Caution</label><select class="inline-select" id="editChq" onchange="toggleChqFields()"><option value="false" ${!s.chq?'selected':''}>Non</option><option value="true" ${s.chq?'selected':''}>Oui</option></select></div><div class="form-group"><label>Banque</label><input class="inline-field" id="editBanque" value="${esc(s.banque||'')}"></div></div>
+    <div class="form-row" id="chqMontantGroup" style="${s.chq?'':'display:none'}"><div class="form-group"><label>Montant chèque caution</label><input type="number" class="inline-field" id="editChqMontant" value="${s.chqMontant||''}"></div><div></div></div>
     <div class="form-group"><label>Notes</label><textarea class="inline-field" id="editNotes" rows="2">${esc(s.notes||'')}</textarea></div>
     <div class="form-group"><label>Date d'inscription</label><input type="date" class="inline-field" id="editDateInscription" value="${dateToInput(s.dateInscription)}"></div>`;
     
@@ -497,7 +495,7 @@ function buildEcheancierHtml(s){
         h+=`</tbody></table>`;
     }
     h+=`<div class="ech-add-row write-only"><input type="date" id="newEchDate"><input type="number" id="newEchAmount" placeholder="Montant" step="0.01" style="width:100px;"><select id="newEchType">${TYPES_PAIEMENT.map(t=>`<option>${t}</option>`).join('')}</select><button class="btn btn-primary btn-sm" onclick="addEcheance()">+ Ajouter</button></div>`;
-    h+=`<details class="ech-raw-section"><summary>📝 Modifier le texte brut des échéances</summary><div class="form-group" style="margin-top:8px;"><textarea id="editEcheances" rows="3" style="width:100%;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:0.85em;">${esc(s.echeancesRaw||'')}</textarea><button class="btn btn-primary btn-sm" onclick="reparseEcheances()" style="margin-top:6px;">🔄 Mettre à jour l'échéancier</button></div></details></div>`;
+    h+=`<div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><label style="font-size:0.78em;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Texte brut des échéances</label><button class="btn btn-primary btn-sm" onclick="reparseEcheances()">🔄 Recalculer</button></div><textarea id="editEcheances" rows="3" style="width:100%;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:0.85em;">${esc(s.echeancesRaw||'')}</textarea></div></div>`;
     return h;
 }
 
@@ -512,7 +510,25 @@ function editEchDate(i,el){const e=getEcheances();if(!e[i])return;const d=new Da
 function editEchAmount(i,el){const e=getEcheances();if(!e[i])return;const inp=document.createElement('input');inp.type='number';inp.step='0.01';inp.value=e[i].montant;inp.style.cssText='background:var(--surface2);border:1px solid var(--primary);border-radius:4px;color:var(--text);padding:2px 6px;width:100px;';el.replaceWith(inp);inp.focus();inp.select();const save=()=>{const v=parseFloat(inp.value);if(v>0){e[i].montant=v;saveEch(e);}else openDetailModal(currentStudentId);};inp.addEventListener('blur',save);inp.addEventListener('keydown',ev=>{if(ev.key==='Enter')save();if(ev.key==='Escape')openDetailModal(currentStudentId);});}
 function editEchType(i,el){const e=getEcheances();if(!e[i])return;const sel=document.createElement('select');sel.style.cssText='background:var(--surface2);border:1px solid var(--primary);border-radius:4px;color:var(--text);padding:2px 6px;';TYPES_PAIEMENT.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;if(t===e[i].type)o.selected=true;sel.appendChild(o);});el.replaceWith(sel);sel.focus();const save=()=>{e[i].type=sel.value;saveEch(e);};sel.addEventListener('change',save);sel.addEventListener('blur',save);}
 
-function reparseEcheances(){const raw=document.getElementById('editEcheances').value.trim();const s=students.find(x=>x.id===currentStudentId);if(!s)return;s.echeancesRaw=raw;if(raw){const p=parseEcheances(raw);s.echeancesJson=p.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''}));s.paid=p.paid;s.total=p.total;}apiPost('saveStudent',{student:s},d=>{if(d.success){showToast('✅ Échéancier mis à jour');loadStudents();openDetailModal(currentStudentId);}});}
+function reparseEcheances(){
+    const raw=document.getElementById('editEcheances').value.trim();
+    const s=students.find(x=>x.id===currentStudentId);if(!s)return;
+    s.echeancesRaw=raw;
+    if(raw){
+        const p=parseEcheances(raw);
+        s.echeancesJson=p.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''}));
+        s.paid=p.paid;s.total=p.total;
+    } else {
+        s.echeancesJson=[];s.paid=0;s.total=0;
+    }
+    apiPost('saveStudent',{student:s},d=>{
+        if(d.success){
+            showToast('✅ Échéancier recalculé — '+((s.echeancesJson||[]).length)+' échéances');
+            loadStudents();
+            setTimeout(()=>openDetailModal(currentStudentId),50);
+        }
+    });
+}
 
 // SAVE DETAIL
 // CONTACT
@@ -585,9 +601,8 @@ function saveDetailFields(){
     s.telephone=document.getElementById('editPhone').value.trim();s.telTuteur=document.getElementById('editTelTuteur').value.trim();
     s.formation=document.getElementById('editFormation').value;s.rythme=document.getElementById('editRythme').value;
     s.nvxReins=document.getElementById('editNvxReins').value;s.prelevement=document.getElementById('editPrelevement').value;
-    s.caution=document.getElementById('editCaution').value.trim();s.banque=document.getElementById('editBanque').value.trim();
+    s.caution=document.getElementById('editChq').value==='true'?'OUI':'NON';s.banque=document.getElementById('editBanque').value.trim();
     s.chq=document.getElementById('editChq').value==='true';s.chqMontant=s.chq?parseFloat(document.getElementById('editChqMontant').value)||0:0;
-    s.chqBanque='';
     s.notes=document.getElementById('editNotes').value.trim();s.dateInscription=inputToDate(document.getElementById('editDateInscription').value);
     apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();closeModal('detailModal');showToast('✅ Modifications enregistrées');}else showToast('Erreur: '+(d.error||''),true);});
 }
@@ -607,7 +622,7 @@ function openCreateModal(){
     <div class="form-row"><div class="form-group"><label>Nom *</label><input id="createNom" placeholder="NOM"></div><div class="form-group"><label>Prénom</label><input id="createPrenom" placeholder="Prénom"></div></div>
     <div class="form-row"><div class="form-group"><label>Téléphone</label><input id="createPhone" placeholder="0600000000"></div><div class="form-group"><label>Tél. Tuteur</label><input id="createTelTuteur"></div></div>
     <div class="form-row-3"><div class="form-group"><label>Formation *</label><select id="createFormation">${fO}</select></div><div class="form-group"><label>Rythme</label><select id="createRythme">${rO}</select></div><div class="form-group"><label>Nvx/Réins</label><select id="createNvxReins"><option value="">—</option><option>Nouveau</option><option>Réinscription</option></select></div></div>
-    <div class="form-row-3"><div class="form-group"><label>Prélèvement</label><select id="createPrelevement"><option value="">—</option><option>OUI</option><option>NON</option></select></div><div class="form-group"><label>Caution</label><input id="createCaution" placeholder="OUI / NON"></div><div class="form-group"><label>Banque</label><input id="createBanque"></div></div>
+    <div class="form-row-3"><div class="form-group"><label>Prélèvement</label><select id="createPrelevement"><option value="">—</option><option>OUI</option><option>NON</option></select></div><div class="form-group"><label>Caution</label><select id="createCaution"><option value="false">Non</option><option value="true">Oui</option></select></div><div class="form-group"><label>Banque</label><input id="createBanque"></div></div>
     <div class="form-group"><label>Échéancier (texte brut)</label><textarea id="createEcheances" rows="3" placeholder="Ex: 760€ PVT LE 30/09/25 PUIS PVT DE 323€ DU 30/10/25 AU 30/07/26"></textarea></div>
     <div class="form-group"><label>Notes</label><textarea id="createNotes" rows="2"></textarea></div>`;
     document.getElementById('createModal').classList.add('active');
@@ -615,7 +630,8 @@ function openCreateModal(){
 function createStudent(){
     const nom=document.getElementById('createNom').value.trim();if(!nom){showToast('Le nom est obligatoire',true);return;}
     const raw=document.getElementById('createEcheances').value.trim();const parsed=raw?parseEcheances(raw):{echeances:[],paid:0,total:0};
-    const s={nom,prenom:document.getElementById('createPrenom').value.trim(),formation:document.getElementById('createFormation').value,rythme:document.getElementById('createRythme').value,telephone:normalizePhone(document.getElementById('createPhone').value),telTuteur:document.getElementById('createTelTuteur').value.trim(),nvxReins:document.getElementById('createNvxReins').value,prelevement:document.getElementById('createPrelevement').value,caution:document.getElementById('createCaution').value.trim(),banque:document.getElementById('createBanque').value.trim(),notes:document.getElementById('createNotes').value.trim(),echeancesRaw:raw,echeancesJson:parsed.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''})),paid:parsed.paid,total:parsed.total,chq:false,chqMontant:0,dateInscription:new Date().toLocaleDateString('fr-FR')};
+    const chqVal=document.getElementById('createCaution').value==='true';
+    const s={nom,prenom:document.getElementById('createPrenom').value.trim(),formation:document.getElementById('createFormation').value,rythme:document.getElementById('createRythme').value,telephone:normalizePhone(document.getElementById('createPhone').value),telTuteur:document.getElementById('createTelTuteur').value.trim(),nvxReins:document.getElementById('createNvxReins').value,prelevement:document.getElementById('createPrelevement').value,caution:chqVal?'OUI':'NON',chq:chqVal,banque:document.getElementById('createBanque').value.trim(),notes:document.getElementById('createNotes').value.trim(),echeancesRaw:raw,echeancesJson:parsed.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''})),paid:parsed.paid,total:parsed.total,chqMontant:0,dateInscription:new Date().toLocaleDateString('fr-FR')};
     apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();closeModal('createModal');showToast('✅ Étudiant créé');}});
 }
 
@@ -712,8 +728,8 @@ function doImport(){
 // EXPORT
 function exportCSV(){
     const BOM='\uFEFF',sep=';';
-    const hdr=['Nom','Prénom','Formation','Rythme','Téléphone','Tél Tuteur','Nvx/Réins','Prélèvement','Caution','Banque','Statut','Payé','Total','Restant','CHQ','CHQ Montant','Notes','Échéances','Date inscription','Créé par','Date création','Modifié par','Date modification'];
-    const rows=students.map(s=>{const st=computeStatus(s);const sl=st==='ok'?'À jour':st==='late'?'En retard':'En attente';return [s.nom,s.prenom,s.formation,s.rythme,s.telephone,s.telTuteur,s.nvxReins,s.prelevement,s.caution,s.banque,sl,s.paid,s.total,(s.total||0)-(s.paid||0),s.chq?'Oui':'Non',s.chqMontant||'',s.notes,s.echeancesRaw,s.dateInscription,s.creePar,s.creeDate,s.modifiePar,s.modifieDate].map(v=>`"${String(v||'').replace(/"/g,'""')}"`);});
+    const hdr=['Nom','Prénom','Formation','Rythme','Téléphone','Tél Tuteur','Nvx/Réins','Prélèvement','Caution','Montant Caution','Banque','Statut','Payé','Total','Restant','Notes','Échéances','Date inscription','Créé par','Date création','Modifié par','Date modification'];
+    const rows=students.map(s=>{const st=computeStatus(s);const sl=st==='ok'?'À jour':st==='late'?'En retard':'En attente';return [s.nom,s.prenom,s.formation,s.rythme,s.telephone,s.telTuteur,s.nvxReins,s.prelevement,s.chq?'Oui':'Non',s.chqMontant||'',s.banque,sl,s.paid,s.total,(s.total||0)-(s.paid||0),s.notes,s.echeancesRaw,s.dateInscription,s.creePar,s.creeDate,s.modifiePar,s.modifieDate].map(v=>`"${String(v||'').replace(/"/g,'""')}"`);});
     const csv=BOM+[hdr.join(sep),...rows.map(r=>r.join(sep))].join('\n');
     const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`effectifs-${new Date().toISOString().slice(0,10)}.csv`;a.click();
 }
