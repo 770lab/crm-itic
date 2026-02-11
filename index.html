@@ -843,7 +843,40 @@ function doImport(){
     imp.sort((a,b)=>(a.nom||'').localeCompare(b.nom||'','fr',{sensitivity:'base'}));
     // Backup before import
     createBackup('Avant import de '+imp.length+' étudiants');
-    apiPost('importStudents',{students:imp},d=>{if(d.success){loadStudents();closeModal('importModal');showToast(`✅ ${imp.length} étudiants importés`);}else{showToast('❌ Erreur import: '+(d.error||''),true);}});
+    // Local mode: batch import
+    if(!API_URL){
+        apiPost('importStudents',{students:imp},d=>{if(d.success){loadStudents();closeModal('importModal');showToast(imp.length+' étudiants importés');}else{showToast('Erreur import: '+(d.error||''),true);}});
+        return;
+    }
+    // Server mode: save one by one (importStudents may not be supported server-side)
+    showLoading(true);
+    var imported=0,errors=0,queue=imp.slice();
+    function importNext(){
+        if(queue.length===0){
+            showLoading(false);
+            loadStudents();
+            closeModal('importModal');
+            if(errors>0) showToast(imported+' importés, '+errors+' erreurs',true);
+            else showToast(imported+' étudiants importés');
+            return;
+        }
+        var st=queue.shift();
+        // Check for existing student (dedup by name)
+        var existing=students.find(function(x){
+            return x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()
+                &&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim();
+        });
+        if(existing) st.id=existing.id;
+        fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'saveStudent',student:st,user:(currentUser&&currentUser.name)||''})})
+        .then(function(r){return r.text();})
+        .then(function(txt){
+            var d=parseGASResponse(txt);
+            if(d&&d.success) imported++;else errors++;
+            importNext();
+        })
+        .catch(function(){errors++;importNext();});
+    }
+    importNext();
 }
 
 // EXPORT
@@ -930,24 +963,35 @@ function restoreBackup(index){
         showToast('✅ '+restoredStudents.length+' fiches restaurées');
         return;
     }
-    // Server mode: import restored data (clear + reimport)
+    // Server mode: delete all then re-import one by one
     showLoading(true);
-    // First delete all
     var ids=students.map(function(s){return String(s.id);});
-    var delDone=0;
     function deleteNextForRestore(){
         if(ids.length===0){
-            // Then import restored data
-            apiPost('importStudents',{students:restoredStudents},function(d2){
-                showLoading(false);
-                if(d2.success){
+            // Then save restored data one by one
+            var queue=restoredStudents.slice();
+            var restored=0;
+            function saveNextForRestore(){
+                if(queue.length===0){
+                    showLoading(false);
                     loadStudents();
                     closeModal('restoreModal');
-                    showToast('✅ '+restoredStudents.length+' fiches restaurées');
-                } else {
-                    showToast('❌ Erreur restauration: '+(d2.error||''),true);
+                    showToast(restored+' fiches restaurées');
+                    return;
                 }
-            });
+                var st=queue.shift();
+                // Remove old id so server creates new entries
+                delete st.id;
+                fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'saveStudent',student:st,user:(currentUser&&currentUser.name)||''})})
+                .then(function(r){return r.text();})
+                .then(function(txt){
+                    var d2=parseGASResponse(txt);
+                    if(d2&&d2.success) restored++;
+                    saveNextForRestore();
+                })
+                .catch(function(){saveNextForRestore();});
+            }
+            saveNextForRestore();
             return;
         }
         var id=ids.shift();
