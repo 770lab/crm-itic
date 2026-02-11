@@ -327,7 +327,7 @@ function parseGASResponse(txt){
     return null;
 }
 function apiGet(action,cb){if(!API_URL){cb(getLocalData(action));return;}showLoading(true);fetch(API_URL+'?action='+action,{redirect:'follow'}).then(r=>r.text()).then(txt=>{showLoading(false);const d=parseGASResponse(txt);if(d)cb(d);else showToast('Réponse serveur invalide',true);}).catch(e=>{showLoading(false);showToast('Erreur réseau: '+e.message,true);});}
-function apiPost(action,payload,cb){if(!API_URL){cb(setLocalData(action,payload));return;}showLoading(true);var userName=(currentUser&&currentUser.name)?currentUser.name:(currentUser&&currentUser.username)?currentUser.username:'';fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action,...payload,user:userName})}).then(r=>r.text()).then(txt=>{showLoading(false);const d=parseGASResponse(txt);if(d)cb(d);else showToast('Réponse serveur invalide',true);}).catch(e=>{showLoading(false);showToast('Erreur réseau: '+e.message,true);});}
+function apiPost(action,payload,cb){if(!API_URL){cb(setLocalData(action,payload));return;}showLoading(true);var userName=(currentUser&&currentUser.name)?currentUser.name:(currentUser&&currentUser.username)?currentUser.username:'';var bodyData={action,...payload,user:userName};console.log('[apiPost]',action,JSON.stringify(bodyData).substring(0,200));fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify(bodyData)}).then(r=>r.text()).then(txt=>{showLoading(false);console.log('[apiPost response]',action,txt.substring(0,300));const d=parseGASResponse(txt);if(d){cb(d);}else{showToast('Réponse serveur invalide',true);cb({success:false,error:'Réponse invalide: '+txt.substring(0,100)});}}).catch(e=>{showLoading(false);console.error('[apiPost error]',action,e);showToast('Erreur réseau: '+e.message,true);cb({success:false,error:e.message});});}
 
 function getLocalData(action){
     if(action==='getStudents') return {success:true,students:JSON.parse(localStorage.getItem('students')||'[]')};
@@ -707,13 +707,11 @@ function deleteAllStudents(){
         localStorage.setItem('history',JSON.stringify(hist));
         students=[];renderStudents();renderStats();showToast(n+' fiches supprimees');return;
     }
-    // Server mode: delete one by one using same mechanism as individual delete
+    // Server mode: delete one by one using apiPost
     const ids=students.map(s=>String(s.id));
     let deleted=0,errors=0;
-    showLoading(true);
     function deleteNext(){
         if(ids.length===0){
-            showLoading(false);
             loadStudents();
             renderStats();
             if(errors>0)showToast(deleted+' supprimees, '+errors+' erreurs',true);
@@ -721,14 +719,10 @@ function deleteAllStudents(){
             return;
         }
         const id=ids.shift();
-        fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'deleteStudent',id:id,user:currentUser?.name})})
-        .then(function(r){return r.text();})
-        .then(function(txt){
-            var d=parseGASResponse(txt);
+        apiPost('deleteStudent',{id:id},function(d){
             if(d&&d.success)deleted++;else errors++;
             deleteNext();
-        })
-        .catch(function(){errors++;deleteNext();});
+        });
     }
     deleteNext();
 }
@@ -848,12 +842,10 @@ function doImport(){
         apiPost('importStudents',{students:imp},d=>{if(d.success){loadStudents();closeModal('importModal');showToast(imp.length+' étudiants importés');}else{showToast('Erreur import: '+(d.error||''),true);}});
         return;
     }
-    // Server mode: save one by one (importStudents may not be supported server-side)
-    showLoading(true);
+    // Server mode: save one by one using apiPost (same path as manual create/edit)
     var imported=0,errors=0,queue=imp.slice();
     function importNext(){
         if(queue.length===0){
-            showLoading(false);
             loadStudents();
             closeModal('importModal');
             if(errors>0) showToast(imported+' importés, '+errors+' erreurs',true);
@@ -867,14 +859,10 @@ function doImport(){
                 &&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim();
         });
         if(existing) st.id=existing.id;
-        fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'saveStudent',student:st,user:(currentUser&&currentUser.name)||''})})
-        .then(function(r){return r.text();})
-        .then(function(txt){
-            var d=parseGASResponse(txt);
+        apiPost('saveStudent',{student:st},function(d){
             if(d&&d.success) imported++;else errors++;
             importNext();
-        })
-        .catch(function(){errors++;importNext();});
+        });
     }
     importNext();
 }
@@ -963,8 +951,7 @@ function restoreBackup(index){
         showToast('✅ '+restoredStudents.length+' fiches restaurées');
         return;
     }
-    // Server mode: delete all then re-import one by one
-    showLoading(true);
+    // Server mode: delete all then re-import one by one via apiPost
     var ids=students.map(function(s){return String(s.id);});
     function deleteNextForRestore(){
         if(ids.length===0){
@@ -973,32 +960,25 @@ function restoreBackup(index){
             var restored=0;
             function saveNextForRestore(){
                 if(queue.length===0){
-                    showLoading(false);
                     loadStudents();
                     closeModal('restoreModal');
                     showToast(restored+' fiches restaurées');
                     return;
                 }
                 var st=queue.shift();
-                // Remove old id so server creates new entries
                 delete st.id;
-                fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'saveStudent',student:st,user:(currentUser&&currentUser.name)||''})})
-                .then(function(r){return r.text();})
-                .then(function(txt){
-                    var d2=parseGASResponse(txt);
+                apiPost('saveStudent',{student:st},function(d2){
                     if(d2&&d2.success) restored++;
                     saveNextForRestore();
-                })
-                .catch(function(){saveNextForRestore();});
+                });
             }
             saveNextForRestore();
             return;
         }
         var id=ids.shift();
-        fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'deleteStudent',id:id,user:(currentUser&&currentUser.name)||''})})
-        .then(function(r){return r.text();})
-        .then(function(){deleteNextForRestore();})
-        .catch(function(){deleteNextForRestore();});
+        apiPost('deleteStudent',{id:id},function(){
+            deleteNextForRestore();
+        });
     }
     deleteNextForRestore();
 }
