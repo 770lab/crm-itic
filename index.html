@@ -305,10 +305,11 @@ function setLocalData(action,payload){
     if(action==='saveStudent'){
         const s=payload.student;
         if(!s.id){s.id=Date.now().toString();s.creePar=currentUser?.name||'';s.creeDate=now;list.push(s);hist.push({date:now,user:currentUser?.name,action:'Création',nom:s.nom,details:s.formation});}
-        else{const idx=list.findIndex(x=>x.id===s.id);if(idx>=0){s.modifiePar=currentUser?.name||'';s.modifieDate=now;list[idx]={...list[idx],...s};}hist.push({date:now,user:currentUser?.name,action:'Modification',nom:s.nom,details:''});}
+        else{const idx=list.findIndex(x=>String(x.id)===String(s.id));if(idx>=0){s.modifiePar=currentUser?.name||'';s.modifieDate=now;list[idx]={...list[idx],...s};}hist.push({date:now,user:currentUser?.name,action:'Modification',nom:s.nom,details:''});}
         localStorage.setItem('students',JSON.stringify(list));localStorage.setItem('history',JSON.stringify(hist));return {success:true,student:s};
     }
-    if(action==='deleteStudent'){const s=list.find(x=>x.id===payload.id);list=list.filter(x=>x.id!==payload.id);localStorage.setItem('students',JSON.stringify(list));if(s)hist.push({date:now,user:currentUser?.name,action:'Suppression',nom:s.nom,details:''});localStorage.setItem('history',JSON.stringify(hist));return {success:true};}
+    if(action==='deleteStudent'){const s=list.find(x=>String(x.id)===String(payload.id));list=list.filter(x=>String(x.id)!==String(payload.id));localStorage.setItem('students',JSON.stringify(list));if(s)hist.push({date:now,user:currentUser?.name,action:'Suppression',nom:s.nom,details:''});localStorage.setItem('history',JSON.stringify(hist));return {success:true};}
+    if(action==='deleteAll'){localStorage.setItem('students','[]');hist.push({date:now,user:currentUser?.name,action:'Suppression totale',nom:list.length+' étudiants',details:''});localStorage.setItem('history',JSON.stringify(hist));return {success:true};}
     if(action==='importStudents'){
         for(const s of payload.students){
             const sNom=(s.nom||'').toUpperCase().trim();const sPre=(s.prenom||'').toUpperCase().trim();
@@ -323,7 +324,7 @@ function setLocalData(action,payload){
 }
 
 // STUDENTS
-function loadStudents(){apiGet('getStudents',d=>{if(d.success){students=d.students||[];renderStudents();renderStats();}});}
+function loadStudents(){apiGet('getStudents',d=>{if(d.success){students=(d.students||[]).map(s=>{if(s.id!==undefined&&s.id!==null)s.id=String(s.id);return s;});renderStudents();renderStats();}});}
 function populateFormationFilter(){document.getElementById('filterFormation').innerHTML='<option value="">Toutes formations</option>'+FORMATIONS.map(f=>`<option>${esc(f)}</option>`).join('');}
 function filterStudents(){renderStudents();}
 
@@ -499,7 +500,7 @@ function parseEcheances(raw){
 
 // DETAIL MODAL
 function openDetailModal(id){
-    currentStudentId=id;const s=students.find(x=>x.id===id);if(!s)return;
+    currentStudentId=String(id);const s=students.find(x=>String(x.id)===String(id));if(!s)return;
     document.getElementById('detailTitle').textContent=s.prenom?`${s.nom} ${s.prenom}`:s.nom;
     const fOpts=FORMATIONS.map(f=>`<option ${f===s.formation?'selected':''}>${esc(f)}</option>`).join('');
     const rOpts=RYTHMES.map(r=>`<option ${r===s.rythme?'selected':''}>${esc(r)}</option>`).join('');
@@ -549,8 +550,8 @@ function buildEcheancierHtml(s){
 }
 
 // ECH EDITING
-function getEcheances(){const s=students.find(x=>x.id===currentStudentId);return s?(s.echeancesJson||[]):[];}
-function saveEch(echs){const s=students.find(x=>x.id===currentStudentId);if(!s)return;s.echeancesJson=echs;s.paid=echs.filter(e=>e.paid).reduce((a,e)=>a+e.montant,0);s.total=echs.reduce((a,e)=>a+e.montant,0);apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();openDetailModal(currentStudentId);}});}
+function getEcheances(){const s=students.find(x=>String(x.id)===String(currentStudentId));return s?(s.echeancesJson||[]):[];}
+function saveEch(echs){const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;s.echeancesJson=echs;s.paid=echs.filter(e=>e.paid).reduce((a,e)=>a+e.montant,0);s.total=echs.reduce((a,e)=>a+e.montant,0);apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();openDetailModal(currentStudentId);}});}
 function togglePaid(i,v){const e=getEcheances();if(e[i]){e[i].paid=v;saveEch(e);}}
 function deleteEch(i){const e=getEcheances();e.splice(i,1);saveEch(e);}
 function addEcheance(){const dv=document.getElementById('newEchDate').value,amt=parseFloat(document.getElementById('newEchAmount').value),tp=document.getElementById('newEchType').value;if(!dv||!amt){showToast('Date et montant requis',true);return;}const d=new Date(dv);const e=getEcheances();e.push({date:d.toISOString(),montant:amt,type:tp,paid:d<new Date(),label:''});e.sort((a,b)=>new Date(a.date)-new Date(b.date));showToast(`✅ Échéance de ${amt}€ ajoutée`);saveEch(e);}
@@ -561,7 +562,7 @@ function editEchType(i,el){const e=getEcheances();if(!e[i])return;const sel=docu
 
 function reparseEcheances(){
     const raw=document.getElementById('editEcheances').value.trim();
-    const s=students.find(x=>x.id===currentStudentId);if(!s)return;
+    const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     s.echeancesRaw=raw;
     if(raw){
         const p=parseEcheances(raw);
@@ -630,7 +631,7 @@ function buildSubject(s){
     return `Information scolarité — ${displayName} — ${s.formation||''}`;
 }
 function sendWhatsApp(target){
-    const s=students.find(x=>x.id===currentStudentId);if(!s)return;
+    const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     const phone=target==='tuteur'?s.telTuteur:s.telephone;
     const waNum=phoneToWhatsApp(phone);
     if(!waNum){showToast('Pas de numéro de téléphone',true);return;}
@@ -638,14 +639,14 @@ function sendWhatsApp(target){
     window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 function sendEmail(){
-    const s=students.find(x=>x.id===currentStudentId);if(!s)return;
+    const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     const msg=buildMessage(s);
     const subject=buildSubject(s);
     window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(msg)}`,'_blank');
 }
 
 function saveDetailFields(){
-    const s=students.find(x=>x.id===currentStudentId);if(!s)return;
+    const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     s.nom=document.getElementById('editNom').value.trim();s.prenom=document.getElementById('editPrenom').value.trim();
     s.telephone=document.getElementById('editPhone').value.trim();s.telTuteur=document.getElementById('editTelTuteur').value.trim();
     s.formation=document.getElementById('editFormation').value;s.rythme=document.getElementById('editRythme').value;
@@ -655,13 +656,42 @@ function saveDetailFields(){
     s.notes=document.getElementById('editNotes').value.trim();s.dateInscription=inputToDate(document.getElementById('editDateInscription').value);
     apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();closeModal('detailModal');showToast('✅ Modifications enregistrées');}else showToast('Erreur: '+(d.error||''),true);});
 }
-function deleteStudent(){if(!confirm('Supprimer cet étudiant ?'))return;apiPost('deleteStudent',{id:currentStudentId},d=>{if(d.success){loadStudents();closeModal('detailModal');showToast('Étudiant supprimé');}});}
+function deleteStudent(){if(!confirm('Supprimer cet étudiant ?'))return;apiPost('deleteStudent',{id:currentStudentId},d=>{if(d.success){loadStudents();closeModal('detailModal');showToast('🗑️ Étudiant supprimé');}else{showToast('❌ Erreur suppression: '+(d.error||'échec serveur'),true);}});}
 function deleteAllStudents(){
     const n=students.length;if(n===0){showToast('Aucun étudiant à supprimer',true);return;}
-    if(!confirm(`⚠️ Supprimer les ${n} fiches étudiantes ?\n\nCette action est irréversible !`))return;
-    if(!confirm(`Êtes-vous vraiment sûr(e) ? ${n} fiches seront définitivement supprimées.`))return;
-    if(!API_URL){localStorage.setItem('students','[]');const hist=JSON.parse(localStorage.getItem('history')||'[]');hist.push({date:new Date().toISOString(),user:currentUser?.name,action:'Suppression totale',nom:n+' étudiants',details:''});localStorage.setItem('history',JSON.stringify(hist));students=[];renderStudents();renderStats();showToast(`🗑️ ${n} fiches supprimées`);return;}
-    apiPost('deleteAll',{},d=>{if(d.success){loadStudents();showToast(`🗑️ ${n} fiches supprimées`);}});
+    if(!confirm('Supprimer les ' + n + ' fiches ? Cette action est irreversible !'))return;
+    // Local mode: direct clear
+    if(!API_URL){
+        localStorage.setItem('students','[]');
+        const hist=JSON.parse(localStorage.getItem('history')||'[]');
+        hist.push({date:new Date().toISOString(),user:currentUser?.name,action:'Suppression totale',nom:n+' étudiants',details:''});
+        localStorage.setItem('history',JSON.stringify(hist));
+        students=[];renderStudents();renderStats();showToast(n+' fiches supprimees');return;
+    }
+    // Server mode: delete one by one using same mechanism as individual delete
+    const ids=students.map(s=>String(s.id));
+    let deleted=0,errors=0;
+    showLoading(true);
+    function deleteNext(){
+        if(ids.length===0){
+            showLoading(false);
+            loadStudents();
+            renderStats();
+            if(errors>0)showToast(deleted+' supprimees, '+errors+' erreurs',true);
+            else showToast(deleted+' fiches supprimees');
+            return;
+        }
+        const id=ids.shift();
+        fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'deleteStudent',id:id,user:currentUser?.name})})
+        .then(function(r){return r.text();})
+        .then(function(txt){
+            var d=parseGASResponse(txt);
+            if(d&&d.success)deleted++;else errors++;
+            deleteNext();
+        })
+        .catch(function(){errors++;deleteNext();});
+    }
+    deleteNext();
 }
 
 // CREATE
