@@ -39,6 +39,7 @@ a { color: var(--primary); }
 .filter-select { padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 0.85em; }
 .filter-banner { background: var(--primary); color: white; padding: 8px 16px; border-radius: var(--radius); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
 .filter-banner .clear-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85em; }
+.global-search { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 12px 24px 8px; border-bottom: 1px solid var(--border); }
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
 .stat-card:hover { border-color: var(--primary); transform: translateY(-2px); }
@@ -98,8 +99,9 @@ a { color: var(--primary); }
 .ech-table tr:hover td { background: rgba(124,92,252,0.05); }
 .ech-table .paid td { opacity: 0.7; }
 .ech-table .late td { color: var(--danger); font-weight: 600; }
-.ech-editable { cursor: pointer; border-bottom: 1px dashed var(--border); padding: 1px 4px; }
-.ech-editable:hover { border-bottom-color: var(--primary); color: var(--primary); }
+.ech-editable { cursor: pointer; border-bottom: 1px dashed var(--border); padding: 2px 6px; border-radius: 4px; transition: all 0.2s; position: relative; }
+.ech-editable:hover { border-bottom-color: var(--primary); color: var(--primary); background: rgba(124,92,252,0.08); }
+.ech-editable:hover::after { content: ' ✏️'; font-size: 0.75em; }
 .ech-add-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
 .ech-add-row input, .ech-add-row select { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.85em; }
 .stats-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -121,6 +123,45 @@ a { color: var(--primary); }
 .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .readonly-banner { background: var(--warn); color: #222; text-align: center; padding: 8px; font-weight: 600; font-size: 0.85em; }
+.dashboard { margin-bottom: 20px; }
+.dash-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.dash-metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; transition: all 0.2s; cursor: pointer; }
+.dash-metric:hover { border-color: var(--primary); transform: translateY(-2px); }
+.dash-metric .dash-num { font-size: 1.8em; font-weight: 800; line-height: 1.2; }
+.dash-metric .dash-label { color: var(--text2); font-size: 0.8em; margin-top: 4px; }
+.dash-metric .dash-sub { font-size: 0.75em; color: var(--text2); margin-top: 2px; }
+.dash-alerts { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.dash-alerts-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.dash-alerts-header h3 { font-size: 0.95em; }
+.dash-alerts-header .count-badge { background: var(--danger); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 700; }
+.dash-alert-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid rgba(46,50,70,0.4); transition: background 0.2s; cursor: pointer; }
+.dash-alert-item:last-child { border-bottom: none; }
+.dash-alert-item:hover { background: rgba(124,92,252,0.06); }
+.dash-alert-item .alert-severity { font-size: 0.72em; font-weight: 700; padding: 3px 8px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
+.dash-alert-item .alert-severity.critical { background: rgba(231,76,60,0.2); color: var(--danger); }
+.dash-alert-item .alert-severity.warning { background: rgba(243,156,18,0.2); color: var(--warn); }
+.dash-alert-item .alert-severity.minor { background: rgba(52,152,219,0.15); color: var(--info); }
+.dash-alert-item .alert-name { font-weight: 600; font-size: 0.9em; min-width: 0; }
+.dash-alert-item .alert-formation { color: var(--text2); font-size: 0.8em; flex-shrink: 0; }
+.dash-alert-item .alert-amount { color: var(--danger); font-weight: 700; font-size: 0.9em; margin-left: auto; white-space: nowrap; flex-shrink: 0; }
+.dash-alert-item .alert-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.dash-ok { background: var(--surface); border: 1px solid var(--ok); border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 16px; }
+.dash-ok .ok-icon { font-size: 2.5em; margin-bottom: 8px; }
+.dash-ok .ok-text { color: var(--ok); font-weight: 700; font-size: 1.1em; }
+.dash-ok .ok-sub { color: var(--text2); font-size: 0.85em; margin-top: 4px; }
+.dash-upcoming { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.dash-upcoming-header { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.dash-upcoming-header h3 { font-size: 0.95em; }
+.dash-upcoming-item { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid rgba(46,50,70,0.4); cursor: pointer; transition: background 0.2s; }
+.dash-upcoming-item:last-child { border-bottom: none; }
+.dash-upcoming-item:hover { background: rgba(124,92,252,0.06); }
+.dash-upcoming-item .upcoming-date { color: var(--text2); font-size: 0.82em; flex-shrink: 0; min-width: 80px; }
+.dash-upcoming-item .upcoming-name { font-weight: 600; font-size: 0.88em; }
+.dash-upcoming-item .upcoming-amount { margin-left: auto; font-weight: 700; font-size: 0.88em; color: var(--warn); }
+.dash-section-toggle { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.82em; font-weight: 600; padding: 8px 18px; width: 100%; text-align: center; }
+.dash-section-toggle:hover { text-decoration: underline; }
+@media (max-width: 900px) { .dash-metrics { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .dash-metrics { grid-template-columns: 1fr 1fr; } }
 .contact-bar { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .btn-whatsapp { background: #25D366; color: white; }
 .btn-whatsapp:hover { background: #1da851; transform: translateY(-1px); }
@@ -182,8 +223,8 @@ a { color: var(--primary); }
         <button class="tab-btn active" onclick="switchTab('home')">🏠 Accueil</button>
         <button class="tab-btn" onclick="switchTab('stats')">📊 Statistiques</button>
     </div>
-    <div id="tab-home" class="tab-content active">
-        <div class="toolbar">
+    <div class="global-search">
+        <div class="toolbar" style="margin-bottom:0;">
             <input type="text" class="search-box" id="searchBox" placeholder="🔍 Rechercher par nom, formation, téléphone, montant..." oninput="filterStudents()">
             <select class="filter-select" id="filterFormation" onchange="filterStudents()"><option value="">Toutes formations</option></select>
             <select class="filter-select" id="filterStatus" onchange="filterStudents()">
@@ -200,8 +241,13 @@ a { color: var(--primary); }
             <span id="filterBannerText"></span>
             <button class="clear-btn" onclick="clearAllFilters()">✕ Tout afficher</button>
         </div>
-        <div id="studentCount" style="color:var(--text2);font-size:0.82em;margin-bottom:12px;"></div>
+    </div>
+    <div id="tab-home" class="tab-content active">
+        <div id="dashboard" class="dashboard"></div>
+        <div id="studentListSection">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><h3 style="font-size:1em;color:var(--text);">📋 Tous les étudiants</h3><span id="studentCount" style="color:var(--text2);font-size:0.82em;"></span></div>
         <div id="studentGrid" class="student-grid"></div>
+        </div>
     </div>
     <div id="tab-stats" class="tab-content"><div id="statsContent"></div></div>
 </div>
@@ -360,9 +406,14 @@ function setLocalData(action,payload){
 }
 
 // STUDENTS
-function loadStudents(){apiGet('getStudents',d=>{if(d.success){students=(d.students||[]).map(s=>{if(s.id!==undefined&&s.id!==null)s.id=String(s.id);return s;});renderStudents();renderStats();}});}
+function loadStudents(){apiGet('getStudents',d=>{if(d.success){students=(d.students||[]).map(s=>{if(s.id!==undefined&&s.id!==null)s.id=String(s.id);if(s.telephone)s.telephone=normalizePhone(String(s.telephone));if(s.telTuteur)s.telTuteur=normalizePhone(String(s.telTuteur));return s;});renderDashboard();renderStudents();renderStats();}});}
 function populateFormationFilter(){document.getElementById('filterFormation').innerHTML='<option value="">Toutes formations</option>'+FORMATIONS.map(f=>`<option>${esc(f)}</option>`).join('');}
-function filterStudents(){renderStudents();}
+function filterStudents(){
+    const hasFilter=document.getElementById('searchBox').value.trim()||document.getElementById('filterFormation').value||document.getElementById('filterStatus').value||document.getElementById('filterRythme').value||document.getElementById('filterLate').value;
+    if(hasFilter){switchTab('home');}
+    document.getElementById('dashboard').style.display=hasFilter?'none':'';
+    renderStudents();
+}
 
 function getFilteredStudents(){
     const q=document.getElementById('searchBox').value.toLowerCase().trim();
@@ -407,9 +458,117 @@ function renderStudents(){
             <div class="meta"><span>${esc(s.formation||'—')}</span><span>${esc(s.rythme||'—')}</span>${nvxBadge}<span class="badge ${badgeCls}">${badgeTxt}</span></div>
             ${s.telephone?`<div style="color:var(--text2);font-size:0.82em;">📱 ${esc(s.telephone)}</div>`:''}
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${barColor};"></div></div>
-            <div class="amounts"><span>${paid.toLocaleString('fr')}€ payé</span><span>${total.toLocaleString('fr')}€ total</span></div>
+            <div class="amounts"><span>${paid.toLocaleString('fr')}€ payé</span><span style="font-weight:700;color:${pct>=100?'var(--ok)':pct>=50?'var(--warn)':'var(--danger)'};">${pct}%</span><span>${total.toLocaleString('fr')}€ total</span></div>
         </div>`;
     }).join('');
+}
+
+// DASHBOARD
+function renderDashboard(){
+    if(students.length===0){document.getElementById('dashboard').innerHTML='';return;}
+    const now=new Date();
+    const total=students.length;
+    const lateStudents=students.filter(s=>computeStatus(s)==='late').map(s=>{
+        const echs=s.echeancesJson||[];
+        const lateEchs=echs.filter(e=>!e.paid&&new Date(e.date)<now);
+        const lateAmount=lateEchs.reduce((a,e)=>a+e.montant,0);
+        const maxDays=getLateDays(s);
+        return {...s,lateAmount,maxDays,lateCount:lateEchs.length};
+    }).sort((a,b)=>b.maxDays-a.maxDays);
+    const okCount=students.filter(s=>computeStatus(s)==='ok').length;
+    const pendCount=students.filter(s=>computeStatus(s)==='pending').length;
+    const tPaid=students.reduce((a,s)=>a+(s.paid||0),0);
+    const tDue=students.reduce((a,s)=>a+(s.total||0),0);
+    const tRem=tDue-tPaid;
+    const globalPct=tDue>0?Math.round(tPaid/tDue*100):0;
+    const totalLateAmount=lateStudents.reduce((a,s)=>a+s.lateAmount,0);
+    
+    // Upcoming payments (next 30 days)
+    const in30=new Date(now.getTime()+30*86400000);
+    const upcoming=[];
+    students.forEach(s=>{
+        (s.echeancesJson||[]).forEach(e=>{
+            const d=new Date(e.date);
+            if(!e.paid&&d>=now&&d<=in30){
+                upcoming.push({student:s,date:d,montant:e.montant,type:e.type});
+            }
+        });
+    });
+    upcoming.sort((a,b)=>a.date-b.date);
+    
+    let h='';
+    
+    // --- Metrics row ---
+    h+=`<div class="dash-metrics">
+        <div class="dash-metric" onclick="applyFilter('','','')"><div class="dash-num" style="color:var(--info);">${total}</div><div class="dash-label">Étudiants</div><div class="dash-sub">${okCount} à jour · ${pendCount} en attente</div></div>
+        <div class="dash-metric" onclick="applyFilter('status','late','⚠️ En retard')"><div class="dash-num" style="color:var(--danger);">${lateStudents.length}</div><div class="dash-label">En retard</div><div class="dash-sub">${totalLateAmount.toLocaleString('fr')}€ impayés</div></div>
+        <div class="dash-metric"><div class="dash-num" style="color:var(--ok);">${tPaid.toLocaleString('fr')}€</div><div class="dash-label">Encaissé</div><div class="dash-sub">${globalPct}% du total</div></div>
+        <div class="dash-metric"><div class="dash-num" style="color:var(--warn);">${tRem.toLocaleString('fr')}€</div><div class="dash-label">Restant dû</div><div class="dash-sub">sur ${tDue.toLocaleString('fr')}€</div></div>
+    </div>`;
+    
+    // --- Global progress bar ---
+    h+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--text2);margin-bottom:6px;"><span>Progression globale des paiements</span><span style="font-weight:700;color:var(--text);">${globalPct}%</span></div>
+        <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;"><div style="height:100%;width:${globalPct}%;background:${globalPct>=80?'var(--ok)':globalPct>=50?'var(--warn)':'var(--danger)'};border-radius:5px;transition:width 0.5s;"></div></div>
+    </div>`;
+    
+    // --- Alerts ---
+    if(lateStudents.length>0){
+        const showMax=10;
+        const displayed=lateStudents.slice(0,showMax);
+        h+=`<div class="dash-alerts"><div class="dash-alerts-header"><h3>🚨 Relances à faire</h3><span class="count-badge">${lateStudents.length} étudiant${lateStudents.length>1?'s':''}</span></div>`;
+        displayed.forEach(s=>{
+            const severity=s.maxDays>=90?'critical':s.maxDays>=30?'warning':'minor';
+            const sevLabel=s.maxDays>=90?'URGENT':s.maxDays>=30?'+'+s.maxDays+'j':s.maxDays+'j';
+            const displayName=s.prenom?`${esc(s.nom)} ${esc(s.prenom)}`:esc(s.nom);
+            h+=`<div class="dash-alert-item" onclick="openDetailModal('${s.id}')">
+                <span class="alert-severity ${severity}">${sevLabel}</span>
+                <span class="alert-name">${displayName}</span>
+                <span class="alert-formation">${esc(s.formation||'')}</span>
+                <span class="alert-amount">${s.lateAmount.toLocaleString('fr')}€ dû</span>
+                <div class="alert-actions">
+                    ${s.telephone?`<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();quickWhatsApp('${s.id}')" style="padding:3px 8px;font-size:0.72em;" title="WhatsApp">📱</button>`:''}
+                </div>
+            </div>`;
+        });
+        if(lateStudents.length>showMax){
+            h+=`<button class="dash-section-toggle" onclick="applyFilter('status','late','⚠️ En retard')">Voir les ${lateStudents.length} étudiants en retard →</button>`;
+        }
+        h+=`</div>`;
+    } else {
+        h+=`<div class="dash-ok"><div class="ok-icon">✅</div><div class="ok-text">Aucun retard de paiement !</div><div class="ok-sub">Tous les étudiants sont à jour ou en attente d'échéances futures.</div></div>`;
+    }
+    
+    // --- Upcoming ---
+    if(upcoming.length>0){
+        const showUp=Math.min(8,upcoming.length);
+        const totalUpcoming=upcoming.reduce((a,u)=>a+u.montant,0);
+        h+=`<div class="dash-upcoming"><div class="dash-upcoming-header"><h3>📅 Prochaines échéances (30j) — ${totalUpcoming.toLocaleString('fr')}€ attendus</h3></div>`;
+        upcoming.slice(0,showUp).forEach(u=>{
+            const displayName=u.student.prenom?`${esc(u.student.nom)} ${esc(u.student.prenom)}`:esc(u.student.nom);
+            const daysUntil=Math.ceil((u.date-now)/86400000);
+            const dateLabel=daysUntil===0?'Aujourd\'hui':daysUntil===1?'Demain':u.date.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+            h+=`<div class="dash-upcoming-item" onclick="openDetailModal('${u.student.id}')">
+                <span class="upcoming-date">${dateLabel}</span>
+                <span class="upcoming-name">${displayName}</span>
+                <span class="upcoming-amount">${u.montant.toLocaleString('fr')}€ · ${esc(u.type||'')}</span>
+            </div>`;
+        });
+        if(upcoming.length>showUp){
+            h+=`<button class="dash-section-toggle" onclick="applyFilter('status','pending','⏳ En attente')">${upcoming.length-showUp} autres échéances →</button>`;
+        }
+        h+=`</div>`;
+    }
+    
+    document.getElementById('dashboard').innerHTML=h;
+}
+
+function quickWhatsApp(id){
+    const s=students.find(x=>String(x.id)===String(id));if(!s||!s.telephone)return;
+    const waNum=phoneToWhatsApp(s.telephone);if(!waNum)return;
+    currentStudentId=String(id);
+    const msg=buildMessage(s);
+    window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
 // PARSER
@@ -456,8 +615,8 @@ function parseEcheances(raw){
         usedIdx.push({s:m.index,e:m.index+m[0].length});
     }
     
-    // PASS 2: Single dated payments "X€ ... le DD/MM/YY" (allows words like "réglé en espèce" between € and le)
-    const singleRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€[^€]{0,50}?\ble\s+(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/gi;
+    // PASS 2: Single dated payments "X€ ... le DD/MM/YY" or "X le DD/MM/YY" (€ optional)
+    const singleRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?[^€\d]{0,50}?\ble\s+(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/gi;
     singleRe.lastIndex=0;
     while((m=singleRe.exec(text))!==null){
         if(usedIdx.some(r=>m.index>=r.s&&m.index<r.e))continue;
@@ -510,8 +669,8 @@ function parseEcheances(raw){
             echeances.push({date:new Date(now),montant,type:detectType(ctx),paid:true,label:'Sans date'});
     }
     
-    // PASS 6: catch remaining "amount + date" patterns
-    const catchAllRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€\s*[^a-zA-ZÀ-ú]*?(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
+    // PASS 6: catch remaining "amount + date" patterns (€ optional)
+    const catchAllRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*[^a-zA-ZÀ-ú]*?(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
     catchAllRe.lastIndex=0;
     while((m=catchAllRe.exec(text))!==null){
         if(usedIdx.some(r=>m.index>=r.s&&m.index<r.e))continue;
@@ -551,7 +710,7 @@ function openDetailModal(id){
         <button class="btn btn-email btn-sm" onclick="sendEmail()">✉️ Email</button>
     </div></div>
     <div class="form-row"><div class="form-group"><label>Nom</label><input class="inline-field" id="editNom" value="${esc(s.nom||'')}"></div><div class="form-group"><label>Prénom</label><input class="inline-field" id="editPrenom" value="${esc(s.prenom||'')}"></div></div>
-    <div class="form-row"><div class="form-group"><label>Téléphone</label><input class="inline-field" id="editPhone" value="${esc(s.telephone||'')}"></div><div class="form-group"><label>Tél. Tuteur/Contact</label><input class="inline-field" id="editTelTuteur" value="${esc(s.telTuteur||'')}"></div></div>
+    <div class="form-row"><div class="form-group"><label>Téléphone</label><input type="tel" class="inline-field" id="editPhone" value="${esc(s.telephone||'')}"></div><div class="form-group"><label>Tél. Tuteur/Contact</label><input type="tel" class="inline-field" id="editTelTuteur" value="${esc(s.telTuteur||'')}"></div></div>
     <div class="form-row-3"><div class="form-group"><label>Formation</label><select class="inline-select" id="editFormation">${fOpts}</select></div><div class="form-group"><label>Rythme</label><select class="inline-select" id="editRythme">${rOpts}</select></div><div class="form-group"><label>Nvx/Réinscription</label><select class="inline-select" id="editNvxReins">${nOpts}</select></div></div>
     <div class="form-row-3"><div class="form-group"><label>Prélèvement</label><select class="inline-select" id="editPrelevement"><option value="" ${!s.prelevement?'selected':''}>—</option><option value="OUI" ${s.prelevement==='OUI'?'selected':''}>OUI</option><option value="NON" ${s.prelevement==='NON'?'selected':''}>NON</option></select></div><div class="form-group"><label>Caution</label><select class="inline-select" id="editChq" onchange="toggleChqFields()"><option value="false" ${!s.chq?'selected':''}>Non</option><option value="true" ${s.chq?'selected':''}>Oui</option></select></div><div class="form-group"><label>Banque</label><input class="inline-field" id="editBanque" value="${esc(s.banque||'')}"></div></div>
     <div class="form-row" id="chqMontantGroup" style="${s.chq?'':'display:none'}"><div class="form-group"><label>Montant chèque caution</label><input type="number" class="inline-field" id="editChqMontant" value="${s.chqMontant||''}"></div><div></div></div>
@@ -572,7 +731,8 @@ function buildEcheancierHtml(s){
     let h=`<div class="ech-section"><h3>📅 Échéancier (${echs.length} échéances)</h3>`;
     if(echs.length>0){
         const paid=echs.filter(e=>e.paid).reduce((a,e)=>a+e.montant,0);const total=echs.reduce((a,e)=>a+e.montant,0);const rem=total-paid;const pct=total>0?Math.round(paid/total*100):0;
-        h+=`<div style="display:flex;gap:16px;margin-bottom:12px;font-size:0.85em;flex-wrap:wrap;"><span style="color:var(--ok);">✅ Payé: ${paid.toLocaleString('fr')}€</span><span style="color:var(--warn);">⏳ Restant: ${rem.toLocaleString('fr')}€</span><span>Total: ${total.toLocaleString('fr')}€ (${pct}%)</span></div>`;
+        h+=`<div style="display:flex;gap:16px;margin-bottom:8px;font-size:0.85em;flex-wrap:wrap;"><span style="color:var(--ok);">✅ Payé: ${paid.toLocaleString('fr')}€</span><span style="color:var(--warn);">⏳ Restant: ${rem.toLocaleString('fr')}€</span><span>Total: ${total.toLocaleString('fr')}€ (${pct}%)</span></div>`;
+        h+=`<p style="color:var(--text2);font-size:0.75em;margin-bottom:8px;">💡 Cliquez sur une date, un montant ou un type pour le modifier directement</p>`;
         h+=`<table class="ech-table"><thead><tr><th></th><th>Date</th><th>Montant</th><th>Type</th><th>Statut</th><th class="write-only"></th></tr></thead><tbody>`;
         echs.forEach((e,i)=>{
             const d=new Date(e.date);const isLate=!e.paid&&d<new Date();const cls=e.paid?'paid':isLate?'late':'';
@@ -684,7 +844,7 @@ function sendEmail(){
 function saveDetailFields(){
     const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     s.nom=document.getElementById('editNom').value.trim();s.prenom=document.getElementById('editPrenom').value.trim();
-    s.telephone=document.getElementById('editPhone').value.trim();s.telTuteur=document.getElementById('editTelTuteur').value.trim();
+    s.telephone=normalizePhone(document.getElementById('editPhone').value.trim());s.telTuteur=normalizePhone(document.getElementById('editTelTuteur').value.trim());
     s.formation=document.getElementById('editFormation').value;s.rythme=document.getElementById('editRythme').value;
     s.nvxReins=document.getElementById('editNvxReins').value;s.prelevement=document.getElementById('editPrelevement').value;
     s.caution=document.getElementById('editChq').value==='true'?'OUI':'NON';s.banque=document.getElementById('editBanque').value.trim();
@@ -705,7 +865,7 @@ function deleteAllStudents(){
         const hist=JSON.parse(localStorage.getItem('history')||'[]');
         hist.push({date:new Date().toISOString(),user:currentUser?.name,action:'Suppression totale',nom:n+' étudiants',details:''});
         localStorage.setItem('history',JSON.stringify(hist));
-        students=[];renderStudents();renderStats();showToast(n+' fiches supprimees');return;
+        students=[];renderDashboard();renderStudents();renderStats();showToast(n+' fiches supprimees');return;
     }
     // Server mode: delete one by one using apiPost
     const ids=students.map(s=>String(s.id));
@@ -732,7 +892,7 @@ function openCreateModal(){
     const fO=FORMATIONS.map(f=>`<option>${esc(f)}</option>`).join('');const rO=RYTHMES.map(r=>`<option>${esc(r)}</option>`).join('');
     document.getElementById('createBody').innerHTML=`
     <div class="form-row"><div class="form-group"><label>Nom *</label><input id="createNom" placeholder="NOM"></div><div class="form-group"><label>Prénom</label><input id="createPrenom" placeholder="Prénom"></div></div>
-    <div class="form-row"><div class="form-group"><label>Téléphone</label><input id="createPhone" placeholder="0600000000"></div><div class="form-group"><label>Tél. Tuteur</label><input id="createTelTuteur"></div></div>
+    <div class="form-row"><div class="form-group"><label>Téléphone</label><input type="tel" id="createPhone" placeholder="0600000000"></div><div class="form-group"><label>Tél. Tuteur</label><input type="tel" id="createTelTuteur"></div></div>
     <div class="form-row-3"><div class="form-group"><label>Formation *</label><select id="createFormation">${fO}</select></div><div class="form-group"><label>Rythme</label><select id="createRythme">${rO}</select></div><div class="form-group"><label>Nvx/Réins</label><select id="createNvxReins"><option value="">—</option><option>Nouveau</option><option>Réinscription</option></select></div></div>
     <div class="form-row-3"><div class="form-group"><label>Prélèvement</label><select id="createPrelevement"><option value="">—</option><option>OUI</option><option>NON</option></select></div><div class="form-group"><label>Caution</label><select id="createCaution"><option value="false">Non</option><option value="true">Oui</option></select></div><div class="form-group"><label>Banque</label><input id="createBanque"></div></div>
     <div class="form-group"><label>Échéancier (texte brut)</label><textarea id="createEcheances" rows="3" placeholder="Ex: 760€ PVT LE 30/09/25 PUIS PVT DE 323€ DU 30/10/25 AU 30/07/26"></textarea></div>
@@ -946,7 +1106,7 @@ function restoreBackup(index){
     if(!API_URL){
         localStorage.setItem('students',JSON.stringify(restoredStudents));
         students=restoredStudents;
-        renderStudents();renderStats();
+        renderDashboard();renderStudents();renderStats();
         closeModal('restoreModal');
         showToast('✅ '+restoredStudents.length+' fiches restaurées');
         return;
@@ -1014,7 +1174,7 @@ function applyFilter(field,value,label){
     if(label){document.getElementById('filterBanner').style.display='flex';document.getElementById('filterBannerText').textContent='🔍 Filtre: '+label;}
     switchTab('home');filterStudents();
 }
-function clearAllFilters(){document.getElementById('searchBox').value='';document.getElementById('filterFormation').value='';document.getElementById('filterStatus').value='';document.getElementById('filterRythme').value='';document.getElementById('filterLate').value='';document.getElementById('filterBanner').style.display='none';filterStudents();}
+function clearAllFilters(){document.getElementById('searchBox').value='';document.getElementById('filterFormation').value='';document.getElementById('filterStatus').value='';document.getElementById('filterRythme').value='';document.getElementById('filterLate').value='';document.getElementById('filterBanner').style.display='none';document.getElementById('dashboard').style.display='';filterStudents();}
 
 // TABS & UTIL
 function switchTab(tab){document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(tab==='home'?0:1)));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');if(tab==='stats')renderStats();}
