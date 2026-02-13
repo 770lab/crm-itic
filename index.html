@@ -1181,27 +1181,38 @@ function doImport(){
                 </div>
             </div>
             <div id="importErrors" style="display:none;margin-bottom:8px;padding:8px 12px;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:6px;color:var(--danger);font-size:0.82em;"></div>
+            <div style="display:flex;gap:16px;margin-bottom:8px;font-size:0.75em;color:var(--text2);">
+                <span>🆕 Nouveau</span><span>🔄 Modifié</span><span>⏭️ Inchangé (ignoré)</span><span>❌ Erreur</span>
+            </div>
             <div class="import-live-table-wrap">
                 <table class="import-live-table">
-                    <thead><tr><th style="width:28px;">#</th><th>NOM</th><th>PRÉNOM</th><th>FORMATION</th><th>PAYÉ</th><th>TOTAL</th><th>ÉCH.</th><th style="width:40px;">OK</th></tr></thead>
+                    <thead><tr><th style="width:28px;">#</th><th>NOM</th><th>PRÉNOM</th><th>FORMATION</th><th>PAYÉ</th><th>TOTAL</th><th>ÉCH.</th><th style="width:40px;" title="🆕 Nouveau · 🔄 Modifié · ⏭️ Inchangé">ÉTAT</th></tr></thead>
                     <tbody id="importLiveRows"></tbody>
                 </table>
             </div>
         </div>`;
     document.getElementById('importPreview').innerHTML='';
     
-    // Local mode: batch (still show progress visually)
+    // Local mode: batch with smart skip display
     if(!API_URL){
-        let i=0;
+        let i=0,localSkipped=0;
         function animateLocal(){
             if(i<imp.length){
-                addImportRow(imp[i],i+1,true);
-                updateImportProgress(i+1,imp.length,0);
+                const st=imp[i];
+                const existing=students.find(x=>x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()&&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim());
+                let mode='new';
+                if(existing){
+                    st.id=existing.id;
+                    mode=studentChanged(existing,st)?'update':'skip';
+                    if(mode==='skip')localSkipped++;
+                }
+                addImportRow(st,i+1,true,mode);
+                updateImportProgress(i+1,imp.length,0,localSkipped);
                 i++;
                 requestAnimationFrame(animateLocal);
             } else {
                 apiPost('importStudents',{students:imp},d=>{
-                    if(d.success){loadStudents();finishImport(imp.length,0);}
+                    if(d.success){loadStudents();finishImport(imp.length-localSkipped,0,localSkipped);}
                     else{showToast('Erreur import: '+(d.error||''),true);}
                 });
             }
@@ -1210,57 +1221,98 @@ function doImport(){
         return;
     }
     
-    // Server mode: save one by one with live display
-    let imported=0,errors=0;const queue=imp.slice();
+    // Server mode: save one by one with live display, skip unchanged
+    let imported=0,errors=0,skipped=0;const queue=imp.slice();
     function importNext(){
         if(queue.length===0){
             loadStudents();
-            finishImport(imported,errors);
+            finishImport(imported,errors,skipped);
             return;
         }
         const idx=imp.length-queue.length;
         const st=queue.shift();
         const existing=students.find(x=>x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()&&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim());
-        if(existing)st.id=existing.id;
+        if(existing){
+            st.id=existing.id;
+            // Check if data actually changed
+            if(!studentChanged(existing,st)){
+                skipped++;
+                addImportRow(st,idx+1,true,'skip');
+                updateImportProgress(idx+1,imp.length,errors,skipped);
+                setTimeout(importNext,0);
+                return;
+            }
+        }
         apiPost('saveStudent',{student:st},d=>{
             const ok=d&&d.success;
             if(ok)imported++;else errors++;
-            addImportRow(st,idx+1,ok);
-            updateImportProgress(idx+1,imp.length,errors);
+            addImportRow(st,idx+1,ok,existing?'update':'new');
+            updateImportProgress(idx+1,imp.length,errors,skipped);
             importNext();
         });
     }
     importNext();
 }
 
-function addImportRow(s,num,ok){
+function studentChanged(existing, incoming){
+    // Compare key fields to detect if data actually changed
+    const fields=['formation','rythme','telephone','banque','echeancesRaw','nvxReins','prelevement','caution','telTuteur','dateInscription'];
+    for(const f of fields){
+        const a=(existing[f]||'').toString().trim();
+        const b=(incoming[f]||'').toString().trim();
+        if(a!==b)return true;
+    }
+    // Compare totals (covers echeances changes)
+    if(Math.abs((existing.total||0)-(incoming.total||0))>0.01)return true;
+    if(Math.abs((existing.paid||0)-(incoming.paid||0))>0.01)return true;
+    return false;
+}
+
+function addImportRow(s,num,ok,mode){
     const tbody=document.getElementById('importLiveRows');if(!tbody)return;
     const echCount=(s.echeancesJson||[]).length;
     const paidStr=s.paid?s.paid.toLocaleString('fr',{maximumFractionDigits:0})+'€':'—';
     const totalStr=s.total?s.total.toLocaleString('fr',{maximumFractionDigits:0})+'€':'—';
     const tr=document.createElement('tr');
     tr.className='import-row-enter';
-    tr.innerHTML=`<td style="color:var(--text2);font-size:0.78em;">${num}</td><td style="font-weight:600;">${esc(s.nom||'')}</td><td>${esc(s.prenom||'')}</td><td><span style="font-size:0.82em;color:var(--text2);">${esc(s.formation||'')}</span></td><td style="color:var(--ok);font-weight:500;">${paidStr}</td><td style="font-weight:500;">${totalStr}</td><td style="text-align:center;font-size:0.82em;">${echCount||'—'}</td><td style="text-align:center;">${ok?'✅':'❌'}</td>`;
+    const modeIcon=mode==='skip'?'⏭️':mode==='update'?'🔄':mode==='new'?'🆕':'✅';
+    const modeStyle=mode==='skip'?'opacity:0.5;':'';
+    tr.style.cssText=modeStyle;
+    tr.innerHTML=`<td style="color:var(--text2);font-size:0.78em;">${num}</td><td style="font-weight:600;">${esc(s.nom||'')}</td><td>${esc(s.prenom||'')}</td><td><span style="font-size:0.82em;color:var(--text2);">${esc(s.formation||'')}</span></td><td style="color:var(--ok);font-weight:500;">${paidStr}</td><td style="font-weight:500;">${totalStr}</td><td style="text-align:center;font-size:0.82em;">${echCount||'—'}</td><td style="text-align:center;">${ok?modeIcon:'❌'}</td>`;
     tbody.appendChild(tr);
     // Auto-scroll to bottom
     const wrap=tbody.closest('.import-live-table-wrap');
     if(wrap)wrap.scrollTop=wrap.scrollHeight;
 }
 
-function updateImportProgress(current,total,errors){
+function updateImportProgress(current,total,errors,skipped){
     const pct=Math.round(current/total*100);
     const bar=document.getElementById('importProgressBar');if(bar)bar.style.width=pct+'%';
-    const counter=document.getElementById('importCounter');if(counter)counter.textContent=current+' / '+total;
+    const counter=document.getElementById('importCounter');
+    if(counter){
+        let txt=current+' / '+total;
+        if(skipped>0)txt+=' ('+skipped+' ⏭️)';
+        counter.textContent=txt;
+    }
     const errDiv=document.getElementById('importErrors');
     if(errDiv&&errors>0){errDiv.style.display='block';errDiv.textContent='⚠️ '+errors+' erreur'+(errors>1?'s':'');}
 }
 
-function finishImport(imported,errors){
+function finishImport(imported,errors,skipped){
     const status=document.getElementById('importStatus');
     const spinner=document.querySelector('.import-spinner');
     if(spinner)spinner.style.display='none';
     if(status){
-        status.textContent=errors>0?`✅ ${imported} importés, ❌ ${errors} erreurs`:`✅ ${imported} étudiants importés !`;
+        let msg='';
+        if(skipped>0&&imported===0)msg=`✅ Aucun changement détecté — ${skipped} étudiants identiques`;
+        else{
+            const parts=[];
+            if(imported>0)parts.push(imported+' importé'+(imported>1?'s':''));
+            if(skipped>0)parts.push(skipped+' inchangé'+(skipped>1?'s':''));
+            if(errors>0)parts.push(errors+' erreur'+(errors>1?'s':''));
+            msg=(errors>0?'⚠️ ':'✅ ')+parts.join(', ');
+        }
+        status.textContent=msg;
         status.style.color=errors>0?'var(--warn)':'var(--ok)';
     }
     const bar=document.getElementById('importProgressBar');
