@@ -453,10 +453,11 @@ function renderStudents(){
         const barColor=status==='ok'?'var(--ok)':status==='late'?'var(--danger)':'var(--warn)';
         const displayName=s.prenom?`${esc(s.nom)} ${esc(s.prenom)}`:esc(s.nom);
         const nvxBadge=s.nvxReins?`<span class="badge ${s.nvxReins==='Nouveau'?'badge-nvx':'badge-info'}">${esc(s.nvxReins)}</span>`:'';
+        const badgesHtml=(s.badges||[]).map(b=>`<span class="badge badge-warn">${esc(b)}</span>`).join('');
         return `<div class="student-card" onclick="openDetailModal('${s.id}')">
             ${lateDays>=30?`<span class="late-badge">${lateDays}j</span>`:''}
             <div class="name">${displayName}</div>
-            <div class="meta"><span>${esc(s.formation||'—')}</span><span>${esc(s.rythme||'—')}</span>${nvxBadge}<span class="badge ${badgeCls}">${badgeTxt}</span></div>
+            <div class="meta"><span>${esc(s.formation||'—')}</span><span>${esc(s.rythme||'—')}</span>${nvxBadge}${badgesHtml}<span class="badge ${badgeCls}">${badgeTxt}</span></div>
             ${s.telephone?`<div style="color:var(--text2);font-size:0.82em;">📱 ${esc(s.telephone)}</div>`:''}
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${barColor};"></div></div>
             <div class="amounts"><span>${paid.toLocaleString('fr')}€ payé</span><span style="font-weight:700;color:${pct>=100?'var(--ok)':pct>=50?'var(--warn)':'var(--danger)'};">${pct}%</span><span>${total.toLocaleString('fr')}€ total</span></div>
@@ -576,10 +577,19 @@ function quickWhatsApp(id){
 const MAX_ECHEANCES=120;
 function makeDate(d,m,y){
     let yi=parseInt(String(y).trim());
-    if(String(y).trim().length===3){if(yi>=200&&yi<=209)yi=2020+(yi%10);else if(yi>=250&&yi<=259)yi=2025;else if(yi>=20&&yi<=99)yi=2000+yi;else if(yi>=260&&yi<=269)yi=2026;else yi=2025;}
+    const ys=String(y).trim();
+    // Fix typos: 206->2026, 205->2025, 255->2025, 269->2026, 026->2026
+    if(ys.length===3){
+        if(yi>=200&&yi<=209)yi=2020+(yi%10);
+        else if(yi>=250&&yi<=259)yi=2025+(yi%10);
+        else if(yi>=260&&yi<=269)yi=2026;
+        else if(yi>=20&&yi<=99)yi=2000+yi;
+        else yi=2025;
+    }
     else if(yi<100)yi=2000+yi;
     if(yi<2020||yi>2030)yi=2025;
     let di=parseInt(d),mi=parseInt(m);
+    // Fix day typos like "300" -> 30
     if(di>31)di=parseInt(String(di).slice(0,2));
     if(mi>12)mi=parseInt(String(mi).slice(0,2));
     if(mi<1||mi>12||di<1||di>31)return null;
@@ -591,20 +601,62 @@ function detectType(text){
     if(/\bESP(?:ECE|ECES|ÈCES?)?\b|\bESP\b/.test(t))return 'Espèces';
     if(/\bCB\b/.test(t))return 'CB';
     if(/\bCH[EÈ]?QU?E?\b|\bCHQ\b/.test(t))return 'Chèque';
-    if(/\bVIR(?:EMENT|T|MT|EMT|MENT)?\b|\bVRT\b|\bVRMT\b|\bVIR[EÉ]S?\b/.test(t))return 'Virement';
+    if(/\bVIR(?:EMENT|T|MT|EMT|MENT)?\b|\bVRT\b|\bVRMT\b|\bVIR[EÉ]S?\b|\bVRT\b/.test(t))return 'Virement';
     if(/\bPVT\b|\bP[VR]T\b|\bPRELEV/i.test(t))return 'Prélèvement';
     return 'Prélèvement';
 }
 
-function parseEcheances(raw){
-    if(!raw||!raw.trim())return {echeances:[],paid:0,total:0};
+function extractBadges(raw){
+    const badges=[];
+    // (A EU LA REDUCTION DE X€)
+    const redMatch=raw.match(/\(A\s+EU\s+LA\s+R[EÉ]DUCTION\s+DE\s+(\d[\d\s]*(?:[.,]\d+)?)\s*€?\)/i);
+    if(redMatch) badges.push('🏷️ Réduction '+redMatch[1].replace(/\s/g,'')+'€');
+    // EARLY BIRDS X€
+    const ebMatch=raw.match(/EARLY\s+BIRD?S?\s+(\d[\d\s]*(?:[.,]\d+)?)\s*€?/i);
+    if(!ebMatch){const ebMatch2=raw.match(/EARLY\s+BRID[S]?\s+(\d[\d\s]*(?:[.,]\d+)?)\s*€?/i);if(ebMatch2)badges.push('🐦 Early Birds '+ebMatch2[1].replace(/\s/g,'')+'€');}
+    else badges.push('🐦 Early Birds '+ebMatch[1].replace(/\s/g,'')+'€');
+    // ERASMUS
+    if(/ERASMUS/i.test(raw)) badges.push('🇪🇺 Erasmus');
+    return badges;
+}
+
+function parseEcheances(raw, dateInscription){
+    if(!raw||!raw.trim())return {echeances:[],paid:0,total:0,badges:[]};
     const echeances=[];const now=new Date();
-    // Normalize: fix double slashes, extra spaces
-    const text=raw.replace(/\/\/+/g,'/').replace(/\s+/g,' ').trim();
+    // Date for "no date" payments: use inscription date if available, else today
+    let fallbackDate=new Date(now);
+    if(dateInscription){
+        try{
+            let fd;
+            if(dateInscription.includes('-'))fd=new Date(dateInscription);
+            else if(dateInscription.includes('/')){const p=dateInscription.split('/');let y=parseInt(p[2]);if(y<100)y+=2000;fd=new Date(y,parseInt(p[1])-1,parseInt(p[0]));}
+            if(fd&&!isNaN(fd))fallbackDate=fd;
+        }catch(e){}
+    }
+    const badges=extractBadges(raw);
     
-    // PASS 1: Find all "du DD/MM/YY au DD/MM/YY" ranges with amounts
-    const rangeRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:\/mois\s+)?(?:du|DU)\s+(\d{1,3})[\/\-](\d{1,2})[\/\-](\d{2,4})\s*(?:au|AU)\s+(\d{1,3})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
-    let m; const usedIdx=[];
+    // Normalize text: fix double slashes, typos, extra spaces
+    let text=raw
+        .replace(/\/\/+/g,'/')          // double slashes
+        .replace(/1U\b/gi,'AU')          // typo 1U -> AU
+        .replace(/\bPUI\b/gi,'PUIS')     // typo PUI -> PUIS
+        .replace(/\bPVRT\b/gi,'PVT')     // typo PVRT -> PVT
+        .replace(/\bPVR\b/gi,'PVT')      // typo PVR -> PVT
+        .replace(/\bPT\b(?=\s+DE?\s+\d)/gi,'PVT') // PT DE -> PVT DE
+        .replace(/(\d)E\b(?!\w)/g,'$1€') // 760E -> 760€
+        .replace(/(\d):(?=[a-zA-Z])/g,'$1/')  // 760€:virement -> 760€/virement
+        .replace(/\bou\b(?=\s+\d{1,2}\/)/gi,'AU') // typo "ou" -> "AU" before date
+        .replace(/\s+/g,' ').trim();
+    
+    // Remove badge sections from calculation (but keep the rest)
+    text=text.replace(/\(A\s+EU\s+LA\s+R[EÉ]DUCTION\s+DE\s+\d[\d\s]*(?:[.,]\d+)?\s*€?\)/gi,'');
+    text=text.replace(/EARLY\s+BRID?S?\s+\d[\d\s]*(?:[.,]\d+)?\s*€?\s*[-–]?\s*/gi,'');
+    
+    const usedIdx=[];
+    
+    // PASS 1: "du DD/MM/YY au DD/MM/YY" ranges with amounts (allowing words like pvt/mois between amount and du)
+    const rangeRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:\/mois\s+)?(?:\w+\s+)*?(?:du|DU|DE)\s+(\d{1,3})[\/\-](\d{1,2})[\/\-](\d{2,4})\s*(?:au|AU)\s+(\d{1,3})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
+    let m;
     while((m=rangeRe.exec(text))!==null){
         const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
         const dS=makeDate(m[2],m[3],m[4]),dE=makeDate(m[5],m[6],m[7]);
@@ -616,7 +668,22 @@ function parseEcheances(raw){
         usedIdx.push({s:m.index,e:m.index+m[0].length});
     }
     
-    // PASS 2: Single dated payments "X€ ... le DD/MM/YY" or "X le DD/MM/YY" (€ optional)
+    // PASS 1b: "X€ LE DD/MM/YY AU DD/MM/YY" (LE...AU as range, common pattern)
+    const leAuRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:\/mois\s+)?(?:\w+\s+)*?(?:le|LE)\s+(\d{1,3})[\/\-](\d{1,2})[\/\-](\d{2,4})\s*(?:au|AU)\s+(\d{1,3})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
+    leAuRe.lastIndex=0;
+    while((m=leAuRe.exec(text))!==null){
+        if(usedIdx.some(r=>m.index>=r.s&&m.index<r.e))continue;
+        const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
+        const dS=makeDate(m[2],m[3],m[4]),dE=makeDate(m[5],m[6],m[7]);
+        if(!montant||!dS||!dE||isNaN(dS)||isNaN(dE))continue;
+        const ctx=text.substring(Math.max(0,m.index-15),m.index+m[0].length);
+        const type=detectType(ctx);
+        let d=new Date(dS),cnt=0;
+        while(d<=dE&&cnt<MAX_ECHEANCES){echeances.push({date:new Date(d),montant,type,paid:d<now,label:''});d.setMonth(d.getMonth()+1);cnt++;}
+        usedIdx.push({s:m.index,e:m.index+m[0].length});
+    }
+    
+    // PASS 2: Single dated payments "X€ ... le DD/MM/YY" (€ optional)
     const singleRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?[^€\d]{0,50}?\ble\s+(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/gi;
     singleRe.lastIndex=0;
     while((m=singleRe.exec(text))!==null){
@@ -632,9 +699,10 @@ function parseEcheances(raw){
         const ctx=text.substring(Math.max(0,m.index-30),m.index+m[0].length+20);
         if(!echeances.some(e=>Math.abs(e.date-d)<864e5&&Math.abs(e.montant-montant)<0.01))
             echeances.push({date:d,montant,type:detectType(ctx),paid:d<now,label:''});
+        usedIdx.push({s:m.index,e:m.index+m[0].length});
     }
     
-    // PASS 3: "pvt X€ LE DD/MM/YY" (without "de")
+    // PASS 3: "pvt X€ LE DD/MM/YY"
     const pvtRe=/(?:pvt?|pt|p[vr]t)\s+(?:de\s+)?(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:le|LE)\s+(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
     pvtRe.lastIndex=0;
     while((m=pvtRe.exec(text))!==null){
@@ -648,29 +716,98 @@ function parseEcheances(raw){
             echeances.push({date:d,montant,type:'Prélèvement',paid:d<now,label:''});
     }
     
-    // PASS 4: "à SM" payments
-    const smRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:à|a)\s+SM/gi;
+    // PASS 3b: "pvt X€ DD/MM/YY" (without "le")
+    const pvtNoLeRe=/(?:pvt?|p[vr]t)\s+(?:de\s+)?(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s+(\d{1,2})[\/\-](\d{1,2})[\/\-]?(\d{2,4})?/gi;
+    pvtNoLeRe.lastIndex=0;
+    while((m=pvtNoLeRe.exec(text))!==null){
+        if(usedIdx.some(r=>m.index>=r.s&&m.index<r.e))continue;
+        const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
+        if(!montant||montant<5)continue;
+        let d;
+        if(m[4])d=makeDate(m[2],m[3],m[4]);
+        else{const mo=parseInt(m[3]);d=makeDate(m[2],m[3],mo>=8?'25':'26');}
+        if(!d||isNaN(d))continue;
+        if(!echeances.some(e=>Math.abs(e.date-d)<864e5&&Math.abs(e.montant-montant)<0.01))
+            echeances.push({date:d,montant,type:'Prélèvement',paid:d<now,label:''});
+    }
+    
+    // PASS 4: Dash/ET separated single amounts with dates: "X€ LE DD/MM/YY - X€ LE DD/MM/YY" or "ET X€ LE DD/MM"
+    const dashRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:le|LE)\s+(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/gi;
+    dashRe.lastIndex=0;
+    while((m=dashRe.exec(text))!==null){
+        if(usedIdx.some(r=>m.index>=r.s&&m.index<r.e))continue;
+        const after=text.substring(m.index+m[0].length,m.index+m[0].length+30);
+        if(/^\s*(?:au|AU)\s+\d/.test(after))continue;
+        const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
+        if(!montant||montant<5)continue;
+        let d;
+        if(m[4])d=makeDate(m[2],m[3],m[4]);
+        else{const mo=parseInt(m[3]);d=makeDate(m[2],m[3],mo>=8?'25':'26');}
+        if(!d||isNaN(d))continue;
+        if(!echeances.some(e=>Math.abs(e.date-d)<864e5&&Math.abs(e.montant-montant)<0.01))
+            echeances.push({date:d,montant,type:detectType(text.substring(Math.max(0,m.index-30),m.index+m[0].length+20)),paid:d<now,label:''});
+    }
+    
+    // PASS 5: "à SM" payments (paid to SM, no date)
+    const smRe=/(?:a\s+)?(?:r[eéè]gl[eéè][crd]?\s+)?(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:à|a)\s+SM/gi;
     smRe.lastIndex=0;
     while((m=smRe.exec(text))!==null){
         const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
         if(!montant)continue;
         if(!echeances.some(e=>Math.abs(e.montant-montant)<0.01&&e.label==='Paiement SM'))
-            echeances.push({date:new Date(now),montant,type:'Autre',paid:true,label:'Paiement SM'});
+            echeances.push({date:new Date(fallbackDate),montant,type:'Autre',paid:true,label:'Paiement SM'});
     }
     
-    // PASS 5: "réglé X€" without date
-    const noDateRe=/(?:a\s+)?(?:r[eéè]gl[eéè][crd]?\s+)(\d[\d\s]*(?:[.,]\d+)?)\s*€\s*(?:[\/:\s]*(?:CB|ESP(?:ECE|ECES)?|VIREMENT|VRT|VRMT|CHQ))?(?!\s*(?:le|LE|du|DU)\s+\d)/gi;
+    // PASS 5b: "SM- X€ réglés" (SM at beginning)
+    const smStartRe=/SM\s*[-–:]\s*(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:r[eéè]gl|pay)/gi;
+    smStartRe.lastIndex=0;
+    while((m=smStartRe.exec(text))!==null){
+        const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
+        if(!montant)continue;
+        if(!echeances.some(e=>Math.abs(e.montant-montant)<0.01&&e.label==='Paiement SM'))
+            echeances.push({date:new Date(fallbackDate),montant,type:'Autre',paid:true,label:'Paiement SM'});
+    }
+    
+    // PASS 6: "réglé X€" without date (already paid, no date found)
+    const noDateRe=/(?:a\s+)?(?:r[eéè]gl[eéè][crd]?\s+)(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:[\/:\s]*(?:CB|ESP(?:ECE|ECES)?|VIREMENT|VRT|VRMT|CHQ|en\s+\w+))?(?!\s*(?:le|LE|du|DU)\s+\d)/gi;
     noDateRe.lastIndex=0;
     while((m=noDateRe.exec(text))!==null){
         if(usedIdx.some(r=>m.index>=r.s&&m.index<r.e))continue;
         const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
         if(!montant||montant<5)continue;
+        // Check if this "réglé" already has a date captured
+        const nearby=text.substring(m.index,m.index+m[0].length+40);
+        if(/\ble\s+\d{1,2}[\/\-]\d/i.test(nearby))continue;
         const ctx=text.substring(Math.max(0,m.index-20),m.index+m[0].length+20);
         if(!echeances.some(e=>Math.abs(e.montant-montant)<0.01&&e.paid))
-            echeances.push({date:new Date(now),montant,type:detectType(ctx),paid:true,label:'Sans date'});
+            echeances.push({date:new Date(fallbackDate),montant,type:detectType(ctx),paid:true,label:'Sans date'});
     }
     
-    // PASS 6: catch remaining "amount + date" patterns (€ optional)
+    // PASS 6b: "Acompte X€" or "X€ conservés" or "Réglé par chq X€"
+    const acompteRe=/(?:acompte|conserv[eé]s?)\s*(\d[\d\s]*(?:[.,]\d+)?)\s*€?/gi;
+    acompteRe.lastIndex=0;
+    while((m=acompteRe.exec(text))!==null){
+        const montant=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
+        if(!montant)continue;
+        if(!echeances.some(e=>Math.abs(e.montant-montant)<0.01&&e.paid))
+            echeances.push({date:new Date(fallbackDate),montant,type:'Autre',paid:true,label:'Acompte'});
+    }
+    
+    // PASS 6c: "Réglé par chq X€ et X€" 
+    const chqRe=/r[eéè]gl[eéè][crd]?\s+par\s+ch[qe]\w*\s+(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*(?:et\s+(\d[\d\s]*(?:[.,]\d+)?)\s*€?)?/gi;
+    chqRe.lastIndex=0;
+    while((m=chqRe.exec(text))!==null){
+        const montant1=parseFloat(m[1].replace(/\s/g,'').replace(',','.'));
+        if(montant1&&!echeances.some(e=>Math.abs(e.montant-montant1)<0.01&&e.paid))
+            echeances.push({date:new Date(fallbackDate),montant:montant1,type:'Chèque',paid:true,label:'Chèque'});
+        if(m[2]){
+            const montant2=parseFloat(m[2].replace(/\s/g,'').replace(',','.'));
+            if(montant2&&!echeances.some(e=>Math.abs(e.montant-montant2)<0.01&&e.paid))
+                echeances.push({date:new Date(fallbackDate),montant:montant2,type:'Chèque',paid:true,label:'Chèque'});
+        }
+    }
+    
+    // PASS 7: catch remaining "amount + date" patterns (€ optional)
     const catchAllRe=/(\d[\d\s]*(?:[.,]\d+)?)\s*€?\s*[^a-zA-ZÀ-ú]*?(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/gi;
     catchAllRe.lastIndex=0;
     while((m=catchAllRe.exec(text))!==null){
@@ -691,7 +828,7 @@ function parseEcheances(raw){
     
     let paidTotal=0,grandTotal=0;
     unique.forEach(e=>{grandTotal+=e.montant;if(e.paid)paidTotal+=e.montant;});
-    return {echeances:unique,paid:Math.round(paidTotal*100)/100,total:Math.round(grandTotal*100)/100};
+    return {echeances:unique,paid:Math.round(paidTotal*100)/100,total:Math.round(grandTotal*100)/100,badges};
 }
 
 // DETAIL MODAL
@@ -703,8 +840,9 @@ function openDetailModal(id){
     const nOpts=['','Nouveau','Réinscription'].map(v=>`<option value="${v}" ${v===(s.nvxReins||'')?'selected':''}>${v||'—'}</option>`).join('');
     const status=computeStatus(s);
     const sBadge=status==='ok'?'<span class="badge badge-ok">✅ À jour</span>':status==='late'?'<span class="badge badge-danger">⚠️ En retard</span>':'<span class="badge badge-warn">⏳ En attente</span>';
+    const detailBadges=(s.badges||[]).map(b=>`<span class="badge badge-warn">${esc(b)}</span>`).join('');
     
-    let html=`<div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">${sBadge}${s.dateInscription?`<span style="color:var(--text2);font-size:0.82em;">📅 Inscrit le ${esc(s.dateInscription)}</span>`:''}
+    let html=`<div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">${sBadge}${detailBadges}${s.dateInscription?`<span style="color:var(--text2);font-size:0.82em;">📅 Inscrit le ${esc(s.dateInscription)}</span>`:''}
     <div style="margin-left:auto;display:flex;gap:6px;">
         ${s.telephone?`<button class="btn btn-whatsapp btn-sm" onclick="sendWhatsApp('student')" title="WhatsApp étudiant">📱 WhatsApp</button>`:''}
         ${s.telTuteur?`<button class="btn btn-whatsapp btn-sm" onclick="sendWhatsApp('tuteur')" title="WhatsApp tuteur" style="background:#128C7E;">📱 Tuteur</button>`:''}
@@ -762,11 +900,11 @@ function reparseEcheances(){
     const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     s.echeancesRaw=raw;
     if(raw){
-        const p=parseEcheances(raw);
+        const p=parseEcheances(raw, s.dateInscription);
         s.echeancesJson=p.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''}));
-        s.paid=p.paid;s.total=p.total;
+        s.paid=p.paid;s.total=p.total;s.badges=p.badges||[];
     } else {
-        s.echeancesJson=[];s.paid=0;s.total=0;
+        s.echeancesJson=[];s.paid=0;s.total=0;s.badges=[];
     }
     apiPost('saveStudent',{student:s},d=>{
         if(d.success){
@@ -902,9 +1040,9 @@ function openCreateModal(){
 }
 function createStudent(){
     const nom=document.getElementById('createNom').value.trim();if(!nom){showToast('Le nom est obligatoire',true);return;}
-    const raw=document.getElementById('createEcheances').value.trim();const parsed=raw?parseEcheances(raw):{echeances:[],paid:0,total:0};
+    const raw=document.getElementById('createEcheances').value.trim();const parsed=raw?parseEcheances(raw):{echeances:[],paid:0,total:0,badges:[]};
     const chqVal=document.getElementById('createCaution').value==='true';
-    const s={nom,prenom:document.getElementById('createPrenom').value.trim(),formation:document.getElementById('createFormation').value,rythme:document.getElementById('createRythme').value,telephone:normalizePhone(document.getElementById('createPhone').value),telTuteur:document.getElementById('createTelTuteur').value.trim(),nvxReins:document.getElementById('createNvxReins').value,prelevement:document.getElementById('createPrelevement').value,caution:chqVal?'OUI':'NON',chq:chqVal,banque:document.getElementById('createBanque').value.trim(),notes:document.getElementById('createNotes').value.trim(),echeancesRaw:raw,echeancesJson:parsed.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''})),paid:parsed.paid,total:parsed.total,chqMontant:0,dateInscription:new Date().toLocaleDateString('fr-FR')};
+    const s={nom,prenom:document.getElementById('createPrenom').value.trim(),formation:document.getElementById('createFormation').value,rythme:document.getElementById('createRythme').value,telephone:normalizePhone(document.getElementById('createPhone').value),telTuteur:document.getElementById('createTelTuteur').value.trim(),nvxReins:document.getElementById('createNvxReins').value,prelevement:document.getElementById('createPrelevement').value,caution:chqVal?'OUI':'NON',chq:chqVal,banque:document.getElementById('createBanque').value.trim(),notes:document.getElementById('createNotes').value.trim(),echeancesRaw:raw,echeancesJson:parsed.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''})),paid:parsed.paid,total:parsed.total,badges:parsed.badges||[],chqMontant:0,dateInscription:new Date().toLocaleDateString('fr-FR')};
     apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();closeModal('createModal');showToast('✅ Étudiant créé');}else{showToast('❌ Erreur création: '+(d.error||'échec serveur'),true);}});
 }
 
@@ -976,7 +1114,9 @@ function previewImport(){
 function doImport(){
     const {rows,colMap}=window._importData||{};if(!rows)return;
     const imp=rows.map(r=>{
-        const raw=colMap.echeances!==undefined?r[colMap.echeances]||'':'';const parsed=raw?parseEcheances(raw):{echeances:[],paid:0,total:0};
+        const raw=colMap.echeances!==undefined?r[colMap.echeances]||'':'';
+        const dateInsc=colMap.dateInscription!==undefined?(r[colMap.dateInscription]||'').trim():'';
+        const parsed=raw?parseEcheances(raw, dateInsc):{echeances:[],paid:0,total:0,badges:[]};
         return {
             nom:colMap.nom!==undefined?(r[colMap.nom]||'').trim():'',
             prenom:colMap.prenom!==undefined?(r[colMap.prenom]||'').trim():'',
@@ -986,13 +1126,13 @@ function doImport(){
             banque:colMap.banque!==undefined?(r[colMap.banque]||'').trim():'',
             echeancesRaw:raw,
             echeancesJson:parsed.echeances.map(e=>({date:e.date.toISOString(),montant:e.montant,type:e.type,paid:e.paid,label:e.label||''})),
-            paid:parsed.paid,total:parsed.total,
+            paid:parsed.paid,total:parsed.total,badges:parsed.badges||[],
             nvxReins:colMap.nvxReins!==undefined?(r[colMap.nvxReins]||'').trim():'',
             prelevement:colMap.prelevement!==undefined?(r[colMap.prelevement]||'').trim():'',
             caution:colMap.caution!==undefined?(r[colMap.caution]||'').trim():'',
-            chq:colMap.caution!==undefined&&/^oui$/i.test((r[colMap.caution]||'').trim()),
-            dateInscription:colMap.dateInscription!==undefined?(r[colMap.dateInscription]||'').trim():'',
-            telTuteur:colMap.telTuteur!==undefined?(r[colMap.telTuteur]||'').trim():''
+            chq:colMap.caution!==undefined&&/^oui/i.test((r[colMap.caution]||'').trim()),
+            dateInscription:dateInsc,
+            telTuteur:normalizePhone(colMap.telTuteur!==undefined?r[colMap.telTuteur]||'':'')
         };
     }).filter(s=>s.nom);
     imp.sort((a,b)=>(a.nom||'').localeCompare(b.nom||'','fr',{sensitivity:'base'}));
