@@ -185,6 +185,17 @@ a { color: var(--primary); }
     .header-actions { margin-left: 0; justify-content: center; }
     .student-grid { grid-template-columns: 1fr; }
 }
+/* Live Import */
+.import-live-table-wrap{max-height:45vh;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);}
+.import-live-table{width:100%;border-collapse:collapse;font-size:0.82em;}
+.import-live-table thead{position:sticky;top:0;z-index:1;}
+.import-live-table th{background:var(--surface2);padding:6px 10px;text-align:left;font-size:0.72em;text-transform:uppercase;letter-spacing:0.5px;color:var(--text2);border-bottom:1px solid var(--border);}
+.import-live-table td{padding:5px 10px;border-bottom:1px solid var(--border);}
+.import-live-table tr:last-child td{border-bottom:none;}
+.import-row-enter{animation:rowSlideIn 0.2s ease-out;}
+@keyframes rowSlideIn{from{opacity:0;transform:translateY(-8px);background:rgba(124,92,252,0.12);}50%{background:rgba(124,92,252,0.08);}to{opacity:1;transform:translateY(0);background:transparent;}}
+.import-spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
@@ -1136,36 +1147,118 @@ function doImport(){
         };
     }).filter(s=>s.nom);
     imp.sort((a,b)=>(a.nom||'').localeCompare(b.nom||'','fr',{sensitivity:'base'}));
-    // Backup before import
     createBackup('Avant import de '+imp.length+' étudiants');
-    // Local mode: batch import
+    
+    // Replace modal content with live progress UI
+    const body=document.getElementById('importBody');
+    body.innerHTML=`
+        <div class="import-live">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div class="import-spinner"></div>
+                <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                        <span id="importStatus" style="font-weight:600;">Import en cours...</span>
+                        <span id="importCounter" style="color:var(--primary);font-weight:700;">0 / ${imp.length}</span>
+                    </div>
+                    <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+                        <div id="importProgressBar" style="height:100%;width:0%;background:var(--primary);border-radius:4px;transition:width 0.15s;"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="importErrors" style="display:none;margin-bottom:8px;padding:8px 12px;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:6px;color:var(--danger);font-size:0.82em;"></div>
+            <div class="import-live-table-wrap">
+                <table class="import-live-table">
+                    <thead><tr><th style="width:28px;">#</th><th>NOM</th><th>PRÉNOM</th><th>FORMATION</th><th>PAYÉ</th><th>TOTAL</th><th>ÉCH.</th><th style="width:40px;">OK</th></tr></thead>
+                    <tbody id="importLiveRows"></tbody>
+                </table>
+            </div>
+        </div>`;
+    document.getElementById('importPreview').innerHTML='';
+    
+    // Local mode: batch (still show progress visually)
     if(!API_URL){
-        apiPost('importStudents',{students:imp},d=>{if(d.success){loadStudents();closeModal('importModal');showToast(imp.length+' étudiants importés');}else{showToast('Erreur import: '+(d.error||''),true);}});
+        let i=0;
+        function animateLocal(){
+            if(i<imp.length){
+                addImportRow(imp[i],i+1,true);
+                updateImportProgress(i+1,imp.length,0);
+                i++;
+                requestAnimationFrame(animateLocal);
+            } else {
+                apiPost('importStudents',{students:imp},d=>{
+                    if(d.success){loadStudents();finishImport(imp.length,0);}
+                    else{showToast('Erreur import: '+(d.error||''),true);}
+                });
+            }
+        }
+        animateLocal();
         return;
     }
-    // Server mode: save one by one using apiPost (same path as manual create/edit)
-    var imported=0,errors=0,queue=imp.slice();
+    
+    // Server mode: save one by one with live display
+    let imported=0,errors=0;const queue=imp.slice();
     function importNext(){
         if(queue.length===0){
             loadStudents();
-            closeModal('importModal');
-            if(errors>0) showToast(imported+' importés, '+errors+' erreurs',true);
-            else showToast(imported+' étudiants importés');
+            finishImport(imported,errors);
             return;
         }
-        var st=queue.shift();
-        // Check for existing student (dedup by name)
-        var existing=students.find(function(x){
-            return x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()
-                &&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim();
-        });
-        if(existing) st.id=existing.id;
-        apiPost('saveStudent',{student:st},function(d){
-            if(d&&d.success) imported++;else errors++;
+        const idx=imp.length-queue.length;
+        const st=queue.shift();
+        const existing=students.find(x=>x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()&&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim());
+        if(existing)st.id=existing.id;
+        apiPost('saveStudent',{student:st},d=>{
+            const ok=d&&d.success;
+            if(ok)imported++;else errors++;
+            addImportRow(st,idx+1,ok);
+            updateImportProgress(idx+1,imp.length,errors);
             importNext();
         });
     }
     importNext();
+}
+
+function addImportRow(s,num,ok){
+    const tbody=document.getElementById('importLiveRows');if(!tbody)return;
+    const echCount=(s.echeancesJson||[]).length;
+    const paidStr=s.paid?s.paid.toLocaleString('fr',{maximumFractionDigits:0})+'€':'—';
+    const totalStr=s.total?s.total.toLocaleString('fr',{maximumFractionDigits:0})+'€':'—';
+    const tr=document.createElement('tr');
+    tr.className='import-row-enter';
+    tr.innerHTML=`<td style="color:var(--text2);font-size:0.78em;">${num}</td><td style="font-weight:600;">${esc(s.nom||'')}</td><td>${esc(s.prenom||'')}</td><td><span style="font-size:0.82em;color:var(--text2);">${esc(s.formation||'')}</span></td><td style="color:var(--ok);font-weight:500;">${paidStr}</td><td style="font-weight:500;">${totalStr}</td><td style="text-align:center;font-size:0.82em;">${echCount||'—'}</td><td style="text-align:center;">${ok?'✅':'❌'}</td>`;
+    tbody.appendChild(tr);
+    // Auto-scroll to bottom
+    const wrap=tbody.closest('.import-live-table-wrap');
+    if(wrap)wrap.scrollTop=wrap.scrollHeight;
+}
+
+function updateImportProgress(current,total,errors){
+    const pct=Math.round(current/total*100);
+    const bar=document.getElementById('importProgressBar');if(bar)bar.style.width=pct+'%';
+    const counter=document.getElementById('importCounter');if(counter)counter.textContent=current+' / '+total;
+    const errDiv=document.getElementById('importErrors');
+    if(errDiv&&errors>0){errDiv.style.display='block';errDiv.textContent='⚠️ '+errors+' erreur'+(errors>1?'s':'');}
+}
+
+function finishImport(imported,errors){
+    const status=document.getElementById('importStatus');
+    const spinner=document.querySelector('.import-spinner');
+    if(spinner)spinner.style.display='none';
+    if(status){
+        status.textContent=errors>0?`✅ ${imported} importés, ❌ ${errors} erreurs`:`✅ ${imported} étudiants importés !`;
+        status.style.color=errors>0?'var(--warn)':'var(--ok)';
+    }
+    const bar=document.getElementById('importProgressBar');
+    if(bar)bar.style.background=errors>0?'var(--warn)':'var(--ok)';
+    // Add close button
+    const wrap=document.querySelector('.import-live');
+    if(wrap){
+        const btn=document.createElement('button');
+        btn.className='btn btn-primary';btn.style.marginTop='12px';btn.textContent='Fermer';
+        btn.onclick=()=>closeModal('importModal');
+        wrap.appendChild(btn);
+    }
+    renderDashboard();
 }
 
 // EXPORT
