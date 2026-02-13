@@ -897,7 +897,20 @@ function buildEcheancierHtml(s){
 
 // ECH EDITING
 function getEcheances(){const s=students.find(x=>String(x.id)===String(currentStudentId));return s?(s.echeancesJson||[]):[];}
-function saveEch(echs){const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;s.echeancesJson=echs;s.paid=echs.filter(e=>e.paid).reduce((a,e)=>a+e.montant,0);s.total=echs.reduce((a,e)=>a+e.montant,0);apiPost('saveStudent',{student:s},d=>{if(d.success){loadStudents();openDetailModal(currentStudentId);}else{showToast('❌ Erreur sauvegarde: '+(d.error||''),true);}});}
+function saveEch(echs){
+    const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
+    s.echeancesJson=echs;
+    s.paid=Math.round(echs.filter(e=>e.paid).reduce((a,e)=>a+e.montant,0)*100)/100;
+    s.total=Math.round(echs.reduce((a,e)=>a+e.montant,0)*100)/100;
+    // Refresh UI IMMEDIATELY with local data (no server wait)
+    openDetailModal(currentStudentId);
+    renderStudents();
+    renderDashboard();
+    // Save to server in background
+    apiPost('saveStudent',{student:s},d=>{
+        if(!d.success)showToast('❌ Erreur sauvegarde: '+(d.error||''),true);
+    });
+}
 function togglePaid(i,v){const e=getEcheances();if(e[i]){e[i].paid=v;saveEch(e);}}
 function deleteEch(i){const e=getEcheances();e.splice(i,1);saveEch(e);}
 function addEcheance(){const dv=document.getElementById('newEchDate').value,amt=parseFloat(document.getElementById('newEchAmount').value),tp=document.getElementById('newEchType').value;if(!dv||!amt){showToast('Date et montant requis',true);return;}const d=new Date(dv);const e=getEcheances();e.push({date:d.toISOString(),montant:amt,type:tp,paid:d<new Date(),label:''});e.sort((a,b)=>new Date(a.date)-new Date(b.date));showToast(`✅ Échéance de ${amt}€ ajoutée`);saveEch(e);}
@@ -917,12 +930,14 @@ function reparseEcheances(){
     } else {
         s.echeancesJson=[];s.paid=0;s.total=0;s.badges=[];
     }
+    // Refresh UI immediately
+    showToast('✅ Échéancier recalculé — '+((s.echeancesJson||[]).length)+' échéances');
+    openDetailModal(currentStudentId);
+    renderStudents();
+    renderDashboard();
+    // Save to server in background
     apiPost('saveStudent',{student:s},d=>{
-        if(d.success){
-            showToast('✅ Échéancier recalculé — '+((s.echeancesJson||[]).length)+' échéances');
-            loadStudents();
-            setTimeout(()=>openDetailModal(currentStudentId),50);
-        }
+        if(!d.success)showToast('❌ Erreur sauvegarde: '+(d.error||''),true);
     });
 }
 
