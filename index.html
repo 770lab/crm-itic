@@ -418,7 +418,31 @@ function setLocalData(action,payload){
 }
 
 // STUDENTS
-function loadStudents(){apiGet('getStudents',d=>{if(d.success){students=(d.students||[]).map(s=>{if(s.id!==undefined&&s.id!==null)s.id=String(s.id);if(s.telephone)s.telephone=normalizePhone(String(s.telephone));if(s.telTuteur)s.telTuteur=normalizePhone(String(s.telTuteur));return s;});renderDashboard();renderStudents();renderStats();autoBackupIfNeeded();}});}
+function normalizeStudentFields(s){
+    const map={
+        'PR2NOM':'prenom','PRENOM':'prenom','prenom':'prenom','Prenom':'prenom','Prénom':'prenom','prénom':'prenom','PRÉNOM':'prenom','firstname':'prenom','FIRSTNAME':'prenom',
+        'NOM':'nom','Nom':'nom','nom':'nom','LASTNAME':'nom','lastname':'nom',
+        'FORMATION':'formation','Formation':'formation',
+        'RYTHME':'rythme','Rythme':'rythme',
+        'TELEPHONE':'telephone','Telephone':'telephone','Téléphone':'telephone','TÉLÉPHONE':'telephone','téléphone':'telephone','PHONE':'telephone',
+        'BANQUE':'banque','Banque':'banque',
+        'NOTES':'notes','Notes':'notes',
+        'PRELEVEMENT':'prelevement','Prelevement':'prelevement','Prélèvement':'prelevement','PRÉLÈVEMENT':'prelevement',
+        'CAUTION':'caution','Caution':'caution',
+        'CHQ':'chq','Chq':'chq',
+        'TEL TUTEUR':'telTuteur','TELTUTEUR':'telTuteur','telTuteur':'telTuteur','Tel Tuteur':'telTuteur','teltuteur':'telTuteur',
+        'NVX/REINS':'nvxReins','NVXREINS':'nvxReins','nvxReins':'nvxReins','NVX':'nvxReins','Nvx/Réins':'nvxReins',
+        'ECHEANCES':'echeancesRaw','echeancesRaw':'echeancesRaw','Echeances':'echeancesRaw','Échéances':'echeancesRaw','ÉCHÉANCES':'echeancesRaw',
+        'DATE':'dateInscription','Date':'dateInscription','dateInscription':'dateInscription','DATE INSCRIPTION':'dateInscription'
+    };
+    const n={};
+    for(const[k,v] of Object.entries(s)){
+        const mapped=map[k]||k;
+        if(n[mapped]===undefined||n[mapped]===null||n[mapped]==='')n[mapped]=v;
+    }
+    return n;
+}
+function loadStudents(){apiGet('getStudents',d=>{if(d.success){if(d.students&&d.students.length>0)console.log('[loadStudents] Sample server fields:',Object.keys(d.students[0]));students=(d.students||[]).map(s=>{s=normalizeStudentFields(s);if(s.id!==undefined&&s.id!==null)s.id=String(s.id);if(s.telephone)s.telephone=normalizePhone(String(s.telephone));if(s.telTuteur)s.telTuteur=normalizePhone(String(s.telTuteur));return s;});renderDashboard();renderStudents();renderStats();autoBackupIfNeeded();}});}
 function populateFormationFilter(){document.getElementById('filterFormation').innerHTML='<option value="">Toutes formations</option>'+FORMATIONS.map(f=>`<option>${esc(f)}</option>`).join('');}
 function filterStudents(){
     const hasFilter=document.getElementById('searchBox').value.trim()||document.getElementById('filterFormation').value||document.getElementById('filterStatus').value||document.getElementById('filterRythme').value||document.getElementById('filterLate').value;
