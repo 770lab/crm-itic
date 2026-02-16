@@ -1191,8 +1191,7 @@ function doImport(){
                 </table>
             </div>
         </div>`;
-    document.getElementById('importPreview').innerHTML='';
-    
+    { const _p = document.getElementById('importPreview'); if (_p) _p.innerHTML=''; }
     // Local mode: batch with smart skip display
     if(!API_URL){
         let i=0,localSkipped=0;
