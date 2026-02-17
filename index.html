@@ -1251,7 +1251,7 @@ function doImport(){
                 i++;
                 requestAnimationFrame(animateLocal);
             } else {
-                apiPost('importStudents',{students:imp},d=>{
+                apiPost('importStudents',{students:imp,data:imp},d=>{
                     if(d.success){loadStudents();finishImport(imp.length-localSkipped,0,localSkipped);}
                     else{showToast('Erreur import: '+(d.error||''),true);}
                 });
@@ -1285,7 +1285,7 @@ function doImport(){
     
     // Single batch request
     document.getElementById('importStatus').textContent=`Envoi de ${toSend.length} étudiants au serveur...`;
-    apiPost('importStudents',{students:toSend},d=>{
+    apiPost('importStudents',{students:toSend,data:toSend},d=>{
         if(d&&d.success){
             loadStudents();
             finishImport(toSend.length,0,skipped);
