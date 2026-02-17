@@ -448,6 +448,13 @@ function loadStudents(){apiGet('getStudents',d=>{if(d.success){
         if(s.id!==undefined&&s.id!==null)s.id=String(s.id);
         if(s.telephone)s.telephone=normalizePhone(String(s.telephone));
         if(s.telTuteur)s.telTuteur=normalizePhone(String(s.telTuteur));
+        // Parse JSON fields that come back as strings from Google Sheets
+        if(typeof s.echeancesJson==='string'){try{s.echeancesJson=JSON.parse(s.echeancesJson);}catch(e){s.echeancesJson=[];}}
+        if(typeof s.badges==='string'){try{s.badges=JSON.parse(s.badges);}catch(e){s.badges=[];}}
+        if(!Array.isArray(s.echeancesJson))s.echeancesJson=[];
+        if(!Array.isArray(s.badges))s.badges=[];
+        if(typeof s.paid==='string')s.paid=parseFloat(s.paid)||0;
+        if(typeof s.total==='string')s.total=parseFloat(s.total)||0;
         return s;
     });
     if(students[0])console.log('[loadStudents] Normalized prenom:',students[0].prenom,'nom:',students[0].nom);
@@ -1254,37 +1261,39 @@ function doImport(){
         return;
     }
     
-    // Server mode: save one by one with live display, skip unchanged
-    let imported=0,errors=0,skipped=0;const queue=imp.slice();
-    function importNext(){
-        if(queue.length===0){
-            loadStudents();
-            finishImport(imported,errors,skipped);
-            return;
-        }
-        const idx=imp.length-queue.length;
-        const st=queue.shift();
+    // Server mode: BATCH import (single request instead of one per student)
+    let skipped=0;
+    const toSend=[];
+    // Show all rows instantly in the live table + filter unchanged
+    imp.forEach((st,idx)=>{
         const existing=students.find(x=>x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()&&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim());
+        let mode='new';
         if(existing){
             st.id=existing.id;
-            // Check if data actually changed
-            if(!studentChanged(existing,st)){
-                skipped++;
-                addImportRow(st,idx+1,true,'skip');
-                updateImportProgress(idx+1,imp.length,errors,skipped);
-                setTimeout(importNext,0);
-                return;
-            }
+            if(!studentChanged(existing,st)){mode='skip';skipped++;}
+            else mode='update';
         }
-        apiPost('saveStudent',{student:st},d=>{
-            const ok=d&&d.success;
-            if(ok)imported++;else errors++;
-            addImportRow(st,idx+1,ok,existing?'update':'new');
-            updateImportProgress(idx+1,imp.length,errors,skipped);
-            importNext();
-        });
+        addImportRow(st,idx+1,true,mode);
+        if(mode!=='skip')toSend.push(st);
+    });
+    updateImportProgress(imp.length,imp.length,0,skipped);
+    
+    if(toSend.length===0){
+        finishImport(0,0,skipped);
+        return;
     }
-    importNext();
+    
+    // Single batch request
+    document.getElementById('importStatus').textContent=`Envoi de ${toSend.length} étudiants au serveur...`;
+    apiPost('importStudents',{students:toSend},d=>{
+        if(d&&d.success){
+            loadStudents();
+            finishImport(toSend.length,0,skipped);
+        } else {
+            finishImport(0,toSend.length,skipped);
+            showToast('❌ Erreur import: '+(d?.error||''),true);
+        }
+    });
 }
 
 function studentChanged(existing, incoming){
