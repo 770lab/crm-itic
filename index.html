@@ -385,7 +385,27 @@ function parseGASResponse(txt){
     return null;
 }
 function apiGet(action,cb){if(!API_URL){cb(getLocalData(action));return;}showLoading(true);fetch(API_URL+'?action='+action,{redirect:'follow'}).then(r=>r.text()).then(txt=>{showLoading(false);const d=parseGASResponse(txt);if(d)cb(d);else showToast('Réponse serveur invalide',true);}).catch(e=>{showLoading(false);showToast('Erreur réseau: '+e.message,true);});}
-function apiPost(action,payload,cb){if(!API_URL){cb(setLocalData(action,payload));return;}showLoading(true);var userName=(currentUser&&currentUser.name)?currentUser.name:(currentUser&&currentUser.username)?currentUser.username:'';var bodyData={action,...payload,user:userName};console.log('[apiPost]',action,JSON.stringify(bodyData).substring(0,200));fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify(bodyData)}).then(r=>r.text()).then(txt=>{showLoading(false);console.log('[apiPost response]',action,txt.substring(0,300));const d=parseGASResponse(txt);if(d){cb(d);}else{showToast('Réponse serveur invalide',true);cb({success:false,error:'Réponse invalide: '+txt.substring(0,100)});}}).catch(e=>{showLoading(false);console.error('[apiPost error]',action,e);showToast('Erreur réseau: '+e.message,true);cb({success:false,error:e.message});});}
+function addOutgoingAliases(payload){
+    if(payload&&payload.student){
+        const s=payload.student;
+        if(s.prenom!==undefined)s.pr2nom=s.prenom;
+        if(s.telTuteur!==undefined)s.teltuteur=s.telTuteur;
+        if(s.nvxReins!==undefined)s.nvxreins=s.nvxReins;
+        if(s.echeancesRaw!==undefined)s.echeances=s.echeancesRaw;
+        if(s.dateInscription!==undefined)s.date=s.dateInscription;
+    }
+    if(payload&&payload.students){
+        payload.students.forEach(s=>{
+            if(s.prenom!==undefined)s.pr2nom=s.prenom;
+            if(s.telTuteur!==undefined)s.teltuteur=s.telTuteur;
+            if(s.nvxReins!==undefined)s.nvxreins=s.nvxReins;
+            if(s.echeancesRaw!==undefined)s.echeances=s.echeancesRaw;
+            if(s.dateInscription!==undefined)s.date=s.dateInscription;
+        });
+    }
+    return payload;
+}
+function apiPost(action,payload,cb){if(!API_URL){cb(setLocalData(action,payload));return;}showLoading(true);var userName=(currentUser&&currentUser.name)?currentUser.name:(currentUser&&currentUser.username)?currentUser.username:'';payload=addOutgoingAliases(payload);var bodyData={action,...payload,user:userName};console.log('[apiPost]',action,JSON.stringify(bodyData).substring(0,200));fetch(API_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify(bodyData)}).then(r=>r.text()).then(txt=>{showLoading(false);console.log('[apiPost response]',action,txt.substring(0,300));const d=parseGASResponse(txt);if(d){cb(d);}else{showToast('Réponse serveur invalide',true);cb({success:false,error:'Réponse invalide: '+txt.substring(0,100)});}}).catch(e=>{showLoading(false);console.error('[apiPost error]',action,e);showToast('Erreur réseau: '+e.message,true);cb({success:false,error:e.message});});}
 
 function getLocalData(action){
     if(action==='getStudents') return {success:true,students:JSON.parse(localStorage.getItem('students')||'[]')};
@@ -419,30 +439,39 @@ function setLocalData(action,payload){
 
 // STUDENTS
 function normalizeStudentFields(s){
+    function nk(k){return k.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9]/g,'');}
     const map={
-        'PR2NOM':'prenom','PRENOM':'prenom','prenom':'prenom','Prenom':'prenom','Prénom':'prenom','prénom':'prenom','PRÉNOM':'prenom','firstname':'prenom','FIRSTNAME':'prenom',
-        'NOM':'nom','Nom':'nom','nom':'nom','LASTNAME':'nom','lastname':'nom',
-        'FORMATION':'formation','Formation':'formation',
-        'RYTHME':'rythme','Rythme':'rythme',
-        'TELEPHONE':'telephone','Telephone':'telephone','Téléphone':'telephone','TÉLÉPHONE':'telephone','téléphone':'telephone','PHONE':'telephone',
-        'BANQUE':'banque','Banque':'banque',
-        'NOTES':'notes','Notes':'notes',
-        'PRELEVEMENT':'prelevement','Prelevement':'prelevement','Prélèvement':'prelevement','PRÉLÈVEMENT':'prelevement',
-        'CAUTION':'caution','Caution':'caution',
-        'CHQ':'chq','Chq':'chq',
-        'TEL TUTEUR':'telTuteur','TELTUTEUR':'telTuteur','telTuteur':'telTuteur','Tel Tuteur':'telTuteur','teltuteur':'telTuteur',
-        'NVX/REINS':'nvxReins','NVXREINS':'nvxReins','nvxReins':'nvxReins','NVX':'nvxReins','Nvx/Réins':'nvxReins',
-        'ECHEANCES':'echeancesRaw','echeancesRaw':'echeancesRaw','Echeances':'echeancesRaw','Échéances':'echeancesRaw','ÉCHÉANCES':'echeancesRaw',
-        'DATE':'dateInscription','Date':'dateInscription','dateInscription':'dateInscription','DATE INSCRIPTION':'dateInscription'
+        'PR2NOM':'prenom','PRENOM':'prenom','FIRSTNAME':'prenom',
+        'NOM':'nom','LASTNAME':'nom','NAME':'nom',
+        'FORMATION':'formation',
+        'RYTHME':'rythme',
+        'TELEPHONE':'telephone','PHONE':'telephone','TEL':'telephone',
+        'BANQUE':'banque',
+        'NOTES':'notes',
+        'PRELEVEMENT':'prelevement',
+        'CAUTION':'caution',
+        'CHQ':'chq',
+        'TELTUTEUR':'telTuteur',
+        'NVXREINS':'nvxReins','NVX':'nvxReins',
+        'ECHEANCES':'echeancesRaw','ECHEANCESRAW':'echeancesRaw',
+        'ECHEANCESJSON':'echeancesJson',
+        'DATE':'dateInscription','DATEINSCRIPTION':'dateInscription',
+        'PAID':'paid','TOTAL':'total',
+        'BADGES':'badges',
+        'CHQMONTANT':'chqMontant',
+        'CREEPAR':'creePar','CREEDATE':'creeDate',
+        'MODIFIEPAR':'modifiePar','MODIFIEDATE':'modifieDate',
+        'ID':'id'
     };
     const n={};
     for(const[k,v] of Object.entries(s)){
-        const mapped=map[k]||k;
+        const norm=nk(k);
+        const mapped=map[norm]||k;
         if(n[mapped]===undefined||n[mapped]===null||n[mapped]==='')n[mapped]=v;
     }
     return n;
 }
-function loadStudents(){apiGet('getStudents',d=>{if(d.success){if(d.students&&d.students.length>0)console.log('[loadStudents] Sample server fields:',Object.keys(d.students[0]));students=(d.students||[]).map(s=>{s=normalizeStudentFields(s);if(s.id!==undefined&&s.id!==null)s.id=String(s.id);if(s.telephone)s.telephone=normalizePhone(String(s.telephone));if(s.telTuteur)s.telTuteur=normalizePhone(String(s.telTuteur));return s;});renderDashboard();renderStudents();renderStats();autoBackupIfNeeded();}});}
+function loadStudents(){apiGet('getStudents',d=>{if(d.success){if(d.students&&d.students.length>0){console.log('[loadStudents] Raw server fields:',Object.keys(d.students[0]));console.log('[loadStudents] Raw sample:',JSON.stringify(d.students[0]).substring(0,500));}students=(d.students||[]).map(s=>{s=normalizeStudentFields(s);if(s.id!==undefined&&s.id!==null)s.id=String(s.id);if(s.telephone)s.telephone=normalizePhone(String(s.telephone));if(s.telTuteur)s.telTuteur=normalizePhone(String(s.telTuteur));return s;});if(students.length>0)console.log('[loadStudents] Normalized sample:',JSON.stringify(students[0]).substring(0,500));renderDashboard();renderStudents();renderStats();autoBackupIfNeeded();}});}
 function populateFormationFilter(){document.getElementById('filterFormation').innerHTML='<option value="">Toutes formations</option>'+FORMATIONS.map(f=>`<option>${esc(f)}</option>`).join('');}
 function filterStudents(){
     const hasFilter=document.getElementById('searchBox').value.trim()||document.getElementById('filterFormation').value||document.getElementById('filterStatus').value||document.getElementById('filterRythme').value||document.getElementById('filterLate').value;
