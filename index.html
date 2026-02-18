@@ -484,14 +484,21 @@ function getFilteredStudents(){
     });
 }
 
+function safeEchs(s){
+    let e=s.echeancesJson;
+    if(!e)return [];
+    if(typeof e==='string'){try{e=JSON.parse(e);}catch(x){return [];}}
+    return Array.isArray(e)?e:[];
+}
+
 function computeStatus(s){
-    const echs=s.echeancesJson||[];
+    const echs=safeEchs(s);
     if(echs.length===0)return 'pending';
     const now=new Date();
     if(echs.some(e=>!e.paid&&new Date(e.date)<now))return 'late';
     return echs.every(e=>e.paid)?'ok':'pending';
 }
-function getLateDays(s){const echs=s.echeancesJson||[];const now=new Date();let max=0;echs.forEach(e=>{if(!e.paid){const d=new Date(e.date);if(d<now){const diff=Math.floor((now-d)/86400000);if(diff>max)max=diff;}}});return max;}
+function getLateDays(s){const echs=safeEchs(s);const now=new Date();let max=0;echs.forEach(e=>{if(!e.paid){const d=new Date(e.date);if(d<now){const diff=Math.floor((now-d)/86400000);if(diff>max)max=diff;}}});return max;}
 
 function renderStudents(){
     const filtered=getFilteredStudents();
@@ -505,7 +512,7 @@ function renderStudents(){
         const barColor=status==='ok'?'var(--ok)':status==='late'?'var(--danger)':'var(--warn)';
         const displayName=s.prenom?`${esc(s.nom)} ${esc(s.prenom)}`:esc(s.nom);
         const nvxBadge=s.nvxReins?`<span class="badge ${s.nvxReins==='Nouveau'?'badge-nvx':'badge-info'}">${esc(s.nvxReins)}</span>`:'';
-        const badgesHtml=(s.badges||[]).map(b=>`<span class="badge badge-warn">${esc(b)}</span>`).join('');
+        const badgesHtml=(Array.isArray(s.badges)?s.badges:[]).map(b=>`<span class="badge badge-warn">${esc(b)}</span>`).join('');
         return `<div class="student-card" onclick="openDetailModal('${s.id}')">
             ${lateDays>=30?`<span class="late-badge">${lateDays}j</span>`:''}
             <div class="name">${displayName}</div>
@@ -523,7 +530,7 @@ function renderDashboard(){
     const now=new Date();
     const total=students.length;
     const lateStudents=students.filter(s=>computeStatus(s)==='late').map(s=>{
-        const echs=s.echeancesJson||[];
+        const echs=safeEchs(s);
         const lateEchs=echs.filter(e=>!e.paid&&new Date(e.date)<now);
         const lateAmount=lateEchs.reduce((a,e)=>a+e.montant,0);
         const maxDays=getLateDays(s);
@@ -541,7 +548,7 @@ function renderDashboard(){
     const in30=new Date(now.getTime()+30*86400000);
     const upcoming=[];
     students.forEach(s=>{
-        (s.echeancesJson||[]).forEach(e=>{
+        (safeEchs(s)).forEach(e=>{
             const d=new Date(e.date);
             if(!e.paid&&d>=now&&d<=in30){
                 upcoming.push({student:s,date:d,montant:e.montant,type:e.type});
@@ -892,7 +899,7 @@ function openDetailModal(id){
     const nOpts=['','Nouveau','Réinscription'].map(v=>`<option value="${v}" ${v===(s.nvxReins||'')?'selected':''}>${v||'—'}</option>`).join('');
     const status=computeStatus(s);
     const sBadge=status==='ok'?'<span class="badge badge-ok">✅ À jour</span>':status==='late'?'<span class="badge badge-danger">⚠️ En retard</span>':'<span class="badge badge-warn">⏳ En attente</span>';
-    const detailBadges=(s.badges||[]).map(b=>`<span class="badge badge-warn">${esc(b)}</span>`).join('');
+    const detailBadges=(Array.isArray(s.badges)?s.badges:[]).map(b=>`<span class="badge badge-warn">${esc(b)}</span>`).join('');
     
     let html=`<div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">${sBadge}${detailBadges}${s.dateInscription?`<span style="color:var(--text2);font-size:0.82em;">📅 Inscrit le ${esc(s.dateInscription)}</span>`:''}
     <div style="margin-left:auto;display:flex;gap:6px;">
@@ -918,7 +925,7 @@ function dateToInput(ds){if(!ds)return '';if(ds.includes('-')&&ds.length===10)re
 function inputToDate(v){if(!v)return '';const p=v.split('-');return `${p[2]}/${p[1]}/${p[0]}`;}
 
 function buildEcheancierHtml(s){
-    const echs=s.echeancesJson||[];
+    const echs=safeEchs(s);
     let h=`<div class="ech-section"><h3>📅 Échéancier (${echs.length} échéances)</h3>`;
     if(echs.length>0){
         const paid=echs.filter(e=>e.paid).reduce((a,e)=>a+e.montant,0);const total=echs.reduce((a,e)=>a+e.montant,0);const rem=total-paid;const pct=total>0?Math.round(paid/total*100):0;
@@ -937,7 +944,7 @@ function buildEcheancierHtml(s){
 }
 
 // ECH EDITING
-function getEcheances(){const s=students.find(x=>String(x.id)===String(currentStudentId));return s?(s.echeancesJson||[]):[];}
+function getEcheances(){const s=students.find(x=>String(x.id)===String(currentStudentId));return s?(safeEchs(s)):[];}
 function saveEch(echs){
     const s=students.find(x=>String(x.id)===String(currentStudentId));if(!s)return;
     s.echeancesJson=echs;
@@ -972,7 +979,7 @@ function reparseEcheances(){
         s.echeancesJson=[];s.paid=0;s.total=0;s.badges=[];
     }
     // Refresh UI immediately
-    showToast('✅ Échéancier recalculé — '+((s.echeancesJson||[]).length)+' échéances');
+    showToast('✅ Échéancier recalculé — '+((safeEchs(s)).length)+' échéances');
     openDetailModal(currentStudentId);
     renderStudents();
     renderDashboard();
@@ -992,7 +999,7 @@ function phoneToWhatsApp(phone){
     return n;
 }
 function buildMessage(s){
-    const echs=s.echeancesJson||[];const now=new Date();
+    const echs=safeEchs(s);const now=new Date();
     const lateEchs=echs.filter(e=>!e.paid&&new Date(e.date)<now);
     const prenom=s.prenom||'';const nom=s.nom||'';
     const displayName=prenom?(prenom+' '+nom):nom;
@@ -1026,7 +1033,7 @@ function buildMessage(s){
     return msg;
 }
 function buildSubject(s){
-    const echs=s.echeancesJson||[];const now=new Date();
+    const echs=safeEchs(s);const now=new Date();
     const lateEchs=echs.filter(e=>!e.paid&&new Date(e.date)<now);
     const displayName=s.prenom?`${s.nom} ${s.prenom}`:s.nom;
     if(lateEchs.length>0) return `Rappel paiement — ${displayName} — ${s.formation||''}`;
@@ -1312,7 +1319,7 @@ function studentChanged(existing, incoming){
 
 function addImportRow(s,num,ok,mode){
     const tbody=document.getElementById('importLiveRows');if(!tbody)return;
-    const echCount=(s.echeancesJson||[]).length;
+    const echCount=(safeEchs(s)).length;
     const paidStr=s.paid?s.paid.toLocaleString('fr',{maximumFractionDigits:0})+'€':'—';
     const totalStr=s.total?s.total.toLocaleString('fr',{maximumFractionDigits:0})+'€':'—';
     const tr=document.createElement('tr');
