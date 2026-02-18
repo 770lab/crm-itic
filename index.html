@@ -1268,36 +1268,21 @@ function doImport(){
         return;
     }
     
-    // Server mode: BATCH import (single request instead of one per student)
-    let skipped=0;
-    const toSend=[];
-    // Show all rows instantly in the live table + filter unchanged
+    // Server mode: BATCH import - send ALL students in one request
+    // Show all rows in the live table
     imp.forEach((st,idx)=>{
-        const existing=students.find(x=>x.nom&&st.nom&&(x.nom||'').toUpperCase().trim()===(st.nom||'').toUpperCase().trim()&&(x.prenom||'').toUpperCase().trim()===(st.prenom||'').toUpperCase().trim());
-        let mode='new';
-        if(existing){
-            st.id=existing.id;
-            if(!studentChanged(existing,st)){mode='skip';skipped++;}
-            else mode='update';
-        }
-        addImportRow(st,idx+1,true,mode);
-        if(mode!=='skip')toSend.push(st);
+        addImportRow(st,idx+1,true,'new');
     });
-    updateImportProgress(imp.length,imp.length,0,skipped);
-    
-    if(toSend.length===0){
-        finishImport(0,0,skipped);
-        return;
-    }
+    updateImportProgress(imp.length,imp.length,0,0);
     
     // Single batch request
-    document.getElementById('importStatus').textContent=`Envoi de ${toSend.length} étudiants au serveur...`;
-    apiPost('importStudents',{students:toSend,data:toSend},d=>{
+    document.getElementById('importStatus').textContent=`Envoi de ${imp.length} étudiants au serveur...`;
+    apiPost('importStudents',{students:imp,data:imp},d=>{
         if(d&&d.success){
             loadStudents();
-            finishImport(toSend.length,0,skipped);
+            finishImport(d.created||imp.length,0,0);
         } else {
-            finishImport(0,toSend.length,skipped);
+            finishImport(0,imp.length,0);
             showToast('❌ Erreur import: '+(d?.error||''),true);
         }
     });
